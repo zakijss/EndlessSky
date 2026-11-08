@@ -1,0 +1,3342 @@
+_menu/buttonless side panel	162	250
+_menu/compass	200	200
+_menu/forest2	118	118
+_menu/g5	56	56
+_menu/haze	250	250
+_menu/haze-133	288	288
+_menu/haze-33	250	250
+_menu/haze-67	250	250
+_menu/haze-black	376	376
+_menu/haze-blackbody	318	318
+_menu/haze-brown	288	288
+_menu/haze-chanai	312	312
+_menu/haze-coal	250	250
+_menu/haze-dark-nebula	318	318
+_menu/haze-full	476	476
+_menu/haze-ghila	468	468
+_menu/haze-lathia	376	376
+_menu/haze-maithi	468	468
+_menu/haze-mitera	562	562
+_menu/haze-none	2	2
+_menu/haze-red	250	250
+_menu/haze-sarifa	438	438
+_menu/haze-tear	438	438
+_menu/haze-twilight	562	562
+_menu/haze-twilight-thick	638	638
+_menu/haze-twilight-thin	478	478
+_menu/haze-twilit-embers	562	562
+_menu/haze-yellow	318	318
+_menu/oberon	38	38
+_menu/scenario panel	388	250
+_menu/side panel	162	250
+_menu/title	188	24
+asteroid/bioroid/spin	62	62
+asteroid/gold/spin	44	44
+asteroid/integral tree/tree a	376	376
+asteroid/integral tree/tree b	376	376
+asteroid/integral tree/tree c	376	376
+asteroid/integral tree/tree d	376	376
+asteroid/integral tree/tree e	376	376
+asteroid/integral tree/tree f	376	376
+asteroid/iron/spin	62	62
+asteroid/large metal/spin	62	62
+asteroid/large plant cluster/large plant cluster	50	50
+asteroid/large plant/large plant	50	50
+asteroid/large plant2/large plant2	50	50
+asteroid/large rock/spin	62	62
+asteroid/large space flora/large space flora	88	88
+asteroid/lead/spin	50	50
+asteroid/livecrystal/livecrystal	160	160
+asteroid/medium metal/spin	50	50
+asteroid/medium rock/spin	56	56
+asteroid/plant cluster/plant cluster	24	24
+asteroid/plant/plant	24	24
+asteroid/plant2/plant2	24	24
+asteroid/silicon/spin	62	62
+asteroid/silver/spin	38	38
+asteroid/small metal/spin	38	38
+asteroid/small rock/spin	44	44
+asteroid/space flora/space flora	44	44
+asteroid/titanium/spin	56	56
+asteroid/water droplet/droplet	112	112
+asteroid/yottrite/spin	56	56
+effect/acuit hit	38	62
+effect/afterburner	24	24
+effect/anti-missile 3 die	4	62
+effect/anti-missile 3 fire	10	10
+effect/antimatter spark	6	124
+effect/archon teleport/archonateleport	194	244
+effect/archon teleport/archonbteleport	194	244
+effect/archon teleport/archoncteleport	194	244
+effect/ast hit	12	20
+effect/asteroid adult 2 flare	124	124
+effect/asteroid adult 3 flare	124	124
+effect/asteroid adult 4 flare	124	124
+effect/asteroid adult 5 flare	124	124
+effect/asteroid adult flare	124	124
+effect/asteroid am circle defense	124	124
+effect/asteroid am fire	250	250
+effect/asteroid circle trail	12	12
+effect/asteroid glow	250	250
+effect/asteroid laser	18	250
+effect/asteroid medium flare	68	68
+effect/asteroid projectile print	24	24
+effect/asteroid projectile static	24	24
+effect/asteroid young 2 flare	44	44
+effect/asteroid young 3 flare	38	38
+effect/asteroid young 4 flare	44	44
+effect/asteroid young flare	44	44
+effect/atomic flare/huge	38	210
+effect/atomic flare/large	32	176
+effect/atomic flare/medium	24	140
+effect/atomic flare/small	18	104
+effect/atomic flare/tiny	12	70
+effect/attractor impact	38	38
+effect/avgi flare/antimatter	94	1312
+effect/avgi flare/fusion	188	450
+effect/avgi flare/ntr	112	300
+effect/avgi flare/rcs	188	412
+effect/avgi flare/remass	150	376
+effect/balfire	50	88
+effect/banisher impact	38	24
+effect/bimodal impact	8	200
+effect/bimodal switch impact	50	50
+effect/blaster impact	18	18
+effect/blaze-pike hit	62	62
+effect/blink	124	124
+effect/blood	38	38
+effect/blue optical laser glare	94	94
+effect/bolide	12	12
+effect/bombardment impact	24	24
+effect/box	18	18
+effect/bullet impact	18	18
+effect/bunrodea flare/large	76	150
+effect/burning spark	36	36
+effect/buzzer am	12	376
+effect/chfire	24	62
+effect/coalition flare/large	24	188
+effect/coalition flare/small	18	112
+effect/composed	124	500
+effect/corrosion spark	40	40
+effect/detainer impact	112	112
+effect/detainer sparks	18	94
+effect/distancer	24	24
+effect/drag cannon impact	10	10
+effect/dragonflame	26	5000
+effect/drain	62	500
+effect/drak bolt impact	50	50
+effect/efreti flare/huge	38	188
+effect/efreti flare/large	32	156
+effect/efreti flare/medium	24	124
+effect/efreti flare/small	18	94
+effect/efreti flare/tiny	12	62
+effect/electron impact	24	24
+effect/ember tear/ember tear fire	248	248
+effect/ember tear/ember tear impact	454	454
+effect/ember tear/ember tear spark	100	100
+effect/ember tear/ember tear vortex	564	1174
+effect/emp ring	188	56
+effect/emp spark	12	24
+effect/emp torpedo fire	12	24
+effect/explosion/huge	124	124
+effect/explosion/large	88	88
+effect/explosion/medium	62	62
+effect/explosion/neutron	32	32
+effect/explosion/nuke	624	624
+effect/explosion/pug/huge	124	124
+effect/explosion/pug/large	88	88
+effect/explosion/pug/medium	62	62
+effect/explosion/pug/small	44	44
+effect/explosion/pug/tiny	32	32
+effect/explosion/quarg/huge	156	156
+effect/explosion/quarg/large	110	110
+effect/explosion/quarg/medium	78	78
+effect/explosion/quarg/small	54	54
+effect/explosion/quarg/tiny	38	38
+effect/explosion/small	44	44
+effect/explosion/tiny	32	32
+effect/finisher impact	218	218
+effect/finisher sparks	24	24
+effect/finisher trail	18	62
+effect/fire-lance impact	62	62
+effect/firestorm ring	188	56
+effect/fissionflare	38	112
+effect/flame	24	24
+effect/flotsam aluminum	18	18
+effect/flotsam anomalous mass	18	18
+effect/flotsam anomalous shield restorer	22	18
+effect/flotsam antimatter power cell	32	24
+effect/flotsam copper	18	18
+effect/flotsam gold	18	18
+effect/flotsam integral wood	32	32
+effect/flotsam iron	18	18
+effect/flotsam jamfruit pod	24	24
+effect/flotsam lead	18	18
+effect/flotsam neodymium	18	18
+effect/flotsam nucleolysis beam	24	18
+effect/flotsam platinum	18	18
+effect/flotsam pollen particle	20	18
+effect/flotsam silicon	18	18
+effect/flotsam silver	18	18
+effect/flotsam telescopic antimissile	24	22
+effect/flotsam titanium	18	18
+effect/flotsam tungsten	18	18
+effect/flotsam uranium	18	18
+effect/flotsam voidfish	16	16
+effect/flotsam yottrite	20	20
+effect/fusionflare	104	312
+effect/grab-strike impact	38	38
+effect/graviton flare	24	56
+effect/graviton flare/graviton flare	24	76
+effect/green optical laser glare	94	94
+effect/gridfire cloud	62	62
+effect/gridfire fire	24	24
+effect/gridfire hit	6	156
+effect/hasur afterburner	66	84
+effect/heaver hyperspace hit	250	250
+effect/heaver shard hit	62	62
+effect/heavy laser impact	18	18
+effect/horizon grappler	18	500
+effect/incipias flare/metallic hydrogen large	18	94
+effect/incipias flare/metallic hydrogen medium	12	62
+effect/incipias flare/metallic hydrogen small	8	38
+effect/inhibitor impact	12	50
+effect/ion explosion	188	188
+effect/ion flare/huge	38	112
+effect/ion flare/large	32	94
+effect/ion flare/medium	24	76
+effect/ion flare/small	18	56
+effect/ion flare/tiny	12	38
+effect/ion impact	62	62
+effect/ion rain impact	18	32
+effect/ionball ring	94	28
+effect/ionic afterburner	62	62
+effect/ionic impact	62	62
+effect/irfire	10	10
+effect/jd detainer	376	376
+effect/jump drive	76	76
+effect/jump drive red	34	34
+effect/ka'het flare/large	12	94
+effect/ka'het flare/medium	10	94
+effect/ka'het flare/small	6	94
+effect/kis impact	10	10
+effect/korath afterburner	38	38
+effect/korath digger hit	16	16
+effect/korath flare/huge	38	188
+effect/korath flare/large	32	156
+effect/korath flare/medium	24	124
+effect/korath flare/small	18	94
+effect/korath flare/tiny	12	62
+effect/korath inferno hit	62	62
+effect/large anti missile	6	250
+effect/laser impact	12	12
+effect/leak	24	24
+effect/leak big	50	50
+effect/meteor fire	12	24
+effect/mhd spark	6	12
+effect/minelayer split	32	32
+effect/missile death	24	24
+effect/moonbeam fleck	6	24
+effect/moonbeam impact	6	38
+effect/nano spark	12	6
+effect/overcharged pulse laser impact	24	24
+effect/particle impact	38	38
+effect/piercer explosion	56	56
+effect/piercer fire	24	24
+effect/piercer impact	38	38
+effect/plasma cloud	160	160
+effect/plasma exhaust	40	80
+effect/plasma explosion	32	32
+effect/plasma fire	80	80
+effect/plasma flare/huge	38	150
+effect/plasma flare/large	32	124
+effect/plasma flare/medium	24	100
+effect/plasma flare/small	18	76
+effect/plasma flare/tiny	12	50
+effect/plasma impact	320	250
+effect/plasma particle	12	12
+effect/point defense die	24	12
+effect/point defense fire	12	400
+effect/point defense hit	12	400
+effect/predecessor flare	62	106
+effect/proton impact	24	32
+effect/puff	50	50
+effect/pug flare/huge	30	136
+effect/pug flare/large	24	112
+effect/pug flare/medium	20	90
+effect/pug flare/small	16	68
+effect/pug flare/tiny	10	44
+effect/pulse impact	24	24
+effect/pwave impact	24	24
+effect/pwaveflare	24	238
+effect/quarg anti missile	6	624
+effect/queru afterburner	60	104
+effect/railspark	32	32
+effect/ranseur	62	1510
+effect/ravager impact	18	18
+effect/remnant afterburner/remnant afterburner	18	250
+effect/remnant flare/large	18	250
+effect/remnant flare/medium	12	176
+effect/remnant flare/small	8	124
+effect/remnant leak	50	50
+effect/remnant leak sparkle	24	24
+effect/repeater impact	18	18
+effect/repulsor impact	38	38
+effect/resja afterburner	62	106
+effect/scin flare/large	62	124
+effect/scin flare/med	42	82
+effect/scin flare/small	32	62
+effect/scin flare/tiny	16	32
+effect/seeker impact	50	50
+effect/sheragiam	8	562
+effect/shunt-strike-hit	52	52
+effect/shunt-strike-sparkle	78	78
+effect/sidewinder fire	18	24
+effect/singularity	76	76
+effect/skylance impact	38	38
+effect/slicer impact	12	12
+effect/slowing	38	38
+effect/small anti missile	6	188
+effect/smoke	76	76
+effect/spark	24	24
+effect/stagnation beam impact	18	18
+effect/star tail hit	76	76
+effect/star tail live	38	38
+effect/static	18	18
+effect/subsidurial death/subsidurial death	124	188
+effect/successor flare/afterburner/afterburner	44	94
+effect/successor flare/large	22	88
+effect/successor flare/medium	14	52
+effect/successor flare/small	8	32
+effect/successor flare/tiny	4	20
+effect/successor pulse laser impact	24	24
+effect/sunbeam impact	16	16
+effect/swarm	6	12
+effect/talcgun	18	206
+effect/thrasher impact	18	18
+effect/torpedo fire	24	24
+effect/tracker cloud	76	76
+effect/tracker fire	32	32
+effect/tracker impact	38	38
+effect/tractor beam	18	376
+effect/typhoon fire	24	24
+effect/uv excimer laser glare	282	282
+effect/vi flare/large	38	76
+effect/vi flare/medium	24	50
+effect/vi flare/small	18	38
+effect/void spark	20	20
+effect/void sprite adult death	250	200
+effect/void sprite infant death	94	94
+effect/void sprite parts/void sprite parts	22	22
+effect/wanderer anti-missile	4	450
+effect/wanderer flare/large	32	124
+effect/wanderer flare/medium	24	100
+effect/wanderer flare/small	18	76
+effect/wanderer flare/tiny	12	50
+effect/warder	6	438
+effect/yellow spark	38	38
+effect/zapper impact	80	80
+font/ubuntu14r	2744	32
+font/ubuntu18r	3528	36
+hardpoint/acuit	12	32
+hardpoint/annihilator turret	10	24
+hardpoint/anti-missile	10	10
+hardpoint/anti-missile hai	8	8
+hardpoint/asteroid am circle	102	102
+hardpoint/astuit	12	24
+hardpoint/ballistic	16	36
+hardpoint/banisher	10	18
+hardpoint/bimodal turret	8	30
+hardpoint/blaster turret	8	22
+hardpoint/blaze-pike	8	24
+hardpoint/blue optical laser	10	10
+hardpoint/bombardment turret	10	24
+hardpoint/burrower	14	82
+hardpoint/buzzer am	8	18
+hardpoint/choleric	16	40
+hardpoint/digger turret	6	16
+hardpoint/disruptor	10	38
+hardpoint/dual sunbeam turret	12	32
+hardpoint/electron turret	10	22
+hardpoint/factory/microbot factory	58	82
+hardpoint/firestorm battery	16	24
+hardpoint/gat turret hardpoint	10	22
+hardpoint/grab-strike	10	16
+hardpoint/green optical laser	10	10
+hardpoint/hai ionic turret	10	18
+hardpoint/heavy anti-missile	10	12
+hardpoint/heavy anti-missile hai	10	12
+hardpoint/heavy laser turret	10	22
+hardpoint/heliarch attractor	10	22
+hardpoint/heliarch repulsor	12	22
+hardpoint/horizon grappler	14	14
+hardpoint/inhibitor turret	14	18
+hardpoint/ion hail turret	10	24
+hardpoint/ion torch	14	44
+hardpoint/irate	12	30
+hardpoint/javelin turret	10	10
+hardpoint/korath heaver	8	18
+hardpoint/korath inferno	8	24
+hardpoint/laser turret	8	24
+hardpoint/locust turret	10	18
+hardpoint/medium vls	12	12
+hardpoint/mining laser turret	10	24
+hardpoint/mod blaster turret	8	22
+hardpoint/moonbeam turret	8	22
+hardpoint/nuke	8	46
+hardpoint/overcharged pulse laser turret	8	20
+hardpoint/plasma turret	12	18
+hardpoint/plasmadyne scoop	132	132
+hardpoint/point defense	12	12
+hardpoint/proton turret	12	26
+hardpoint/pug anti-missile	14	16
+hardpoint/pug gridfire turret	10	10
+hardpoint/pug zapper turret	12	18
+hardpoint/pulse turret	10	18
+hardpoint/pwavehp	12	30
+hardpoint/quad blaster turret	8	22
+hardpoint/quarg anti missile	12	18
+hardpoint/quarg ribault	12	18
+hardpoint/quarg skydagger	12	22
+hardpoint/quarg skylance	12	28
+hardpoint/ravager turret	12	24
+hardpoint/repeater turret	6	18
+hardpoint/sheragiam	12	12
+hardpoint/shooting star flare/ss-rays	76	76
+hardpoint/shunt-strike	14	18
+hardpoint/slicer turret	12	44
+hardpoint/small vls	6	12
+hardpoint/speckle turret	10	26
+hardpoint/stagnation beam	10	12
+hardpoint/successor pulse laser turret	6	20
+hardpoint/sunbeam turret	12	32
+hardpoint/t3 anti missile	12	12
+hardpoint/thrasher turret	12	18
+hardpoint/tiny vls	6	6
+hardpoint/tractor beam	10	12
+hardpoint/ureb turret	10	56
+hardpoint/wanderer anti-missile	12	16
+hardpoint/warder	8	8
+icon/dragonflame	18	18
+icon/emp	18	18
+icon/finisher	18	18
+icon/firelight	18	18
+icon/firestorm torpedo	18	18
+icon/flamethrower	18	18
+icon/gat	18	18
+icon/gat turret	18	18
+icon/hv spike	18	18
+icon/javelin	18	18
+icon/javelin turret	18	18
+icon/korath heaver	18	18
+icon/meteor	18	18
+icon/mhd	18	18
+icon/minelayer	18	18
+icon/nettle	18	18
+icon/nuke	18	18
+icon/orchid	18	18
+icon/piercer	18	18
+icon/rail gun	18	18
+icon/rocket	18	18
+icon/shard	18	18
+icon/sidewinder	18	18
+icon/swarm	18	18
+icon/thunderhead	18	18
+icon/torpedo	18	18
+icon/tracker	18	18
+icon/typhoon	18	18
+label/arachi	132	88
+label/core	220	108
+label/deep	52	228
+label/dirt belt	272	266
+label/earth	136	32
+label/gegno	250	124
+label/graveyard	260	152
+label/hai	164	152
+label/incipias	188	118
+label/kimek	110	104
+label/korath	216	208
+label/north	244	124
+label/outer limits	344	66
+label/paradise	208	164
+label/rim	138	178
+label/saryds	126	80
+label/south	276	42
+label/successors	358	180
+label/tangled shroud	436	90
+label/twilight	350	152
+label/umbral	180	188
+label/wanderers	318	162
+label/waste	312	154
+land/aera	450	224
+land/asteroid0	450	224
+land/asteroid1	450	224
+land/badlands0	450	224
+land/badlands1	450	224
+land/badlands10	450	224
+land/badlands11	450	224
+land/badlands12	450	224
+land/badlands13	450	224
+land/badlands2	450	224
+land/badlands3	450	224
+land/badlands4	450	224
+land/badlands5	450	224
+land/badlands6	450	224
+land/badlands7	450	224
+land/badlands8	450	224
+land/badlands9-harro	450	224
+land/beach0	450	224
+land/beach1	450	224
+land/beach10-sfiera	450	224
+land/beach11-harro	450	224
+land/beach12-harro	450	224
+land/beach13	450	224
+land/beach14	450	224
+land/beach15	450	224
+land/beach18	450	224
+land/beach19	450	224
+land/beach2	450	224
+land/beach20	450	224
+land/beach3	450	224
+land/beach4	450	224
+land/beach5	450	224
+land/beach6	450	224
+land/beach7-sfiera	450	224
+land/beach8-sfiera	450	224
+land/beach9-sfiera	450	224
+land/bwerner0	450	224
+land/bwerner1	450	224
+land/bwerner2	450	224
+land/bwerner3	450	224
+land/bwerner4	450	224
+land/bwerner5	450	224
+land/bwerner6	450	224
+land/bwerner7	450	224
+land/bwerner8	450	224
+land/canyon0	450	224
+land/canyon01	450	224
+land/canyon02	450	224
+land/canyon03	450	224
+land/canyon04	450	224
+land/canyon05	450	224
+land/canyon1	450	224
+land/canyon10-harro	450	224
+land/canyon11	450	224
+land/canyon12	450	224
+land/canyon13	450	224
+land/canyon14	450	224
+land/canyon15	450	224
+land/canyon16	450	224
+land/canyon18	450	224
+land/canyon2	450	224
+land/canyon3	450	224
+land/canyon4	450	224
+land/canyon5	450	224
+land/canyon6	450	224
+land/canyon7	450	224
+land/canyon8	450	224
+land/canyon9	450	224
+land/city0	450	224
+land/city1	450	224
+land/city10	450	224
+land/city11	450	224
+land/city13-sfiera	450	224
+land/city14-sfiera	450	224
+land/city15-sfiera	450	224
+land/city16-sfiera	450	224
+land/city17-sfiera	450	224
+land/city18-iridium	450	224
+land/city19	450	224
+land/city2	450	224
+land/city20	450	224
+land/city21	450	224
+land/city22	450	224
+land/city23	450	224
+land/city24	450	224
+land/city25	450	224
+land/city26	450	224
+land/city27	450	224
+land/city28	450	224
+land/city3	450	224
+land/city4	450	224
+land/city5	450	224
+land/city6	450	224
+land/city7	450	224
+land/city8	450	224
+land/city9	450	224
+land/clouds_00	450	224
+land/clouds_01	450	224
+land/clouds_02	450	224
+land/clouds_03	450	224
+land/clouds_04	450	224
+land/clouds_05	450	224
+land/clouds_06	450	224
+land/clouds_07	450	224
+land/clouds_08	450	224
+land/clouds10	450	224
+land/clouds11	450	224
+land/clouds14	450	224
+land/clouds15	450	224
+land/clouds9	450	224
+land/desert0	450	224
+land/desert1	450	224
+land/desert10-harro	450	224
+land/desert11	450	224
+land/desert12	450	224
+land/desert13	450	224
+land/desert14	450	224
+land/desert15	450	224
+land/desert19	450	224
+land/desert2	450	224
+land/desert20	450	224
+land/desert21	450	224
+land/desert3	450	224
+land/desert4	450	224
+land/desert5	450	224
+land/desert6	450	224
+land/desert7	450	224
+land/desert8-sfiera	450	224
+land/desert9-sfiera	450	224
+land/dmottl0	450	224
+land/dmottl1	450	224
+land/dmottl2	450	224
+land/dmottl3	450	224
+land/dmottl4	450	224
+land/dmottl5	450	224
+land/dokimi	450	224
+land/dune0	450	224
+land/dune1	450	224
+land/dune2	450	224
+land/dune3	450	224
+land/dune4	450	224
+land/dune5	450	224
+land/dune6-harro	450	224
+land/dune7	450	224
+land/earthrise	450	224
+land/enceladus_1	450	224
+land/enceladus_2	450	224
+land/enceladus_3	450	224
+land/enceladus_4	450	224
+land/fields0	450	224
+land/fields1	450	224
+land/fields10-sfiera	450	224
+land/fields11-sfiera	450	224
+land/fields12-sfiera	450	224
+land/fields13	450	224
+land/fields13-sfiera	450	224
+land/fields14	450	224
+land/fields15	450	224
+land/fields16	450	224
+land/fields17	450	224
+land/fields18	450	224
+land/fields19	450	224
+land/fields2	450	224
+land/fields20	450	224
+land/fields21	450	224
+land/fields22	450	224
+land/fields23	450	224
+land/fields24	450	224
+land/fields25	450	224
+land/fields26	450	224
+land/fields27	450	224
+land/fields28	450	224
+land/fields29	450	224
+land/fields3	450	224
+land/fields4	450	224
+land/fields5	450	224
+land/fields6	450	224
+land/fields7	450	224
+land/fields8	450	224
+land/fields9	450	224
+land/fog0	450	224
+land/fog1	450	224
+land/fog10	450	224
+land/fog11	450	224
+land/fog12	450	224
+land/fog15	450	224
+land/fog16	450	224
+land/fog2	450	224
+land/fog3	450	224
+land/fog4	450	224
+land/fog5	450	224
+land/fog6	450	224
+land/fog7	450	224
+land/fog8	450	224
+land/fog9	450	224
+land/forest0	450	224
+land/forest1	450	224
+land/forest10	450	224
+land/forest11	450	224
+land/forest12	450	224
+land/forest13	450	224
+land/forest14	450	224
+land/forest15	450	224
+land/forest16	450	224
+land/forest2	450	224
+land/forest3	450	224
+land/forest4	450	224
+land/forest5	450	224
+land/forest6	450	224
+land/forest7	450	224
+land/forest8	450	224
+land/forest9	450	224
+land/garden1	450	224
+land/gliese	450	224
+land/haze0	450	224
+land/haze1	450	224
+land/hills0	450	224
+land/hills1	450	224
+land/hills10	450	224
+land/hills11	450	224
+land/hills13	450	224
+land/hills14	450	224
+land/hills15	450	224
+land/hills16	450	224
+land/hills2	450	224
+land/hills3	450	224
+land/hills4	450	224
+land/hills5-sfiera	450	224
+land/hills6-sfiera	450	224
+land/hills7-harro	450	224
+land/hills8	450	224
+land/humo	450	224
+land/igna	450	224
+land/industrial0-iridium	450	224
+land/lava0	450	224
+land/lava1	450	224
+land/lava10	450	224
+land/lava11	450	224
+land/lava12	450	224
+land/lava13	450	224
+land/lava14	450	224
+land/lava15	450	224
+land/lava16	450	224
+land/lava2	450	224
+land/lava3	450	224
+land/lava4	450	224
+land/lava5	450	224
+land/lava6	450	224
+land/lava7-sfiera	450	224
+land/lava8	450	224
+land/lava9	450	224
+land/loc0	450	224
+land/loc1	450	224
+land/loc2	450	224
+land/loc3	450	224
+land/mars0	450	224
+land/mars1	450	224
+land/mars2	450	224
+land/mars3	450	224
+land/mars4	450	224
+land/mercury1	450	224
+land/methuselah	450	224
+land/mfield0	450	224
+land/mfield1	450	224
+land/mfield2	450	224
+land/mfield3	450	224
+land/mfield4	450	224
+land/mfield5	450	224
+land/moon0	450	224
+land/moon1	450	224
+land/mountain0	450	224
+land/mountain1	450	224
+land/mountain10-sfiera	450	224
+land/mountain11-sfiera	450	224
+land/mountain12-sfiera	450	224
+land/mountain13-sfiera	450	224
+land/mountain14-sfiera	450	224
+land/mountain15-sfiera	450	224
+land/mountain16-striker	450	224
+land/mountain17-harro	450	224
+land/mountain18-harro	450	224
+land/mountain19-harro	450	224
+land/mountain2	450	224
+land/mountain20-harro	450	224
+land/mountain21-harro	450	224
+land/mountain22-spfld	450	224
+land/mountain23-spfld	450	224
+land/mountain24-spfld	450	224
+land/mountain25-spfld	450	224
+land/mountain26	450	224
+land/mountain27	450	224
+land/mountain28	450	224
+land/mountain3	450	224
+land/mountain33	450	224
+land/mountain38	450	224
+land/mountain4	450	224
+land/mountain41	450	224
+land/mountain45	450	224
+land/mountain46	450	224
+land/mountain5	450	224
+land/mountain6	450	224
+land/mountain7	450	224
+land/mountain8	450	224
+land/mountain9	450	224
+land/myrabella0	450	224
+land/myrabella1	450	224
+land/myrabella2	450	224
+land/myrabella3	450	224
+land/myrabella4	450	224
+land/myrabella5	450	224
+land/myrabella6	450	224
+land/myrabella7	450	224
+land/myrabella8	450	224
+land/nasa0	450	224
+land/nasa1	450	224
+land/nasa10	450	224
+land/nasa11	450	224
+land/nasa12	450	224
+land/nasa13	450	224
+land/nasa14	450	224
+land/nasa15	450	224
+land/nasa16	450	224
+land/nasa17	450	224
+land/nasa18	450	224
+land/nasa19	450	224
+land/nasa2	450	224
+land/nasa20	450	224
+land/nasa21	450	224
+land/nasa22	450	224
+land/nasa23	450	224
+land/nasa24	450	224
+land/nasa25	450	224
+land/nasa26	450	224
+land/nasa27	450	224
+land/nasa28	450	224
+land/nasa29	450	224
+land/nasa3	450	224
+land/nasa30	450	224
+land/nasa31	450	224
+land/nasa32	450	224
+land/nasa33	450	224
+land/nasa34	450	224
+land/nasa35	450	224
+land/nasa36	450	224
+land/nasa37	450	224
+land/nasa38	450	224
+land/nasa39	450	224
+land/nasa4	450	224
+land/nasa40	450	224
+land/nasa41	450	224
+land/nasa5	450	224
+land/nasa6	450	224
+land/nasa7	450	224
+land/nasa8	450	224
+land/nasa9	450	224
+land/occupas	450	224
+land/path1	450	224
+land/path2	450	224
+land/path3	450	224
+land/path4	450	224
+land/peripheria	450	224
+land/redias	450	224
+land/sea0	450	224
+land/sea1	450	224
+land/sea10-sfiera	450	224
+land/sea11-sfiera	450	224
+land/sea12-sfiera	450	224
+land/sea13-sfiera	450	224
+land/sea14-sfiera	450	224
+land/sea15-harro	450	224
+land/sea16-harro	450	224
+land/sea17-harro	450	224
+land/sea18	450	224
+land/sea19	450	224
+land/sea2	450	224
+land/sea20	450	224
+land/sea21	450	224
+land/sea22	450	224
+land/sea23	450	224
+land/sea24	450	224
+land/sea3	450	224
+land/sea4	450	224
+land/sea5	450	224
+land/sea6	450	224
+land/sea7	450	224
+land/sea8	450	224
+land/sea9	450	224
+land/sivael0	450	224
+land/sivael1	450	224
+land/sivael2	450	224
+land/sivael3	450	224
+land/sivael4	450	224
+land/sivael5	450	224
+land/sivael6	450	224
+land/sivael7	450	224
+land/sivael8	450	224
+land/sivael9	450	224
+land/sky0	450	224
+land/sky1	450	224
+land/sky10	450	224
+land/sky11	450	224
+land/sky12	450	224
+land/sky13	450	224
+land/sky14	450	224
+land/sky2	450	224
+land/sky3	450	224
+land/sky4	450	224
+land/sky5	450	224
+land/sky6	450	224
+land/sky7	450	224
+land/sky8	450	224
+land/sky9	450	224
+land/snow0	450	224
+land/snow1	450	224
+land/snow10	450	224
+land/snow10-sfiera	450	224
+land/snow11-sfiera	450	224
+land/snow12	450	224
+land/snow13	450	224
+land/snow14	450	224
+land/snow15	450	224
+land/snow16	450	224
+land/snow17	450	224
+land/snow18	450	224
+land/snow19	450	224
+land/snow2	450	224
+land/snow20	450	224
+land/snow21	450	224
+land/snow22	450	224
+land/snow23	450	224
+land/snow24	450	224
+land/snow25	450	224
+land/snow26	450	224
+land/snow27	450	224
+land/snow28	450	224
+land/snow29	450	224
+land/snow3	450	224
+land/snow30	450	224
+land/snow33	450	224
+land/snow36	450	224
+land/snow37	450	224
+land/snow38	450	224
+land/snow39	450	224
+land/snow4	450	224
+land/snow40	450	224
+land/snow5	450	224
+land/snow6	450	224
+land/snow7	450	224
+land/snow8	450	224
+land/snow9	450	224
+land/space0	450	224
+land/space1	450	224
+land/space2	450	224
+land/space3	450	224
+land/space4	450	224
+land/space5	450	224
+land/space6	450	224
+land/space7	450	224
+land/station0	450	224
+land/station1	450	224
+land/station10	450	224
+land/station11	450	224
+land/station12	450	224
+land/station13	450	224
+land/station14	450	224
+land/station15	450	224
+land/station16	450	224
+land/station17	450	224
+land/station18	450	224
+land/station19	450	224
+land/station2	450	224
+land/station20	450	224
+land/station21	450	224
+land/station22	450	224
+land/station23	450	224
+land/station24	450	224
+land/station25	450	224
+land/station26	450	224
+land/station27	450	224
+land/station28	450	224
+land/station29	450	224
+land/station3	450	224
+land/station30	450	224
+land/station31	450	224
+land/station32	450	224
+land/station33	450	224
+land/station34	450	224
+land/station35	450	224
+land/station36	450	224
+land/station37	450	224
+land/station38	450	224
+land/station39	450	224
+land/station4	450	224
+land/station40	450	224
+land/station41	450	224
+land/station42	450	224
+land/station43	450	224
+land/station44	450	224
+land/station45	450	224
+land/station46	450	224
+land/station47	450	224
+land/station48	450	224
+land/station49	450	224
+land/station5	450	224
+land/station50	450	224
+land/station53	450	224
+land/station54	450	224
+land/station55	450	224
+land/station56	450	224
+land/station57	450	224
+land/station59	450	224
+land/station6	450	224
+land/station60	450	224
+land/station7	450	224
+land/station8	450	224
+land/station9	450	224
+land/treser	450	224
+land/tundra1	450	224
+land/turra	450	224
+land/valley0	450	224
+land/valley1	450	224
+land/valley10-sfiera	450	224
+land/valley11-harro	450	224
+land/valley12-harro	450	224
+land/valley13-harro	450	224
+land/valley14-harro	450	224
+land/valley15-harro	450	224
+land/valley2	450	224
+land/valley3	450	224
+land/valley4	450	224
+land/valley5	450	224
+land/valley6	450	224
+land/valley7	450	224
+land/valley8	450	224
+land/valley9	450	224
+land/vulpa	450	224
+land/water0	450	224
+land/water1	450	224
+land/water10-harro	450	224
+land/water11-harro	450	224
+land/water12	450	224
+land/water13	450	224
+land/water14	450	224
+land/water15	450	224
+land/water16	450	224
+land/water17	450	224
+land/water18	450	224
+land/water19	450	224
+land/water2	450	224
+land/water20	450	224
+land/water21	450	224
+land/water22	450	224
+land/water23	450	224
+land/water24	450	224
+land/water25	450	224
+land/water28	450	224
+land/water3	450	224
+land/water30	450	224
+land/water31	450	224
+land/water32	450	224
+land/water33	450	224
+land/water4	450	224
+land/water5	450	224
+land/water6	450	224
+land/water7	450	224
+land/water8	450	224
+land/water9	450	224
+map/a-dwarf-star	80	80
+map/a-giant-star	120	120
+map/a-large-star	100	100
+map/a-small-star	80	80
+map/a-star	80	80
+map/a-supergiant-star	160	160
+map/b-dwarf-star	80	80
+map/b-giant-star	120	120
+map/b-large-star	100	100
+map/b-small-star	80	80
+map/b-star	80	80
+map/b-supergiant-star	160	160
+map/big black hole	156	156
+map/black hole 3	188	188
+map/black hole 4	188	188
+map/black hole 5	188	188
+map/black hole 6	168	168
+map/black hole corona	188	188
+map/black hole star	156	156
+map/black-hole-star	214	160
+map/black-hole-still	188	188
+map/brown-dwarf-star	20	20
+map/carbon-star	120	120
+map/coal-black-hole-star	160	160
+map/f-dwarf-star	80	80
+map/f-giant-star	120	120
+map/f-large-star	100	100
+map/f-old-star	100	100
+map/f-small-star	80	80
+map/f-star	80	80
+map/f-supergiant-star	160	160
+map/g-dwarf-star	80	80
+map/g-giant-star	120	120
+map/g-large-star	100	100
+map/g-old-star	100	100
+map/g-small-star	80	80
+map/g-star	80	80
+map/g-supergiant-star	160	160
+map/giant-star	120	120
+map/k-dwarf-star	80	80
+map/k-giant-star	120	120
+map/k-large-star	100	100
+map/k-old-star	100	100
+map/k-small-star	80	80
+map/k-star	80	80
+map/k-supergiant-star	160	160
+map/m-dwarf-star	80	80
+map/m-giant-star	120	120
+map/m-large-star	100	100
+map/m-small-star	80	80
+map/m-star	80	80
+map/m-supergiant-star	160	160
+map/magnetar-star	160	160
+map/neutron-star	160	186
+map/nova-old-star	160	160
+map/nova-small-star	120	120
+map/nova-star	120	120
+map/o-dwarf-star	80	80
+map/o-giant-star	120	120
+map/o-large-star	100	100
+map/o-small-star	80	80
+map/o-star	80	80
+map/o-supergiant-star	160	160
+map/patir-star	188	188
+map/small-black-hole-star	70	70
+map/small-neutron-star	94	94
+map/twilight-black-hole-star	160	160
+map/unexplored-star	80	80
+map/wr-star	120	120
+outfit/acuit	112	112
+outfit/acumen	106	106
+outfit/aeon cell	100	94
+outfit/afterburner	88	62
+outfit/ameliorate cell	78	78
+outfit/android	56	94
+outfit/anomalous mass	52	56
+outfit/anomalous shield restorer	88	76
+outfit/anti-materiel gun	94	62
+outfit/anti-missile	76	76
+outfit/anti-missile hai	88	88
+outfit/antimatter power cell	124	94
+outfit/arc fusion torch	132	132
+outfit/asteroid scanner	76	76
+outfit/asteroid weapon 1	124	88
+outfit/asteroid weapon 2	100	76
+outfit/asteroid weapon 3	88	76
+outfit/asteroid weapon 4	82	100
+outfit/asteroid weapon 5	82	56
+outfit/asteroid weapon 6	76	62
+outfit/asteroid weapon 7	88	94
+outfit/asteroid weapon 8	88	76
+outfit/astuit	94	94
+outfit/auxiliary license	76	50
+outfit/ballistic cannon	112	76
+outfit/ballistic turret	112	112
+outfit/banisher	82	100
+outfit/battlezone battery	94	94
+outfit/beam antimatter drive	132	132
+outfit/beyond the hyperdrive	112	112
+outfit/bimodal coilgun	112	68
+outfit/bimodal coilgun turret	112	112
+outfit/blaster	94	76
+outfit/blaster turret	82	88
+outfit/blaze-pike	94	100
+outfit/blue optical laser	76	76
+outfit/blue screwdriver	82	62
+outfit/blue sun	100	100
+outfit/bombardment cannon	88	76
+outfit/bombardment turret	88	94
+outfit/brawl cell	94	94
+outfit/breeder	94	82
+outfit/brig	82	76
+outfit/bright cloud	76	76
+outfit/bullet	88	76
+outfit/bullet storage	88	76
+outfit/bunk room	100	82
+outfit/burrower	106	106
+outfit/buzzer	100	88
+outfit/caldera afterburner	88	76
+outfit/campaign core	112	112
+outfit/cargo expansion	100	94
+outfit/cargo scanner	62	76
+outfit/catalytic ramscoop	100	94
+outfit/chiisana rift steering	82	68
+outfit/chiisana rift thruster	76	76
+outfit/choleric cannon	112	112
+outfit/choleric turret	112	112
+outfit/city-ship license	76	50
+outfit/cloud piercer	124	124
+outfit/coalition license	76	76
+outfit/collar	76	76
+outfit/command center	94	94
+outfit/concealment lamina	100	88
+outfit/concentrating solar array	94	94
+outfit/concentrating solar cell	94	94
+outfit/control transceiver	62	82
+outfit/cooling ducts	62	76
+outfit/cooling ducts hai	68	68
+outfit/cooling module	56	68
+outfit/core	124	100
+outfit/crusade battery	118	118
+outfit/cryogenic deuterium tank	94	94
+outfit/crystal capacitor	68	68
+outfit/crystal pendant	94	124
+outfit/dark reactor	100	76
+outfit/dark storm	100	76
+outfit/decoy plating	62	62
+outfit/detainer	112	106
+outfit/deuterium slush tank	76	76
+outfit/diffuse deflector	88	88
+outfit/disruptor	94	94
+outfit/double plasma core	112	88
+outfit/drag cannon	112	112
+outfit/dragonflame	118	74
+outfit/dual sunbeam turret	100	100
+outfit/dwarf core	62	88
+outfit/dwarf core hai	56	76
+outfit/electron beam	106	88
+outfit/electron turret	106	112
+outfit/electroweak reactor	88	68
+outfit/embattery	112	112
+outfit/ember tear	118	68
+outfit/emergency ramscoop	50	56
+outfit/emp rack	88	88
+outfit/emp torpedo	62	56
+outfit/emp torpedo bay	88	68
+outfit/enforcer confrontation gear	100	68
+outfit/enforcer riot staff	124	76
+outfit/epoch cell	94	82
+outfit/excavator	62	62
+outfit/expeller	100	100
+outfit/external launch rail	82	56
+outfit/external launch tube	124	76
+outfit/finisher	56	50
+outfit/finisher maegrolain	112	112
+outfit/finisher pod	94	94
+outfit/finisher storage	76	94
+outfit/fire-lance	106	94
+outfit/firelight	56	38
+outfit/firelight bank	100	88
+outfit/firelight rack	112	112
+outfit/firestorm battery	88	94
+outfit/firestorm torpedo	112	94
+outfit/firestorm torpedo rack	124	112
+outfit/fission	100	62
+outfit/fission hai	94	62
+outfit/fissiondrive	112	112
+outfit/flamethrower	124	100
+outfit/fragmentation grenades	82	68
+outfit/fuel cell hai	62	56
+outfit/fuel module	94	76
+outfit/fuel pod	94	76
+outfit/fuel sail	112	112
+outfit/fusion	100	82
+outfit/fusion cannon	112	76
+outfit/fusion hai	100	76
+outfit/fusiondrive	112	112
+outfit/gas class shield	100	124
+outfit/gat	100	76
+outfit/gat turret	106	106
+outfit/grab-strike	94	100
+outfit/green optical laser	76	76
+outfit/guardian turret	94	112
+outfit/guile pulse laser	112	112
+outfit/hai boulder	112	76
+outfit/hai geode	94	94
+outfit/hai ionic blaster	100	62
+outfit/hai ionic turret	106	118
+outfit/hai jammer	112	112
+outfit/hai jammer overclocked	112	112
+outfit/hai pebble core	68	68
+outfit/hai rifle	88	56
+outfit/hai tracker	62	62
+outfit/hai tracker pod	88	76
+outfit/hai tracker storage	82	106
+outfit/hai williwaw	68	94
+outfit/harmonic keystone	112	112
+outfit/harvested aluminum	94	76
+outfit/harvested copper	94	76
+outfit/harvested gold	94	76
+outfit/harvested iron	94	76
+outfit/harvested lead	94	76
+outfit/harvested neodymium	94	76
+outfit/harvested platinum	94	76
+outfit/harvested silicon	94	76
+outfit/harvested silver	94	76
+outfit/harvested titanium	94	76
+outfit/harvested tungsten	94	76
+outfit/harvested uranium	94	76
+outfit/harvested yottrite	94	76
+outfit/heatsink partition	94	94
+outfit/heavy anti-missile	76	94
+outfit/heavy anti-missile hai	76	94
+outfit/heavy blaster	112	76
+outfit/heavy laser	100	88
+outfit/heavy laser turret	82	94
+outfit/heliarch attractor	88	94
+outfit/heliarch license	76	50
+outfit/heliarch repulsor	82	94
+outfit/high houses license	112	112
+outfit/hion	112	112
+outfit/holovid zone	94	94
+outfit/horizon grappler	94	94
+outfit/huge atomic steering	124	94
+outfit/huge atomic steering hai	100	76
+outfit/huge atomic thruster	112	88
+outfit/huge atomic thruster hai	100	76
+outfit/huge battery	88	100
+outfit/huge battery hai	88	100
+outfit/huge fuel cell	100	76
+outfit/huge ion steering	100	94
+outfit/huge ion thruster	100	88
+outfit/huge korath afterburner	112	96
+outfit/huge korath reverser	112	88
+outfit/huge korath steering	112	100
+outfit/huge korath thruster	112	88
+outfit/huge plasma steering	112	94
+outfit/huge plasma thruster	112	94
+outfit/huge shield	82	100
+outfit/hv spike	112	112
+outfit/hv spike rack	112	112
+outfit/hydra	100	62
+outfit/hydra pod	106	68
+outfit/hyperdrive	94	94
+outfit/inductive extractor	112	76
+outfit/inhibitor cannon	94	68
+outfit/inhibitor turret	94	94
+outfit/integral wood	94	94
+outfit/interference plating	88	62
+outfit/ion cannon	112	94
+outfit/ion hail turret	94	94
+outfit/ion rain gun	94	82
+outfit/ion torch	106	106
+outfit/ionic afterburner	88	82
+outfit/irate cannon	112	112
+outfit/irate carronade	106	106
+outfit/irate turret	112	112
+outfit/jamfruit pod	94	94
+outfit/javelin	88	76
+outfit/javelin mini pod	76	56
+outfit/javelin pod	94	68
+outfit/javelin storage	76	100
+outfit/javelin turret	94	94
+outfit/jump drive	84	98
+outfit/jump drive (broken)	98	98
+outfit/ka'het annihilator	112	112
+outfit/ka'het annihilator turret	94	94
+outfit/ka'het compact engine	76	76
+outfit/ka'het emp deployer	100	76
+outfit/ka'het grand restorer	112	94
+outfit/ka'het ion trap	100	76
+outfit/ka'het maeri engine	112	76
+outfit/ka'het mhd deployer	82	68
+outfit/ka'het mhd generator	100	100
+outfit/ka'het nullifier	124	94
+outfit/ka'het primary cooling	100	94
+outfit/ka'het ravager beam	94	76
+outfit/ka'het ravager turret	94	94
+outfit/ka'het reserve accumulator	76	76
+outfit/ka'het shield restorer	88	76
+outfit/ka'het support cooling	76	76
+outfit/ka'het sustainer engine	112	76
+outfit/ka'het taser	94	94
+outfit/ka'het telis engine	100	88
+outfit/ka'het vareti engine	106	118
+outfit/keystone	56	50
+outfit/korath bow drive	82	56
+outfit/korath digger	100	100
+outfit/korath digger turret	88	100
+outfit/korath fuel processor	68	76
+outfit/korath heaver	94	94
+outfit/korath inferno	100	112
+outfit/korath mine	76	76
+outfit/korath mine storage	112	106
+outfit/korath minelayer	112	94
+outfit/korath piercer storage	82	68
+outfit/korath rifle	94	60
+outfit/lantern fission core	94	82
+outfit/large atomic steering	124	94
+outfit/large atomic steering hai	100	76
+outfit/large atomic thruster	112	82
+outfit/large atomic thruster hai	94	76
+outfit/large battery	82	76
+outfit/large battery hai	82	76
+outfit/large battery module	100	76
+outfit/large betavoltaic	112	112
+outfit/large biochemical	76	82
+outfit/large cogeneration module	76	76
+outfit/large collector module	88	88
+outfit/large efreti steering	106	76
+outfit/large efreti thruster	106	68
+outfit/large fuel cell	76	76
+outfit/large heat shunt	100	94
+outfit/large ion steering	76	88
+outfit/large ion thruster	94	88
+outfit/large korath afterburner	112	94
+outfit/large korath generator	112	100
+outfit/large korath reverser	100	82
+outfit/large korath steering	106	94
+outfit/large korath thruster	100	82
+outfit/large nanite fabricator	100	88
+outfit/large plasma engines scin	112	112
+outfit/large plasma steering	112	94
+outfit/large plasma thruster	112	94
+outfit/large quarg steering	106	76
+outfit/large quarg thruster	106	62
+outfit/large radar jammer	82	82
+outfit/large radiant steering	112	100
+outfit/large radiant thruster	106	88
+outfit/large reactor module	100	88
+outfit/large regenerator	88	88
+outfit/large regenerator hai	88	94
+outfit/large remnant steering	94	88
+outfit/large remnant thruster	100	82
+outfit/large repair module	88	68
+outfit/large reverse module	88	62
+outfit/large shield	76	100
+outfit/large shield module	76	76
+outfit/large shield relay	100	100
+outfit/large steering module	88	62
+outfit/large successor battery	112	112
+outfit/large successor reactor	112	112
+outfit/large successor reverse	112	112
+outfit/large successor shield	112	112
+outfit/large successor steering	112	112
+outfit/large successor thruster	112	112
+outfit/large systems core	106	112
+outfit/large thrust module	88	62
+outfit/large torch steering vi	112	112
+outfit/large torch thruster vi	112	112
+outfit/laser	100	88
+outfit/laser rifle	76	50
+outfit/laser turret	88	100
+outfit/lasher pistol	56	44
+outfit/license	76	50
+outfit/liquid class shield	100	124
+outfit/liquid helium	100	82
+outfit/liquid nitrogen	100	82
+outfit/liquid sodium	100	100
+outfit/locust blaster	94	76
+outfit/locust turret	82	88
+outfit/luxury accommodations	94	94
+outfit/magnetic scoop	100	94
+outfit/magnetoplasma drive	112	112
+outfit/mandible cannon	100	76
+outfit/map	76	76
+outfit/mcs extractor	94	94
+outfit/medium atomic reverse hai	88	68
+outfit/medium atomic steering	124	94
+outfit/medium atomic steering hai	100	68
+outfit/medium atomic thruster	112	82
+outfit/medium atomic thruster hai	88	68
+outfit/medium battery	68	76
+outfit/medium battery hai	68	76
+outfit/medium betavoltaic	112	112
+outfit/medium efreti steering	88	62
+outfit/medium efreti thruster	94	62
+outfit/medium fuel cell	76	62
+outfit/medium ion steering	88	68
+outfit/medium ion thruster	88	68
+outfit/medium korath afterburner	100	76
+outfit/medium korath generator	82	94
+outfit/medium korath reverser	94	76
+outfit/medium korath steering	94	88
+outfit/medium korath thruster	94	76
+outfit/medium plasma steering	118	82
+outfit/medium plasma steering scin	112	112
+outfit/medium plasma thruster	118	82
+outfit/medium plasma thruster scin	112	112
+outfit/medium quarg steering	94	62
+outfit/medium quarg thruster	94	62
+outfit/medium radiant steering	100	94
+outfit/medium radiant thruster	94	82
+outfit/medium remnant steering	82	68
+outfit/medium remnant thruster	82	68
+outfit/medium shield	76	94
+outfit/medium successor reactor	112	112
+outfit/medium successor reverse	112	112
+outfit/medium successor shield	112	112
+outfit/medium successor steering	112	112
+outfit/medium successor thruster	112	112
+outfit/medium systems core	88	112
+outfit/medium torch steering vi	112	112
+outfit/medium torch thruster vi	112	112
+outfit/medium vls	94	88
+outfit/metallic hydrogen cell	76	94
+outfit/meteor	100	82
+outfit/meteor launcher	94	88
+outfit/meteor pod	94	88
+outfit/meteor storage	94	94
+outfit/mh blue-class steering	124	124
+outfit/mh blue-class thruster	124	124
+outfit/mh green-class steering	124	124
+outfit/mh green-class thruster	124	124
+outfit/mh red-class steering	124	124
+outfit/mh red-class thruster	124	124
+outfit/microbot defense station	102	94
+outfit/militia license	76	50
+outfit/millennium cell	62	94
+outfit/mining laser	110	82
+outfit/mining laser turret	94	106
+outfit/mod blaster	94	76
+outfit/mod blaster turret	82	94
+outfit/moonbeam	88	62
+outfit/moonbeam turret	88	88
+outfit/mouthparts	62	62
+outfit/mug	62	62
+outfit/multispectral scanner	112	76
+outfit/nami rift steering	94	76
+outfit/nami rift thruster	88	76
+outfit/nanite enhancer	88	88
+outfit/nanite limiter	38	76
+outfit/navy carrier license	76	50
+outfit/navy cruiser license	76	50
+outfit/navy license	76	50
+outfit/nerve gas	88	68
+outfit/nettle kkv	94	94
+outfit/nettle magazine	94	68
+outfit/nucleolysis beam	100	76
+outfit/nuke	100	80
+outfit/ookii rift steering	100	88
+outfit/ookii rift thruster	100	82
+outfit/ophrys stockpile	100	100
+outfit/ophrys torpedo	94	94
+outfit/optical laser rifle	112	94
+outfit/optical lasing generator	94	94
+outfit/orchid magazine	112	76
+outfit/orchid missile	132	132
+outfit/outfit expansion	100	94
+outfit/outfit scanner	82	76
+outfit/outskirts gauger	94	94
+outfit/overcharged betavoltaic	112	112
+outfit/overcharged pulse laser	112	112
+outfit/overcharged pulse laser turret	112	112
+outfit/overcharged shield module	82	82
+outfit/overclocked repair module	94	68
+outfit/particle cannon	100	76
+outfit/phantom pallet	94	94
+outfit/photoelectric lamina	100	88
+outfit/piercer	100	68
+outfit/piercer launcher	100	76
+outfit/plasma cannon	100	88
+outfit/plasma core	112	88
+outfit/plasma discharger	94	62
+outfit/plasma grenades	124	112
+outfit/plasma repeater	100	88
+outfit/plasma turret	100	106
+outfit/plasmadyne scoop	124	124
+outfit/plasmasickle	94	94
+outfit/point defense	68	100
+outfit/pollen particle	82	76
+outfit/proton gun	100	82
+outfit/proton turret	82	94
+outfit/pug akfar steering	76	76
+outfit/pug akfar thruster	76	76
+outfit/pug anti-missile	88	88
+outfit/pug biodefenses	100	100
+outfit/pug cormet steering	88	88
+outfit/pug cormet thruster	88	88
+outfit/pug gridfire turret	112	112
+outfit/pug lohmar steering	100	100
+outfit/pug lohmar thruster	100	100
+outfit/pug seeker	88	88
+outfit/pug staff	124	76
+outfit/pug zapper	88	88
+outfit/pug zapper turret	100	100
+outfit/pulse cannon	82	68
+outfit/pulse turret	76	88
+outfit/pwave turret	112	112
+outfit/quad blaster turret	94	100
+outfit/quarg aegis shield generator	94	94
+outfit/quarg ancile shield generator	94	94
+outfit/quarg antimatter core	94	94
+outfit/quarg aspis shield generator	82	82
+outfit/quarg central repair hub	94	94
+outfit/quarg countermeasures	88	88
+outfit/quarg culverin	112	112
+outfit/quarg peripheral repair hub	94	94
+outfit/quarg quantum battery	76	76
+outfit/quarg quasar core	94	94
+outfit/quarg ranseur	112	112
+outfit/quarg ribault	82	106
+outfit/quarg singularity core	94	94
+outfit/quarg skydagger	100	100
+outfit/quarg skylance	112	112
+outfit/quarg stratospear	94	94
+outfit/quark reactor	76	62
+outfit/radiant shield shunt	112	112
+outfit/radiative lamina	100	88
+outfit/railgun	88	56
+outfit/railgun h2h	88	56
+outfit/railslug	88	56
+outfit/railslug rack	88	88
+outfit/ramscoop	88	68
+outfit/rcs large	124	88
+outfit/rcs medium	132	94
+outfit/rcs small	100	76
+outfit/reactor limiter	24	68
+outfit/reactor overclocker	50	56
+outfit/reasoning node	76	62
+outfit/red screwdriver	82	62
+outfit/red sun	62	62
+outfit/refueling module	62	62
+outfit/remass injector	94	94
+outfit/remnant afterburner	100	100
+outfit/remnant capital license	50	76
+outfit/remnant license	62	62
+outfit/remnant rifle	112	68
+outfit/repeater	94	94
+outfit/repeater turret	94	94
+outfit/research laboratory	94	94
+outfit/reverse thruster	82	62
+outfit/reverse thruster ion	76	62
+outfit/reverse thruster plasma	76	76
+outfit/rock 0	76	82
+outfit/rock 1	76	76
+outfit/rock 2	94	82
+outfit/rock 3	88	88
+outfit/rock 4	62	68
+outfit/rocket	118	94
+outfit/rocket launcher	106	106
+outfit/rocket pod	100	82
+outfit/rocket storage	76	100
+outfit/salvage scanner	76	68
+outfit/savagery pike	148	100
+outfit/scan module	56	62
+outfit/scram drive	94	94
+outfit/scrambler turret	100	100
+outfit/scrap cell	78	78
+outfit/security station	88	88
+outfit/shard	112	112
+outfit/sheragi ews	112	112
+outfit/sheragiam	112	112
+outfit/sheragicooling	112	112
+outfit/shield booster	50	62
+outfit/shield cortex interface	112	112
+outfit/shield limiter	50	56
+outfit/shield refactor module	80	80
+outfit/shunt-strike	92	92
+outfit/sidewinder	82	76
+outfit/sidewinder launcher	94	88
+outfit/sidewinder pod	94	88
+outfit/sidewinder storage	82	82
+outfit/sjeja kinetic lance	112	112
+outfit/skadetear	76	76
+outfit/skirmish battery	94	94
+outfit/slicer	112	88
+outfit/slicer turret	112	106
+outfit/small atomic reverse hai	82	62
+outfit/small atomic steering	100	76
+outfit/small atomic steering hai	94	68
+outfit/small atomic thruster	100	68
+outfit/small atomic thruster hai	82	62
+outfit/small battery	62	68
+outfit/small battery hai	62	68
+outfit/small battery module	50	76
+outfit/small betavoltaic	112	112
+outfit/small biochemical	44	76
+outfit/small bunk room	82	62
+outfit/small cogeneration module	62	62
+outfit/small collector module	68	56
+outfit/small efreti steering	76	56
+outfit/small efreti thruster	88	56
+outfit/small embattery	112	112
+outfit/small fuel cell	68	62
+outfit/small heat shunt	76	76
+outfit/small ion steering	82	68
+outfit/small ion thruster	82	68
+outfit/small korath afterburner	94	66
+outfit/small korath generator	68	76
+outfit/small korath reverser	82	76
+outfit/small korath steering	88	82
+outfit/small korath thruster	82	76
+outfit/small nanite fabricator	62	62
+outfit/small nucleovoltaic	76	76
+outfit/small photovoltaic	76	62
+outfit/small plasma steering	94	88
+outfit/small plasma steering scin	112	112
+outfit/small plasma thruster	88	82
+outfit/small plasma thruster scin	112	112
+outfit/small quarg steering	82	82
+outfit/small quarg thruster	82	82
+outfit/small radar jammer	68	76
+outfit/small radiant steering	88	82
+outfit/small radiant thruster	82	68
+outfit/small radiothermal	62	76
+outfit/small reactor module	68	76
+outfit/small recovery module	94	94
+outfit/small regenerator	76	82
+outfit/small regenerator hai	76	82
+outfit/small remnant steering	68	62
+outfit/small remnant thruster	76	62
+outfit/small repair module	62	56
+outfit/small reverse module	68	56
+outfit/small sheragi cooling	112	112
+outfit/small shield	68	88
+outfit/small shield module	56	62
+outfit/small shield relay	76	62
+outfit/small steering module	68	56
+outfit/small successor battery	112	112
+outfit/small successor reactor	112	112
+outfit/small successor reverse	112	112
+outfit/small successor shield	112	112
+outfit/small successor steering	112	112
+outfit/small successor thruster	112	112
+outfit/small systems core	68	112
+outfit/small thermionic	88	76
+outfit/small thrust module	68	56
+outfit/small torch steering vi	112	112
+outfit/small torch thruster vi	112	112
+outfit/small vls	94	88
+outfit/solar battery	100	88
+outfit/solar cell	62	56
+outfit/spark fusion torch	112	112
+outfit/speck magazine	100	100
+outfit/speck round	88	62
+outfit/speckle coilgun	94	76
+outfit/speckle turret	94	94
+outfit/spectrometer array	138	100
+outfit/specular deflector	112	112
+outfit/stack core	94	100
+outfit/stagnation beam	124	124
+outfit/star tail cell	62	62
+outfit/star tail cell storage	112	112
+outfit/star tail launcher	104	62
+outfit/subarashii rift steering	106	88
+outfit/subarashii rift thruster	100	82
+outfit/successor armor heavy	112	112
+outfit/successor armor keystone	112	112
+outfit/successor armor light	112	112
+outfit/successor armor regen	112	112
+outfit/successor cooling	112	112
+outfit/successor engines tiny	112	112
+outfit/successor license	112	112
+outfit/successor pulse laser	112	112
+outfit/successor pulse laser turret	112	112
+outfit/sunbeam	100	76
+outfit/sunbeam turret	100	100
+outfit/supercapacitor	62	56
+outfit/surtrblood	76	76
+outfit/surveillance pod	76	88
+outfit/swarm missile	76	62
+outfit/swarm pod	100	82
+outfit/swarm storage	82	68
+outfit/swatter	88	100
+outfit/sword	124	124
+outfit/t3 anti missile	94	94
+outfit/tactical scanner	68	68
+outfit/teciimach bay	84	72
+outfit/teciimach pod	72	68
+outfit/telescopic antimissile	100	88
+outfit/thermoelectric cooler	56	50
+outfit/thorax cannon	106	88
+outfit/thrasher cannon	88	68
+outfit/thrasher turret	94	94
+outfit/thunderhead	82	56
+outfit/thunderhead launcher	112	76
+outfit/thunderhead storage	112	88
+outfit/tiny atomic engines hai	76	62
+outfit/tiny atomic reverse hai	82	56
+outfit/tiny atomic steering	88	68
+outfit/tiny atomic steering hai	94	62
+outfit/tiny atomic thruster	82	62
+outfit/tiny atomic thruster hai	82	56
+outfit/tiny battery	62	56
+outfit/tiny battery hai	62	56
+outfit/tiny efreti steering	62	44
+outfit/tiny efreti thruster	80	56
+outfit/tiny fuel cell	62	56
+outfit/tiny ion engines	82	62
+outfit/tiny ion steering	82	62
+outfit/tiny ion thruster	76	62
+outfit/tiny korath afterburner	94	64
+outfit/tiny korath engine	82	56
+outfit/tiny korath reverser	76	76
+outfit/tiny korath steering	82	76
+outfit/tiny korath thruster	76	76
+outfit/tiny photovoltaic	62	62
+outfit/tiny plasma engines scin	112	112
+outfit/tiny plasma steering	82	76
+outfit/tiny plasma thruster	76	76
+outfit/tiny radiant steering	76	68
+outfit/tiny radiant thruster	68	56
+outfit/tiny remnant engine	68	50
+outfit/tiny shield	68	82
+outfit/tiny successor shield	112	112
+outfit/tiny systems core	48	112
+outfit/tiny vls	94	94
+outfit/torpedo	94	76
+outfit/torpedo launcher	124	94
+outfit/torpedo storage	94	100
+outfit/torpedopod	124	94
+outfit/tractor beam	106	106
+outfit/trefoil board	112	112
+outfit/triple plasma core	112	100
+outfit/tripulse shredder	104	78
+outfit/tuur scanning suite	112	112
+outfit/twin blaster	96	54
+outfit/twin mod blaster	96	52
+outfit/typhoon	100	82
+outfit/typhoon launcher	124	112
+outfit/typhoon storage	76	94
+outfit/typhoonpod	124	112
+outfit/ultracapacitor bank	100	82
+outfit/ultracapacitor cell	56	62
+outfit/unknown	76	76
+outfit/ureb turret	132	132
+outfit/value detector	100	76
+outfit/vapor nuclear rocket	94	94
+outfit/veldt combat scanner	112	112
+outfit/void rifle	112	112
+outfit/void sprite parts	94	94
+outfit/voidfish	94	94
+outfit/wanderer anti-missile	88	88
+outfit/wanderer heat sink	100	76
+outfit/wanderer license	62	62
+outfit/wanderer military license	62	62
+outfit/wanderer outfits license	38	56
+outfit/wanderer ramscoop	76	62
+outfit/warder	62	76
+outfit/warforge battery	118	118
+outfit/warzone core	94	94
+outfit/water cooling	76	76
+outfit/white sun	100	88
+outfit/yellow sun	88	76
+outfit/zap fusion torch	124	124
+planet/aera	282	282
+planet/alvorada	104	104
+planet/asteroid base	62	62
+planet/asteroid magic	68	68
+planet/asura	188	188
+planet/aviskir	134	134
+planet/beryl/beryl	62	124
+planet/browndwarf-l	262	262
+planet/browndwarf-l-rogue	262	262
+planet/browndwarf-t	262	262
+planet/browndwarf-t-rogue	262	262
+planet/browndwarf-y	262	262
+planet/browndwarf-y-rogue	262	262
+planet/callisto	62	62
+planet/callisto-b	62	62
+planet/cloud0	100	100
+planet/cloud0-b	100	100
+planet/cloud1	132	132
+planet/cloud1-b	132	132
+planet/cloud2	132	132
+planet/cloud2-b	132	132
+planet/cloud3	106	106
+planet/cloud3-b	106	106
+planet/cloud4	118	118
+planet/cloud4-b	118	118
+planet/cloud5	150	150
+planet/cloud5-b	150	150
+planet/cloud6	112	112
+planet/cloud6-b	112	112
+planet/cloud7	94	94
+planet/cloud7-b	94	94
+planet/cloud8	100	100
+planet/cloud8-b	100	100
+planet/debris0	188	188
+planet/debris1	188	188
+planet/desert0	100	100
+planet/desert0-b	100	100
+planet/desert1	124	124
+planet/desert1-b	124	124
+planet/desert10	112	112
+planet/desert10-b	112	112
+planet/desert11	126	126
+planet/desert12	128	128
+planet/desert13	122	122
+planet/desert2	106	106
+planet/desert2-b	106	106
+planet/desert3	112	112
+planet/desert3-b	112	112
+planet/desert4	44	44
+planet/desert4-b	44	44
+planet/desert5	106	106
+planet/desert5-b	106	106
+planet/desert6	112	112
+planet/desert6-b	112	112
+planet/desert7	88	88
+planet/desert7-b	88	88
+planet/desert8	100	100
+planet/desert8-b	100	100
+planet/desert9	88	88
+planet/desert9-b	88	88
+planet/dust0	38	38
+planet/dust0-b	38	38
+planet/dust1	56	56
+planet/dust1-b	56	56
+planet/dust2	68	68
+planet/dust2-b	68	68
+planet/dust3	50	50
+planet/dust3-b	50	50
+planet/dust4	56	56
+planet/dust4-b	56	56
+planet/dust5	62	62
+planet/dust5-b	62	62
+planet/dust6	76	76
+planet/dust6-b	76	76
+planet/dust7	50	50
+planet/dust7-b	50	50
+planet/dust8	130	130
+planet/dust9	104	104
+planet/dyson1	124	124
+planet/dyson2	124	124
+planet/dyson3	250	250
+planet/earth	112	112
+planet/earth-b	112	112
+planet/europa	44	44
+planet/europa-b	44	44
+planet/exotic-metal-garden	62	62
+planet/fog0	144	144
+planet/fog0-b	144	144
+planet/forest0	124	124
+planet/forest0-b	124	124
+planet/forest1	106	106
+planet/forest1-b	106	106
+planet/forest10	104	104
+planet/forest11	120	120
+planet/forest12	174	174
+planet/forest2	118	118
+planet/forest2-b	118	118
+planet/forest3	94	94
+planet/forest3-b	94	94
+planet/forest4	124	124
+planet/forest4-b	124	124
+planet/forest5	112	112
+planet/forest5-b	112	112
+planet/forest6	94	94
+planet/forest6-b	94	94
+planet/forest7	122	122
+planet/forest8	132	132
+planet/forest9	122	122
+planet/ganymede	68	68
+planet/ganymede-b	68	68
+planet/gas0	256	256
+planet/gas0-b	256	256
+planet/gas0-hot	188	188
+planet/gas1	500	300
+planet/gas1-b	500	300
+planet/gas1-hot	124	124
+planet/gas10	176	176
+planet/gas10-b	176	176
+planet/gas10-hot	168	168
+planet/gas11	238	238
+planet/gas11-b	238	238
+planet/gas12	276	276
+planet/gas12-b	276	276
+planet/gas13	262	262
+planet/gas13-b	262	262
+planet/gas14	206	206
+planet/gas14-b	206	206
+planet/gas15	176	176
+planet/gas15-b	176	176
+planet/gas16	176	176
+planet/gas16-b	176	176
+planet/gas17	200	200
+planet/gas17-b	200	200
+planet/gas2	268	268
+planet/gas2-b	268	268
+planet/gas2-hot	156	156
+planet/gas3	282	282
+planet/gas3-b	282	282
+planet/gas3-c	590	590
+planet/gas3-hot	124	124
+planet/gas4	224	224
+planet/gas4-b	224	224
+planet/gas4-hot	124	124
+planet/gas5	244	244
+planet/gas5-b	244	244
+planet/gas5-hot	100	100
+planet/gas6	376	288
+planet/gas6-b	376	288
+planet/gas6-hot	188	188
+planet/gas7	232	232
+planet/gas7-b	232	232
+planet/gas7-hot	156	156
+planet/gas7-r	438	438
+planet/gas8	324	324
+planet/gas8-b	324	324
+planet/gas8-hot	138	138
+planet/gas9	218	218
+planet/gas9-b	218	218
+planet/gas9-hot	138	138
+planet/gateway-active	188	188
+planet/gateway-frozen	188	188
+planet/gateway-inactive	188	188
+planet/gliese	250	250
+planet/ice0	50	50
+planet/ice0-b	50	50
+planet/ice1	132	132
+planet/ice1-b	132	132
+planet/ice10	124	124
+planet/ice11	124	124
+planet/ice12	82	82
+planet/ice2	100	100
+planet/ice2-b	100	100
+planet/ice3	118	118
+planet/ice3-b	118	118
+planet/ice4	100	100
+planet/ice4-b	100	100
+planet/ice5	118	118
+planet/ice5-b	118	118
+planet/ice6	100	100
+planet/ice6-b	100	100
+planet/ice7	62	62
+planet/ice7-b	62	62
+planet/ice8	50	50
+planet/ice8-b	50	50
+planet/ice9	132	132
+planet/io	50	50
+planet/io-b	50	50
+planet/jupiter	250	250
+planet/jupiter-b	250	250
+planet/lava0	62	62
+planet/lava0-b	62	62
+planet/lava1	68	68
+planet/lava1-b	68	68
+planet/lava2	68	68
+planet/lava2-b	68	68
+planet/lava3	88	88
+planet/lava3-b	88	88
+planet/lava4	100	100
+planet/lava4-b	100	100
+planet/lava5	94	94
+planet/lava5-b	94	94
+planet/lava6	76	76
+planet/lava6-b	76	76
+planet/lava7	82	82
+planet/lava7-b	82	82
+planet/luna	50	50
+planet/luna-b	50	50
+planet/mars	94	94
+planet/mars-b	94	94
+planet/mendez	96	96
+planet/mercury	68	68
+planet/mercury-b	68	68
+planet/miranda	44	44
+planet/miranda-b	44	44
+planet/nebula1	78	78
+planet/neptune	188	188
+planet/neptune-b	188	188
+planet/oberon	38	38
+planet/oberon-b	38	38
+planet/ocean0	100	100
+planet/ocean0-b	100	100
+planet/ocean1	112	112
+planet/ocean1-b	112	112
+planet/ocean10	132	132
+planet/ocean2	124	124
+planet/ocean2-b	124	124
+planet/ocean3	106	106
+planet/ocean3-b	106	106
+planet/ocean4	118	118
+planet/ocean4-b	118	118
+planet/ocean5	100	100
+planet/ocean5-b	100	100
+planet/ocean6	132	132
+planet/ocean6-b	132	132
+planet/ocean7	106	106
+planet/ocean7-b	106	106
+planet/ocean8	124	124
+planet/ocean8-b	124	124
+planet/ocean9	112	112
+planet/ocean9-b	112	112
+planet/panels1	50	50
+planet/panels2	100	50
+planet/panels3	150	50
+planet/panels4	188	50
+planet/panels5	224	50
+planet/penrose machine	1000	800
+planet/pontes	160	160
+planet/redias	328	328
+planet/rhea	56	56
+planet/rhea-b	56	56
+planet/ringworld	376	38
+planet/ringworld broken debris	376	38
+planet/ringworld broken debris small	188	38
+planet/ringworld broken left	376	38
+planet/ringworld broken right	376	38
+planet/ringworld left	376	38
+planet/ringworld right	376	38
+planet/rock0	50	50
+planet/rock0-b	50	50
+planet/rock1	106	106
+planet/rock1-b	106	106
+planet/rock10	132	132
+planet/rock10-b	132	132
+planet/rock11	76	76
+planet/rock11-b	76	76
+planet/rock12	112	112
+planet/rock12-b	112	112
+planet/rock13	100	100
+planet/rock13-b	100	100
+planet/rock14	62	62
+planet/rock14-b	62	62
+planet/rock15	76	76
+planet/rock15-b	76	76
+planet/rock16	94	94
+planet/rock16-b	94	94
+planet/rock17	38	38
+planet/rock17-b	38	38
+planet/rock18	100	100
+planet/rock18-b	100	100
+planet/rock19	94	94
+planet/rock19-b	94	94
+planet/rock2	112	112
+planet/rock2-b	112	112
+planet/rock20	50	50
+planet/rock21	100	100
+planet/rock3	50	50
+planet/rock3-b	50	50
+planet/rock4	124	124
+planet/rock4-b	124	124
+planet/rock5	82	82
+planet/rock5-b	82	82
+planet/rock6	100	100
+planet/rock6-b	100	100
+planet/rock7	44	44
+planet/rock7-b	44	44
+planet/rock8	88	88
+planet/rock8-b	88	88
+planet/rock9	100	100
+planet/rock9-b	100	100
+planet/saturn	244	544
+planet/sheragi_postverta	124	94
+planet/sheragi_postverta_2	124	94
+planet/station predecessor 1	124	124
+planet/station successor 1	188	188
+planet/station successor 2	138	138
+planet/station successor 3	106	138
+planet/station successor 4	124	124
+planet/station-accelerator	188	188
+planet/station-accelerator-broken	188	188
+planet/station-asteroid-a0	250	250
+planet/station-asteroid-a1	188	188
+planet/station-asteroid-a2	250	250
+planet/station-asteroid-a3	250	250
+planet/station-bunrodea	124	124
+planet/station-chanai	188	188
+planet/station-cylinder-a0	200	200
+planet/station-cylinder-a0-broken	200	200
+planet/station-cylinder-a0-incomplete	200	200
+planet/station-depot-a0	124	124
+planet/station-depot-a1	124	124
+planet/station-depot-a2	124	124
+planet/station-disk	176	162
+planet/station-outpost-a0	124	124
+planet/station-outpost-a1	124	124
+planet/station-outpost-a2	94	94
+planet/station-outpost-a3	124	124
+planet/station-platform-a0	124	124
+planet/station-platform-a1	124	124
+planet/station-platform-a2	188	188
+planet/station-platform-a3	188	188
+planet/station-platform-a4	124	124
+planet/station-reflector-a0	62	62
+planet/station-reflector-a1	124	124
+planet/station-reflector-a2	188	188
+planet/station-shipyard-a0	100	100
+planet/station-shipyard-a1	138	138
+planet/station-shipyard-a2	124	124
+planet/station-solar-a0	124	124
+planet/station-solar-a0-broken	94	94
+planet/station-solar-a1	124	124
+planet/station-solar-a1-broken	124	124
+planet/station-solar-a2	250	250
+planet/station-solar-a3	94	94
+planet/station-solar-a4	188	188
+planet/station-telescope-a0	124	124
+planet/station-telescope-a1	94	94
+planet/station-weapon-a0	62	62
+planet/station-weapon-a1	62	62
+planet/station-weapon-a2	62	62
+planet/station-weapon-a3	88	88
+planet/station0	162	162
+planet/station0b	162	162
+planet/station1	100	100
+planet/station10	124	124
+planet/station11	150	150
+planet/station12	112	112
+planet/station13	112	112
+planet/station14	100	100
+planet/station15	150	150
+planet/station16	124	124
+planet/station17	162	162
+planet/station18	144	144
+planet/station19	124	124
+planet/station1b	250	250
+planet/station1c	124	150
+planet/station1k	100	100
+planet/station1kd	100	100
+planet/station2	124	124
+planet/station2b	250	250
+planet/station2c	124	150
+planet/station2k	124	124
+planet/station2kd	124	124
+planet/station3	112	112
+planet/station3b	124	124
+planet/station3bd	124	124
+planet/station3c	150	162
+planet/station3k	150	150
+planet/station3kd	150	150
+planet/station4	124	124
+planet/station4b	150	150
+planet/station4bd	188	188
+planet/station4c	156	124
+planet/station5	150	150
+planet/station5c	150	200
+planet/station6	176	176
+planet/station6c	156	94
+planet/station7	124	150
+planet/station7c	312	312
+planet/station7cb	124	62
+planet/station8	100	100
+planet/station9	150	150
+planet/stationh-ancient0	224	224
+planet/stationh-ancient1	224	224
+planet/stationh-ancient2	250	250
+planet/tethys	38	38
+planet/tethys-b	38	38
+planet/titan	76	76
+planet/titan-b	76	76
+planet/treser	282	282
+planet/tschyss	112	112
+planet/uranus	200	200
+planet/uranus-b	200	200
+planet/vajra/vajra	124	750
+planet/venus	106	106
+planet/venus-b	106	106
+planet/vesvi	468	468
+planet/vulpa	282	282
+planet/water0	76	76
+planet/water0-b	76	76
+planet/water1	124	124
+planet/water1-b	124	124
+planet/wisp	112	112
+planet/wormhole	250	250
+planet/wormhole-blue	312	312
+planet/wormhole-red	250	250
+planet/yniu eiu	112	112
+planet/yniu ena	50	50
+planet/zenith cold	106	106
+planet/zenith hot	106	106
+projectile/2x electron	10	562
+projectile/2x heavy laser	10	500
+projectile/2x laser	6	376
+projectile/2x tinyflare	12	18
+projectile/aberrant spike	38	76
+projectile/acuit	12	38
+projectile/annihilator	12	112
+projectile/asteroid laser	18	250
+projectile/asteroid missile	12	38
+projectile/asteroid twin projectile	38	50
+projectile/asteroid weapon circle	124	124
+projectile/asteroid weapon live	124	124
+projectile/asteroid weapon swarm	32	32
+projectile/astuit	6	18
+projectile/attractor	12	800
+projectile/ballistic	12	16
+projectile/banisher	24	750
+projectile/bimodal	6	124
+projectile/bimodal switch	6	32
+projectile/blaster	6	32
+projectile/blaze-pike	20	562
+projectile/blue optical laser	20	3000
+projectile/bombardment	8	18
+projectile/bullet	2	10
+projectile/choleric	12	16
+projectile/culverin	76	76
+projectile/detainer	10	94
+projectile/digger	38	600
+projectile/digger thin	30	600
+projectile/disruptor	24	600
+projectile/drag cannon	8	60
+projectile/drak bolt	4	88
+projectile/electron	6	562
+projectile/ember tear/ember tear	64	1000
+projectile/emp torpedo	12	50
+projectile/expeller	20	750
+projectile/finisher	18	38
+projectile/finisher activating	18	38
+projectile/fire-lance	12	488
+projectile/firelight	18	28
+projectile/firelight active	18	28
+projectile/firestorm torpedo	44	50
+projectile/flamethrower	50	50
+projectile/fleck	38	38
+projectile/fusion gun bolt	320	320
+projectile/grab-strike	24	24
+projectile/guile pulse laser	18	188
+projectile/heaver hyperspace	88	112
+projectile/heaver shard	20	112
+projectile/heavy blaster	12	56
+projectile/heavy laser	6	500
+projectile/hion	6	62
+projectile/hionfrag	6	62
+projectile/iasa	4	94
+projectile/inhibitor	6	124
+projectile/ion bolt	10	62
+projectile/ion rain	8	60
+projectile/ionball	80	80
+projectile/ionic blast	6	38
+projectile/ionic turret	16	104
+projectile/irate	12	16
+projectile/javelin	4	44
+projectile/kis	4	62
+projectile/korath inferno	30	688
+projectile/korath mine	16	22
+projectile/korath minelayer	22	30
+projectile/laser	6	376
+projectile/lightning	24	400
+projectile/locust blaster	6	188
+projectile/mandible cannon	24	62
+projectile/meteor	8	38
+projectile/mhd	18	18
+projectile/mining laser	6	250
+projectile/missile	8	46
+projectile/mod blaster	6	32
+projectile/moonbeam	8	612
+projectile/nettle	18	38
+projectile/neutron bolt	30	30
+projectile/nucleolysis	112	532
+projectile/orchid boost	56	224
+projectile/orchid boost stage	56	224
+projectile/orchid coast	56	224
+projectile/orchid divert	56	224
+projectile/orchid divert stage	56	224
+projectile/orchid inactive	56	224
+projectile/orchid terminal	56	224
+projectile/particle beam	4	62
+projectile/piercer	8	56
+projectile/plasma	12	124
+projectile/plasma discharge	12	50
+projectile/proton	6	50
+projectile/proton fragment	6	50
+projectile/pulse	6	38
+projectile/pwavecannon	16	76
+projectile/rail slug	4	44
+projectile/rainbow	24	24
+projectile/ravager beam	12	600
+projectile/repeater	10	38
+projectile/repulsor	18	700
+projectile/ribault	24	24
+projectile/rocket	12	38
+projectile/seeker	38	24
+projectile/shardactive	8	18
+projectile/shardinactive	8	18
+projectile/shunt-strike	24	52
+projectile/sidewinder	10	38
+projectile/sjeja kinetic lance	6	500
+projectile/skydagger	12	438
+projectile/skylance	12	624
+projectile/slicer	6	650
+projectile/slipstream projector/slipstream	94	624
+projectile/speck	56	56
+projectile/stagnation beam	12	750
+projectile/star tail	38	38
+projectile/star tail upload	38	38
+projectile/strange ray	50	50
+projectile/successor pulse laser	4	612
+projectile/sunbeam/2x sunbeam	12	676
+projectile/sunbeam/sunbeam	6	676
+projectile/thorax cannon	150	150
+projectile/thrasher	20	40
+projectile/thunderhead	10	56
+projectile/thunderhead fragment	6	38
+projectile/tinyflare	6	18
+projectile/torch	24	124
+projectile/torpedo	24	38
+projectile/tracker	12	76
+projectile/typhoon	32	56
+scene/army0	338	150
+scene/asteroid scene	338	188
+scene/builder cloud probe	338	238
+scene/buildings	338	224
+scene/busystreet	338	224
+scene/cave scene	338	224
+scene/citydark	338	206
+scene/councilofahr1	188	62
+scene/councilofahr2	188	188
+scene/dokimi range	338	250
+scene/earth	450	224
+scene/emeraldswordderelict	162	162
+scene/emerging ladybug	338	224
+scene/engine	338	124
+scene/engine2	338	124
+scene/eso0	338	224
+scene/flivver crash	338	206
+scene/geoscan	300	200
+scene/greenwater	450	224
+scene/hai shipyard	338	144
+scene/hai start	250	124
+scene/hroar	150	154
+scene/icepicture	338	224
+scene/iceplains	338	172
+scene/iceplains2	338	224
+scene/icy opening	338	124
+scene/incipias message	338	224
+scene/lab scene	338	188
+scene/lab scene2	338	188
+scene/lobby	338	124
+scene/loc0	338	224
+scene/loc1	338	224
+scene/loc2	338	224
+scene/loc3	338	224
+scene/loc4	338	224
+scene/loc5	168	168
+scene/loc6	338	338
+scene/loc7	338	224
+scene/loc8	338	224
+scene/loc9	338	224
+scene/lonelyrock	338	224
+scene/mainsail	450	224
+scene/midgard	450	224
+scene/new boston	450	224
+scene/penguinscene	338	156
+scene/plasma scene	338	200
+scene/ranger baker	338	250
+scene/reception	338	124
+scene/redrocks	338	224
+scene/remnant remote spaceport	338	224
+scene/remnant station	338	168
+scene/ringworld debris	338	176
+scene/rulei	312	312
+scene/sagittarius a	338	190
+scene/seascape	338	240
+scene/seasidecliffs	338	254
+scene/Seasunset	338	206
+scene/smeer	338	194
+scene/snowfield	338	162
+scene/snowplain	338	228
+scene/snowvillage	338	170
+scene/ssil vida alert hologram	338	224
+scene/station4b firing	338	188
+scene/sunset	338	168
+scene/tempest	338	200
+scene/tower	338	224
+scene/train	338	124
+scene/trefoil	338	250
+ship/-nra-ret	224	188
+ship/aaulqra	82	156
+ship/aberrant chomper	68	124
+ship/aberrant dancer	76	132
+ship/aberrant hugger	68	162
+ship/aberrant icebreaker	62	112
+ship/aberrant junior	50	100
+ship/aberrant latte	76	112
+ship/aberrant longfellow	68	132
+ship/aberrant mole	56	124
+ship/aberrant pike	50	112
+ship/aberrant pileup	68	124
+ship/aberrant trip	68	112
+ship/aberrant triplet	82	112
+ship/aberrant whiskers	68	124
+ship/aerie	94	124
+ship/albatross	218	244
+ship/arach courier	56	76
+ship/arach freighter	62	182
+ship/arach hulk	118	250
+ship/arach spindle	56	250
+ship/arach transport	62	150
+ship/ararebo	100	238
+ship/arch-carrack	162	244
+ship/archon	194	244
+ship/archon b	194	244
+ship/archon c	194	244
+ship/argosy	56	118
+ship/arrow	38	88
+ship/asteroid adult	124	124
+ship/asteroid adult 2	124	124
+ship/asteroid adult 3	124	124
+ship/asteroid adult 4	124	124
+ship/asteroid adult 5	124	124
+ship/asteroid medium	68	68
+ship/asteroid young	44	44
+ship/asteroid young 2	44	44
+ship/asteroid young 3	38	38
+ship/asteroid young 4	38	38
+ship/astral cetacean/astral	250	376
+ship/autumn leaf	68	100
+ship/auxiliaryc	118	238
+ship/auxiliaryh	118	238
+ship/auxiliaryt	118	238
+ship/avgi akoustiki	32	24
+ship/avgi atenuatia	118	368
+ship/avgi avlaki	132	68
+ship/avgi diaspersi	112	198
+ship/avgi difraktos	88	206
+ship/avgi entasi	200	150
+ship/avgi frequentia	50	112
+ship/avgi harmonikos	250	188
+ship/avgi interferos	82	156
+ship/avgi koryfi/koryfi	182	68
+ship/avgi melodikos/melodikos	250	188
+ship/avgi optikon	24	38
+ship/avgi phononos	38	88
+ship/avgi photikon	18	44
+ship/avgi polari	56	112
+ship/avgi prismaios	76	150
+ship/avgi refraktos	68	212
+ship/avgi sonikis	62	38
+ship/avgi tachytia/tachytia	282	624
+ship/avgi tremoros	24	68
+ship/avgi undsyni	132	324
+ship/avgi undulon	32	44
+ship/avgi vibratia	28	38
+ship/ayym/ayym	124	218
+ship/bactrian	106	294
+ship/barb	38	38
+ship/barbp	38	38
+ship/bastion	88	124
+ship/battleship	156	282
+ship/behemoth	138	200
+ship/berserker	62	62
+ship/blackbird	100	82
+ship/blackdiamond	38	50
+ship/bluejacket	200	124
+ship/bounder	68	106
+ship/boxwing	38	44
+ship/builder satellite	32	38
+ship/bulk freighter	118	262
+ship/carrier	200	250
+ship/charm-shallop	138	194
+ship/chaser	38	44
+ship/chigiriki	150	238
+ship/cirrus	112	112
+ship/clipper	62	68
+ship/combat drone	24	38
+ship/container transport	112	262
+ship/cool breeze	50	62
+ship/corvette	76	150
+ship/cruiser	124	200
+ship/dagger	36	44
+ship/deep river	94	438
+ship/deep river 0	94	438
+ship/deep river 1	94	438
+ship/deep river 2	94	438
+ship/deep river 3	94	438
+ship/deep river 4	94	438
+ship/derecho	94	224
+ship/dreadnought	118	236
+ship/dredger	162	238
+ship/dropship	38	38
+ship/earth shaper	44	50
+ship/echo-galleon	188	438
+ship/ejniisde	76	152
+ship/ejniisde-khora	64	152
+ship/ember waste node/ember waste node	190	190
+ship/embershade/embershade	96	138
+ship/embersylph/embersylph	282	156
+ship/emeraldsword	196	368
+ship/enforcer	36	68
+ship/escape shuttle	24	38
+ship/faes'mar	24	50
+ship/falcon	100	188
+ship/far lek 14	24	50
+ship/far osk 27	32	62
+ship/fetri'sei	44	76
+ship/finch	38	50
+ship/firebird	82	94
+ship/flivver	56	50
+ship/flycatcher	24	50
+ship/freighter	44	124
+ship/frigate	94	132
+ship/fury	50	50
+ship/gascraft	24	50
+ship/gegno augen	188	562
+ship/gegno coesite	94	138
+ship/gegno conglomerate	100	284
+ship/gegno corundum	100	176
+ship/gegno diorite	104	206
+ship/gegno dolomite	88	206
+ship/gegno dunite	50	124
+ship/gegno eclogite	82	124
+ship/gegno epidote	156	312
+ship/gegno feldspar	156	344
+ship/gegno felsic	96	212
+ship/gegno gneiss	94	376
+ship/gegno granofel	176	176
+ship/gegno granulite	188	344
+ship/gegno gypsum	76	168
+ship/gegno halite	40	62
+ship/gegno hornfel a	88	294
+ship/gegno hornfel b	88	294
+ship/gegno hornfel c	88	294
+ship/gegno hornfel d	88	294
+ship/gegno kyanite	150	500
+ship/gegno mica	32	56
+ship/gegno protolith	218	500
+ship/gegno rhyolite	88	94
+ship/gegno schist a	106	250
+ship/gegno schist b	106	250
+ship/gegno schist c	106	250
+ship/gegno shale	44	56
+ship/gegno slate	50	56
+ship/gegno tridymite	88	100
+ship/gero	100	100
+ship/gull	88	124
+ship/gunboat	62	76
+ship/hai anomalocaris	94	124
+ship/hai aphid	50	50
+ship/hai centipede	98	156
+ship/hai cicada	100	100
+ship/hai emperor beetle	118	168
+ship/hai flea	36	38
+ship/hai geocoris	194	194
+ship/hai grasshopper	56	56
+ship/hai ladybug	100	100
+ship/hai lightning bug	76	68
+ship/hai pond strider	112	112
+ship/hai scarab	66	84
+ship/hai sea scorpion	84	100
+ship/hai shield beetle	118	168
+ship/hai solifuge	118	188
+ship/hai violin spider	38	44
+ship/hai water bug	118	94
+ship/hailstone	38	56
+ship/hallucination	76	76
+ship/hasur vowsworn	62	84
+ship/hauler i	112	156
+ship/hauler ii	112	206
+ship/hauler iii	112	250
+ship/hauler vi	176	250
+ship/hawk	62	56
+ship/headhunter	62	76
+ship/heavy gust	104	184
+ship/heavy shuttle	32	50
+ship/heliarch breacher	62	112
+ship/heliarch hunter	88	162
+ship/heliarch interdictor	68	206
+ship/heliarch judicator	98	206
+ship/heliarch neutralizer	76	106
+ship/heliarch punisher	188	238
+ship/heliarch pursuer	48	48
+ship/heliarch rover	44	44
+ship/heliarch stalker	50	50
+ship/heron	362	456
+ship/hogshead	62	124
+ship/hurricane	176	238
+ship/ibis	94	188
+ship/ikatila-ej	250	344
+ship/jackal	44	50
+ship/jje/jje	32	62
+ship/kaiken	32	44
+ship/kama	88	176
+ship/kar ik vot 349	150	300
+ship/kas-ik tek 7	22	38
+ship/kaskhorade	78	162
+ship/kestrel	144	224
+ship/kestrelc	144	224
+ship/kestrele	144	224
+ship/kestreloriginal	144	224
+ship/kestrels	144	224
+ship/kestrelw	144	224
+ship/kimek briar	50	112
+ship/kimek spire	106	282
+ship/kimek thistle	76	156
+ship/kimek thorn	50	56
+ship/korsmanath a-awoj	312	624
+ship/kunai	76	88
+ship/kvelqde	30	44
+ship/kvelqde-khora	30	44
+ship/lampyrid	100	156
+ship/lance	34	44
+ship/leviathan	106	162
+ship/localworldship	172	286
+ship/maeri'het	62	100
+ship/manta	94	106
+ship/marrowe	38	88
+ship/marrows	38	88
+ship/marroww	38	88
+ship/mbactriane	118	294
+ship/mboundere	68	106
+ship/mbounders	68	106
+ship/mbounderw	68	106
+ship/merganser	48	62
+ship/met par tek 53	88	168
+ship/mfalcone	100	200
+ship/mfalcons	100	200
+ship/mfalconw	100	200
+ship/mfirebirde	82	100
+ship/mfirebirds	82	100
+ship/mfirebirdw	82	100
+ship/mfury	62	62
+ship/mining drone	22	30
+ship/mleviathane	106	162
+ship/mleviathans	106	162
+ship/mleviathanw	106	162
+ship/mmantae	94	106
+ship/mmantas	94	106
+ship/mmantaw	94	106
+ship/model 128	100	224
+ship/model 16	44	124
+ship/model 256	150	238
+ship/model 32	50	162
+ship/model 512	212	238
+ship/model 64	62	200
+ship/model 8	50	62
+ship/modified argosy	56	118
+ship/modified boxwing	44	56
+ship/modified carrier	200	250
+ship/modified dromedary	122	264
+ship/modified dromedary ghost	122	264
+ship/modified dromedary specter	122	264
+ship/modified dromedary wreck	122	264
+ship/modified ladybug	100	100
+ship/monitor	76	124
+ship/mosprey	118	144
+ship/mquicksilvere	50	72
+ship/mquicksilvers	50	72
+ship/mquicksilverw	50	72
+ship/mravene	124	102
+ship/mravens	124	102
+ship/mravenw	124	102
+ship/msplintere	76	150
+ship/msplinters	76	150
+ship/msplinterw	76	150
+ship/mule	68	164
+ship/myaede	68	94
+ship/nest	112	156
+ship/nimbus	160	160
+ship/nnaatej	40	106
+ship/nnesaarau	66	56
+ship/ojde	76	150
+ship/osprey	124	138
+ship/pelican	156	188
+ship/penguin/penguin	32	50
+ship/peregrine/peregrine	188	188
+ship/petrel	38	56
+ship/pirate bulwark	88	124
+ship/pirate cutthroat	62	68
+ship/pirate mammoth	138	200
+ship/pirate nighthawk	100	88
+ship/pirate scrapper	32	44
+ship/pirate valkyrie	94	124
+ship/pointedstick vanguard	76	168
+ship/pollen	12	12
+ship/protector	132	156
+ship/puffin	24	50
+ship/pug arfecta	182	218
+ship/pug enfolta	76	150
+ship/pug maboro	132	224
+ship/pug zibruka	62	94
+ship/quarg drake	76	94
+ship/quarg guivre	250	200
+ship/quarg hydra	124	238
+ship/quarg lindwyrm	112	182
+ship/quarg wardragon	100	124
+ship/quarg wyvern	82	162
+ship/queru luminous gaze	60	104
+ship/quicksilver	50	68
+ship/racing flivver	56	56
+ship/rai-alorej	194	282
+ship/raider	138	194
+ship/rainmaker	56	64
+ship/raven	124	102
+ship/remnant satellite	24	44
+ship/resja of the nine eyes	62	106
+ship/riptide	106	218
+ship/roost	112	204
+ship/saber	76	150
+ship/saryd runabout	56	68
+ship/saryd sojourner	100	232
+ship/saryd traveler	106	124
+ship/saryd visitor	82	100
+ship/sasumata	76	162
+ship/science drone	50	50
+ship/scout	38	56
+ship/seiitej	70	124
+ship/selii'mar	24	44
+ship/shooting star/shooting star	76	76
+ship/shuttle	32	44
+ship/silent harvester	40	80
+ship/skein	112	250
+ship/skylark	100	162
+ship/smew	44	62
+ship/sparrow	44	50
+ship/splinter	76	150
+ship/squall	138	206
+ship/star barge	44	50
+ship/star queen	62	150
+ship/starling	62	124
+ship/stolsaqra	36	60
+ship/stratus	80	80
+ship/strong wind	100	176
+ship/subsidurial	124	124
+ship/summer leaf	50	88
+ship/sunder	48	72
+ship/surveillance drone	32	38
+ship/swan/swan	244	250
+ship/tanto	76	200
+ship/tek far 109	138	268
+ship/tek far 71 lek	76	282
+ship/tek far 78 osk	82	312
+ship/tekkan	50	88
+ship/telis'het	94	124
+ship/tempest	106	168
+ship/tern	24	38
+ship/tubfalet	138	194
+ship/valkkyiara-khorasaqra	94	162
+ship/vanguard	76	168
+ship/vareti'het	112	182
+ship/venta	200	200
+ship/veusade	76	106
+ship/void sprite/void sprite adult	168	182
+ship/void sprite/void sprite infant	88	76
+ship/vujlet	62	82
+ship/vujlet modified	62	82
+ship/vyrmeid/boomerang	38	38
+ship/vyrmeid/plankton	30	50
+ship/vyrmeid/squid	38	50
+ship/vyuir/vyuir	188	312
+ship/wardragon	88	94
+ship/wasp	44	56
+ship/waverider	56	82
+ship/windjammer	200	250
+ship/winter gale	68	124
+ship/world-ship a	132	438
+ship/world-ship b	124	438
+ship/world-ship c	118	438
+ship/world-ship d	150	438
+ship/world-ship e	156	438
+ship/world-ship f	156	438
+star/a-dwarf	16	16
+star/a-eater	94	94
+star/a-giant	170	170
+star/a-supergiant	420	420
+star/a0	70	70
+star/a3	68	68
+star/a5	62	62
+star/a8	62	62
+star/b-dwarf	16	16
+star/b-giant	200	200
+star/b-supergiant	320	320
+star/b0	100	100
+star/b3	84	84
+star/b5	80	80
+star/b8	76	76
+star/big black hole	624	624
+star/big black hole core	624	624
+star/black hole 3	812	812
+star/black hole 3 core	812	812
+star/black hole 4	1280	1280
+star/black hole 4 core	1280	1280
+star/black hole 5	876	876
+star/black hole 5 core	876	876
+star/black hole 6	762	762
+star/black hole 6 core	762	762
+star/black hole corona	1280	1280
+star/black hole corona core	1280	1280
+star/black hole star	938	938
+star/black hole star core	938	938
+star/black-hole	1262	946
+star/black-hole-core	160	160
+star/black-hole-still	812	812
+star/black-hole-still-core	812	812
+star/carbon	1276	1276
+star/carbon-core	160	160
+star/coal-black-hole	320	320
+star/f-dwarf	16	16
+star/f-giant	170	170
+star/f-supergiant	470	470
+star/f0	62	62
+star/f3	58	58
+star/f5	58	58
+star/f5-old	100	100
+star/f8	58	58
+star/g-dwarf	16	16
+star/g-giant	220	220
+star/g-supergiant	590	590
+star/g0	56	56
+star/g0-old	132	132
+star/g3	56	56
+star/g5	56	56
+star/g5-old	124	124
+star/g8	54	54
+star/giant	156	156
+star/k-dwarf	14	14
+star/k-giant	320	320
+star/k-supergiant	640	640
+star/k0	54	54
+star/k0-old	162	162
+star/k3	52	52
+star/k5	54	54
+star/k5-old	156	156
+star/k8	54	54
+star/l-dwarf	10	10
+star/m-dwarf	8	8
+star/m-giant	470	470
+star/m-supergiant	960	960
+star/m0	48	48
+star/m3	44	44
+star/m4	44	44
+star/m5	40	40
+star/m8	34	34
+star/magnetar	938	938
+star/neutron	240	280
+star/neutron-core	160	160
+star/neutron-small	124	124
+star/neutron-small-core	32	32
+star/nova	1876	1876
+star/nova-core	200	200
+star/nova-old	1876	1876
+star/nova-old-core	156	156
+star/nova-small	624	624
+star/o-dwarf	16	16
+star/o-giant	320	320
+star/o-supergiant	390	390
+star/o0	160	160
+star/o3	130	130
+star/o5	120	120
+star/o8	104	104
+star/patir	1438	1438
+star/patir core	124	124
+star/proto-planetary-disk	1876	1876
+star/protostar-orange	376	376
+star/protostar-yellow	250	250
+star/small-black-hole	94	94
+star/smoke ring	3000	3000
+star/twilight-black-hole	640	640
+star/void-scar	302	284
+star/wr	640	640
+thumbnail/-nra-ret	158	96
+thumbnail/aaulqra	132	132
+thumbnail/aberrant chomper	156	124
+thumbnail/aberrant dancer	168	138
+thumbnail/aberrant hugger	156	138
+thumbnail/aberrant icebreaker	124	124
+thumbnail/aberrant junior	118	112
+thumbnail/aberrant latte	124	124
+thumbnail/aberrant longfellow	162	138
+thumbnail/aberrant mole	124	132
+thumbnail/aberrant pike	132	124
+thumbnail/aberrant pileup	144	124
+thumbnail/aberrant trip	144	124
+thumbnail/aberrant triplet	144	124
+thumbnail/aberrant whiskers	138	144
+thumbnail/aerie	120	100
+thumbnail/albatross	168	118
+thumbnail/arach courier	100	88
+thumbnail/arach freighter	132	124
+thumbnail/arach hulk	156	150
+thumbnail/arach spindle	156	156
+thumbnail/arach transport	118	106
+thumbnail/ararebo	156	132
+thumbnail/arch-carrack	150	118
+thumbnail/archon	156	110
+thumbnail/argosy	112	106
+thumbnail/arrow	106	106
+thumbnail/autumn leaf	112	88
+thumbnail/auxiliaryc	156	144
+thumbnail/auxiliaryh	156	144
+thumbnail/auxiliaryt	156	144
+thumbnail/avgi akoustiki	76	76
+thumbnail/avgi atenuatia	156	156
+thumbnail/avgi avlaki	132	68
+thumbnail/avgi diaspersi	132	132
+thumbnail/avgi difraktos	132	132
+thumbnail/avgi entasi	150	132
+thumbnail/avgi frequentia	112	112
+thumbnail/avgi harmonikos	168	94
+thumbnail/avgi interferos	132	132
+thumbnail/avgi koryfi	182	112
+thumbnail/avgi melodikos	168	94
+thumbnail/avgi optikon	56	56
+thumbnail/avgi phononos	112	94
+thumbnail/avgi photikon	94	94
+thumbnail/avgi polari	112	112
+thumbnail/avgi prismaios	132	132
+thumbnail/avgi refraktos	150	150
+thumbnail/avgi sonikis	94	76
+thumbnail/avgi tachytia	206	206
+thumbnail/avgi tremoros	100	88
+thumbnail/avgi undsyni	156	156
+thumbnail/avgi undulon	76	76
+thumbnail/avgi vibratia	76	76
+thumbnail/bactrian	168	158
+thumbnail/barb	88	56
+thumbnail/barbp	88	56
+thumbnail/bastion	138	112
+thumbnail/battleship	156	156
+thumbnail/behemoth	150	138
+thumbnail/berserker	106	68
+thumbnail/blackbird	124	82
+thumbnail/blackdiamond	94	76
+thumbnail/bounder	124	88
+thumbnail/boxwing	76	62
+thumbnail/bulk freighter	156	124
+thumbnail/carrier	156	132
+thumbnail/charm-shallop	112	106
+thumbnail/chaser	68	50
+thumbnail/chigiriki	156	118
+thumbnail/cirrus	106	106
+thumbnail/clipper	106	76
+thumbnail/combat drone	56	56
+thumbnail/container transport	156	124
+thumbnail/cool breeze	88	68
+thumbnail/corvette	132	124
+thumbnail/cruiser	162	138
+thumbnail/dagger	76	62
+thumbnail/deep river	168	168
+thumbnail/derecho	150	132
+thumbnail/dreadnought	156	138
+thumbnail/dredger	162	144
+thumbnail/dropship	76	62
+thumbnail/earth shaper	82	56
+thumbnail/echo-galleon	168	168
+thumbnail/ejniisde	118	118
+thumbnail/ejniisde-khora	118	118
+thumbnail/ember waste node	150	112
+thumbnail/emeraldsword	156	156
+thumbnail/enforcer	100	88
+thumbnail/faes'mar	100	100
+thumbnail/falcon	162	138
+thumbnail/far lek 14	62	56
+thumbnail/far osk 27	82	76
+thumbnail/fetri'sei	100	82
+thumbnail/finch	82	68
+thumbnail/firebird	116	94
+thumbnail/flivver	88	76
+thumbnail/flycatcher	68	50
+thumbnail/freighter	124	112
+thumbnail/frigate	124	100
+thumbnail/fury	88	68
+thumbnail/gascraft	76	62
+thumbnail/gegno augen	156	156
+thumbnail/gegno coesite	124	90
+thumbnail/gegno conglomerate	162	162
+thumbnail/gegno corundum	140	130
+thumbnail/gegno diorite	156	156
+thumbnail/gegno dolomite	156	156
+thumbnail/gegno dunite	124	88
+thumbnail/gegno eclogite	142	142
+thumbnail/gegno epidote	156	156
+thumbnail/gegno feldspar	200	156
+thumbnail/gegno felsic	156	156
+thumbnail/gegno gneiss	156	156
+thumbnail/gegno granofel	162	162
+thumbnail/gegno granulite	188	188
+thumbnail/gegno gypsum	138	124
+thumbnail/gegno halite	108	84
+thumbnail/gegno hornfel a	156	156
+thumbnail/gegno hornfel b	156	156
+thumbnail/gegno hornfel c	156	156
+thumbnail/gegno hornfel d	156	156
+thumbnail/gegno kyanite	162	138
+thumbnail/gegno mica	76	76
+thumbnail/gegno protolith	188	188
+thumbnail/gegno rhyolite	112	112
+thumbnail/gegno schist a	156	156
+thumbnail/gegno schist b	156	156
+thumbnail/gegno schist c	156	156
+thumbnail/gegno shale	88	88
+thumbnail/gegno slate	88	88
+thumbnail/gegno tridymite	106	82
+thumbnail/gero	100	100
+thumbnail/gull	112	94
+thumbnail/gunboat	94	82
+thumbnail/hai anomalocaris	124	112
+thumbnail/hai aphid	94	76
+thumbnail/hai centipede	156	124
+thumbnail/hai cicada	112	82
+thumbnail/hai emperor beetle	150	118
+thumbnail/hai flea	76	50
+thumbnail/hai geocoris	156	98
+thumbnail/hai grasshopper	104	82
+thumbnail/hai ladybug	168	168
+thumbnail/hai lightning bug	118	76
+thumbnail/hai pond strider	144	88
+thumbnail/hai scarab	106	94
+thumbnail/hai sea scorpion	124	112
+thumbnail/hai shield beetle	150	118
+thumbnail/hai solifuge	150	118
+thumbnail/hai violin spider	82	68
+thumbnail/hai water bug	144	82
+thumbnail/hailstone	68	50
+thumbnail/hasur vowsworn	100	76
+thumbnail/hauler i	132	100
+thumbnail/hauler ii	144	112
+thumbnail/hauler iii	156	124
+thumbnail/hauler vi	168	132
+thumbnail/hawk	100	76
+thumbnail/headhunter	118	94
+thumbnail/heavy gust	158	128
+thumbnail/heavy shuttle	82	82
+thumbnail/heliarch breacher	106	94
+thumbnail/heliarch hunter	124	124
+thumbnail/heliarch interdictor	150	144
+thumbnail/heliarch judicator	144	144
+thumbnail/heliarch neutralizer	106	88
+thumbnail/heliarch punisher	168	138
+thumbnail/heliarch pursuer	100	100
+thumbnail/heliarch rover	100	100
+thumbnail/heliarch stalker	100	100
+thumbnail/hogshead	112	106
+thumbnail/hurricane	162	124
+thumbnail/ibis	138	118
+thumbnail/ikatila-ej	162	144
+thumbnail/jackal	112	76
+thumbnail/kaiken	82	68
+thumbnail/kama	112	100
+thumbnail/kar ik vot 349	168	138
+thumbnail/kas-ik tek 7	68	52
+thumbnail/kaskhorade	138	132
+thumbnail/kestrel	150	132
+thumbnail/kestrelc	150	132
+thumbnail/kestrele	150	132
+thumbnail/kestreloriginal	150	132
+thumbnail/kestrels	150	132
+thumbnail/kestrelw	150	132
+thumbnail/kimek briar	112	100
+thumbnail/kimek spire	156	156
+thumbnail/kimek thistle	132	118
+thumbnail/kimek thorn	88	68
+thumbnail/korsmanath a-awoj	156	132
+thumbnail/kunai	124	76
+thumbnail/kvelqde	62	62
+thumbnail/kvelqde-khora	62	62
+thumbnail/lampyrid	132	100
+thumbnail/lance	76	68
+thumbnail/leviathan	138	118
+thumbnail/maeri'het	100	94
+thumbnail/manta	112	100
+thumbnail/marrowe	106	106
+thumbnail/marrows	106	106
+thumbnail/marroww	106	106
+thumbnail/mboundere	124	88
+thumbnail/mbounders	124	88
+thumbnail/mbounderw	124	88
+thumbnail/merganser	112	94
+thumbnail/met par tek 53	124	106
+thumbnail/mfalcone	162	138
+thumbnail/mfalcons	162	138
+thumbnail/mfalconw	162	138
+thumbnail/mfirebirde	116	94
+thumbnail/mfirebirds	116	94
+thumbnail/mfirebirdw	116	94
+thumbnail/mfury	98	70
+thumbnail/mining drone	62	62
+thumbnail/mleviathane	138	118
+thumbnail/mleviathans	138	118
+thumbnail/mleviathanw	138	118
+thumbnail/mmantae	112	100
+thumbnail/mmantas	112	100
+thumbnail/mmantaw	112	100
+thumbnail/model 128	144	138
+thumbnail/model 16	112	106
+thumbnail/model 256	156	124
+thumbnail/model 32	124	118
+thumbnail/model 512	168	112
+thumbnail/model 64	138	132
+thumbnail/model 8	88	76
+thumbnail/modified argosy	112	106
+thumbnail/modified boxwing	112	94
+thumbnail/modified carrier	156	132
+thumbnail/modified dromedary	150	140
+thumbnail/modified dromedary wreck	150	140
+thumbnail/monitor	118	106
+thumbnail/mquicksilvere	100	76
+thumbnail/mquicksilvers	100	76
+thumbnail/mquicksilverw	100	76
+thumbnail/mravene	144	90
+thumbnail/mravens	144	90
+thumbnail/mravenw	144	90
+thumbnail/msplintere	124	108
+thumbnail/msplinters	124	108
+thumbnail/msplinterw	124	108
+thumbnail/mule	132	118
+thumbnail/myaede	132	132
+thumbnail/nest	132	100
+thumbnail/nimbus	160	160
+thumbnail/nnaatej	100	100
+thumbnail/nnesaarau	112	112
+thumbnail/ojde	144	144
+thumbnail/osprey	138	100
+thumbnail/pelican	156	132
+thumbnail/penguin	94	74
+thumbnail/peregrine	156	156
+thumbnail/petrel	74	68
+thumbnail/pirate bulwark	138	112
+thumbnail/pirate cutthroat	106	76
+thumbnail/pirate mammoth	144	138
+thumbnail/pirate nighthawk	124	82
+thumbnail/pirate scrapper	82	82
+thumbnail/pirate valkyrie	118	94
+thumbnail/protector	156	106
+thumbnail/puffin	76	62
+thumbnail/pug arfecta	150	124
+thumbnail/pug enfolta	132	124
+thumbnail/pug maboro	136	138
+thumbnail/pug zibruka	100	94
+thumbnail/quarg drake	106	76
+thumbnail/quarg guivre	156	106
+thumbnail/quarg hydra	156	138
+thumbnail/quarg lindwyrm	138	124
+thumbnail/quarg wardragon	112	82
+thumbnail/quarg wyvern	150	138
+thumbnail/queru luminous gaze	100	82
+thumbnail/quicksilver	100	82
+thumbnail/racing flivver	88	88
+thumbnail/rai-alorej	156	106
+thumbnail/raider	168	112
+thumbnail/rainmaker	100	82
+thumbnail/raven	144	90
+thumbnail/resja of the nine eyes	112	112
+thumbnail/riptide	138	112
+thumbnail/roost	144	112
+thumbnail/saber	124	112
+thumbnail/saryd runabout	106	94
+thumbnail/saryd sojourner	156	132
+thumbnail/saryd traveler	144	118
+thumbnail/saryd visitor	124	100
+thumbnail/sasumata	112	112
+thumbnail/scout	100	88
+thumbnail/seiitej	124	124
+thumbnail/selii'mar	62	62
+thumbnail/shuttle	82	82
+thumbnail/skein	156	124
+thumbnail/skylark	138	118
+thumbnail/smew	82	82
+thumbnail/sparrow	94	76
+thumbnail/splinter	124	108
+thumbnail/squall	156	124
+thumbnail/star barge	82	82
+thumbnail/star queen	124	112
+thumbnail/starling	118	94
+thumbnail/stolsaqra	88	82
+thumbnail/stratus	80	80
+thumbnail/strong wind	138	112
+thumbnail/subsidurial	150	132
+thumbnail/summer leaf	100	82
+thumbnail/sunder	112	112
+thumbnail/surveillance drone	62	62
+thumbnail/swan	182	118
+thumbnail/tanto	118	118
+thumbnail/tek far 109	144	138
+thumbnail/tek far 71 lek	144	144
+thumbnail/tek far 78 osk	156	150
+thumbnail/tekkan	88	88
+thumbnail/telis'het	124	112
+thumbnail/tempest	138	112
+thumbnail/tern	68	52
+thumbnail/tubfalet	168	112
+thumbnail/valkkyiara-khorasaqra	132	132
+thumbnail/vanguard	124	112
+thumbnail/vareti'het	150	138
+thumbnail/venta	160	160
+thumbnail/veusade	112	112
+thumbnail/void sprite adult	150	132
+thumbnail/void sprite infant	112	76
+thumbnail/vujlet	112	112
+thumbnail/vujlet modified	112	112
+thumbnail/vyuir	124	124
+thumbnail/wardragon	110	94
+thumbnail/wasp	94	76
+thumbnail/winter gale	112	94
+thumbnail/world-ship a	168	168
+thumbnail/world-ship b	168	168
+thumbnail/world-ship c	168	168
+thumbnail/world-ship d	168	168
+thumbnail/world-ship e	168	168
+thumbnail/world-ship f	168	168
+ui/ammo selected	38	18
+ui/ammo unselected	38	18
+ui/audio low	12	12
+ui/audio max	12	12
+ui/audio medium	12	12
+ui/audio none	12	12
+ui/boarding dialog	438	262
+ui/bottom edge	200	18
+ui/bottom edges	400	18
+ui/checked	12	12
+ui/collapsed	12	12
+ui/description panel	356	176
+ui/dialog bottom	182	56
+ui/dialog bottom wide	306	56
+ui/dialog cancel	56	32
+ui/dialog middle	182	24
+ui/dialog middle wide	306	24
+ui/dialog top	182	32
+ui/dialog top wide	306	32
+ui/error	16	16
+ui/expanded	12	12
+ui/faction left	8	8
+ui/faction right	8	8
+ui/fast forward	8	8
+ui/find selected	16	16
+ui/find unselected	16	16
+ui/five info buttons	638	32
+ui/hail panel	376	176
+ui/icon selected	38	38
+ui/icon unselected	38	38
+ui/in cargo	12	12
+ui/info panel	638	356
+ui/installed	12	12
+ui/left edge	18	624
+ui/map system	124	56
+ui/map trade	124	144
+ui/message log key	124	38
+ui/milky way	2560	2560
+ui/mission	262	144
+ui/mission empty	262	68
+ui/mission key	162	88
+ui/navigation	112	38
+ui/news	324	106
+ui/orbits and key	156	306
+ui/outfitter key	128	68
+ui/outfitter selected	112	112
+ui/outfitter unselected	112	112
+ui/patir cluster	488	488
+ui/paused	8	8
+ui/planet dialog	476	424
+ui/planet dialog button	100	38
+ui/player tab	638	24
+ui/pleiades	282	250
+ui/radar	160	160
+ui/radio selected	12	12
+ui/radio unselected	12	12
+ui/red alert	18	18
+ui/red alert grayed	18	18
+ui/right edge	18	624
+ui/sales key	124	76
+ui/selected system	262	24
+ui/settings audio bar	38	242
+ui/settings base panel	342	318
+ui/settings five buttons	136	142
+ui/settings four buttons	136	118
+ui/settings keys box	118	110
+ui/settings three buttons	136	118
+ui/settings two buttons	136	118
+ui/ship tab	638	24
+ui/shipyard selected	156	156
+ui/shipyard unselected	156	156
+ui/sort abc	14	10
+ui/sort ascending	12	12
+ui/sort convenient	14	10
+ui/sort descending	12	12
+ui/sort pay	14	10
+ui/sort rush include	14	10
+ui/sort rush separate	14	10
+ui/sort speed	14	10
+ui/sort unacceptable include	14	10
+ui/sort unacceptable separate	14	10
+ui/status	138	282
+ui/tactical/acceleration	10	8
+ui/tactical/crew	6	12
+ui/tactical/energy	6	16
+ui/tactical/fuel	10	8
+ui/tactical/gun range	10	10
+ui/tactical/range	18	6
+ui/tactical/thermal	6	16
+ui/tactical/turn	10	10
+ui/tactical/turret range	10	10
+ui/tactical/velocity	10	8
+ui/target	94	94
+ui/three info buttons	638	32
+ui/thumb box	76	76
+ui/thumb boxes	62	124
+ui/unchecked	12	12
+ui/very wide button	100	32
+ui/warning	16	16
+ui/wide button	68	32
+ui/zoom	56	32

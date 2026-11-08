@@ -1,0 +1,414 @@
+asteroid/integral tree/tree a	74924
+asteroid/integral tree/tree c	54685
+asteroid/integral tree/tree d	42822
+asteroid/integral tree/tree e	38945
+asteroid/integral tree/tree b	40769
+asteroid/integral tree/tree f	14087
+asteroid/gold/spin	2205.7647058823532
+asteroid/bioroid/spin	2857.3333333333335
+asteroid/large plant2/large plant2	2847.4166666666665
+asteroid/large metal/spin	5118.833333333333
+asteroid/iron/spin	4654.6833333333334
+asteroid/large plant cluster/large plant cluster	1508.1666666666667
+asteroid/large plant/large plant	2754.375
+asteroid/large rock/spin	4377.583333333333
+asteroid/lead/spin	3207.625
+asteroid/plant cluster/plant cluster	416.02083333333331
+asteroid/large space flora/large space flora	2890.6842105263158
+asteroid/plant2/plant2	758.375
+asteroid/silver/spin	1408.1428571428571
+asteroid/medium rock/spin	3795.6140350877195
+asteroid/plant/plant	730.125
+asteroid/small metal/spin	1420.1666666666667
+asteroid/medium metal/spin	2690.7291666666665
+asteroid/silicon/spin	3820.1666666666665
+asteroid/small rock/spin	2727.7450980392155
+asteroid/space flora/space flora	775.17543859649118
+asteroid/water droplet/droplet	18585.16129032258
+asteroid/titanium/spin	3923.8596491228072
+asteroid/yottrite/spin	2528.4210526315787
+asteroid/livecrystal/livecrystal	15756.299999999999
+ship/aaulqra	12905
+ship/aberrant chomper	9013
+ship/aberrant hugger	10367
+ship/-nra-ret	55248
+ship/aberrant icebreaker	8555
+ship/aberrant mole	8699
+ship/aberrant latte	8494
+ship/aberrant pike	7790
+ship/aberrant longfellow	10091
+ship/aberrant triplet	12658
+ship/aberrant trip	10566
+ship/aberrant dancer	13515
+ship/aberrant pileup	10162
+ship/aberrant whiskers	8801
+ship/aerie	14383
+ship/aberrant junior	7269
+ship/arach spindle	19504
+ship/arach freighter	15314
+ship/arach hulk	36145
+ship/arach transport	11219
+ship/albatross	31297
+ship/arach courier	5688
+ship/argosy	9535
+ship/arrow	2673
+ship/arch-carrack	51283
+ship/asteroid adult	20802
+ship/ararebo	40598
+ship/archon b	21450.5
+ship/asteroid adult 3	23858
+ship/archon c	22347.5
+ship/asteroid adult 4	22002
+ship/asteroid adult 2	16931
+ship/archon	22618.5
+ship/asteroid medium	8553
+ship/asteroid young 2	3059
+ship/asteroid young 4	2316
+ship/asteroid young	2548
+ship/asteroid young 3	2089
+ship/avgi akoustiki	1395
+ship/autumn leaf	8090
+ship/asteroid adult 5	19828
+ship/auxiliaryt	28833
+ship/auxiliaryc	37486
+ship/auxiliaryh	32410
+ship/avgi avlaki	12295
+ship/avgi difraktos	23279
+ship/avgi frequentia	9090
+ship/avgi atenuatia	46575
+ship/avgi interferos	12283
+ship/avgi diaspersi	19221
+ship/avgi optikon	1039
+ship/avgi photikon	999
+ship/avgi entasi	48647
+ship/avgi harmonikos	32304
+ship/avgi prismaios	9544
+ship/avgi polari	6185
+ship/avgi phononos	3992
+ship/avgi tremoros	1670
+ship/avgi refraktos	18031
+ship/avgi sonikis	1707
+ship/avgi undulon	1467
+ship/avgi vibratia	1061
+ship/bactrian	54352
+ship/barb	1711
+ship/barbp	1711
+ship/bastion	16127
+ship/battleship	47958
+ship/avgi undsyni	42908
+ship/behemoth	28204
+ship/berserker	2818
+ship/blackbird	10257
+ship/blackdiamond	3254
+ship/bounder	6708
+ship/boxwing	2609
+ship/bluejacket	22148
+ship/builder satellite	1520
+ship/bulk freighter	52630
+ship/charm-shallop	25217
+ship/chaser	2305
+ship/chigiriki	50199
+ship/carrier	46334
+ship/cirrus	15857
+ship/combat drone	1498
+ship/clipper	4639
+ship/cool breeze	3390
+ship/avgi koryfi/koryfi	12625.366666666667
+ship/container transport	57077
+ship/corvette	11638
+ship/dagger	2190
+ship/cruiser	23868
+ship/deep river 0	42366
+ship/deep river 1	49786
+ship/ayym/ayym	36097
+ship/deep river 2	56308
+ship/deep river 3	59389
+ship/derecho	27826
+ship/deep river	65400
+ship/deep river 4	63463
+ship/dropship	1600
+ship/dreadnought	38857
+ship/earth shaper	2906
+ship/ejniisde	10785
+ship/ejniisde-khora	10686
+ship/dredger	62639
+ship/embershade/embershade	12680.200000000001
+ship/echo-galleon	88317
+ship/enforcer	3848
+ship/escape shuttle	1371
+ship/emeraldsword	95861
+ship/falcon	18549
+ship/far lek 14	1227
+ship/faes'mar	2314
+ship/far osk 27	1877
+ship/fetri'sei	5487
+ship/finch	1704
+ship/firebird	9744
+ship/flivver	2428
+ship/flycatcher	1489
+ship/freighter	7447
+ship/fury	3298
+ship/gascraft	1838
+ship/frigate	13269
+ship/gegno coesite	18251
+ship/gegno augen	165741
+ship/gegno corundum	22763
+ship/gegno diorite	30076
+ship/gegno conglomerate	52199
+ship/gegno dunite	3457
+ship/gegno dolomite	26283
+ship/gegno eclogite	13357
+ship/gegno epidote	68650
+ship/gegno felsic	28320
+ship/gegno gneiss	56914
+ship/gegno feldspar	73332
+ship/gegno granofel	44774
+ship/gegno gypsum	18377
+ship/gegno halite	4050
+ship/gegno hornfel a	34405
+ship/gegno hornfel b	36056
+ship/ember waste node/ember waste node	15311.291666666666
+ship/gegno granulite	85006
+ship/gegno hornfel c	37409
+ship/gegno hornfel d	34925
+ship/gegno mica	2650
+ship/gegno rhyolite	10148
+ship/gegno schist a	31320
+ship/gegno protolith	138866
+ship/gegno schist b	32841
+ship/gegno shale	3840
+ship/gegno schist c	35996
+ship/gegno slate	4400
+ship/gegno kyanite	66456
+ship/gegno tridymite	11659
+ship/gull	9483
+ship/gero	9456
+ship/hai aphid	3986
+ship/gunboat	5960
+ship/hai anomalocaris	16444
+ship/hai centipede	21528
+ship/hai flea	1739
+ship/hai cicada	14300
+ship/hai geocoris	38170
+ship/hai grasshopper	2976
+ship/hai lightning bug	7007
+ship/hai emperor beetle	31156
+ship/hai ladybug	16524
+ship/hai pond strider	15243
+ship/hai sea scorpion	11990
+ship/hai scarab	7834
+ship/hai solifuge	34657
+ship/hai shield beetle	29875
+ship/hai violin spider	2703
+ship/hailstone	2272
+ship/hallucination	8259
+ship/hai water bug	16727
+ship/hasur vowsworn	7320
+ship/hauler i	16488
+ship/hauler ii	20034
+ship/hawk	3182
+ship/headhunter	4282
+ship/heavy gust	18684
+ship/heavy shuttle	2305
+ship/hauler vi	40503
+ship/hauler iii	23653
+ship/heliarch breacher	7833
+ship/heliarch hunter	16387
+ship/heliarch neutralizer	9707
+ship/heliarch judicator	21158
+ship/heliarch pursuer	1329
+ship/heliarch rover	2146
+ship/heliarch interdictor	19757
+ship/heliarch stalker	2552
+ship/heliarch punisher	32966
+ship/hogshead	11268
+ship/hurricane	43119
+ship/ibis	17417
+ship/jackal	2817
+ship/jje/jje	2067
+ship/kaiken	2016
+ship/kama	26078
+ship/ikatila-ej	146112
+ship/heron	122376
+ship/kas-ik tek 7	1424
+ship/kar ik vot 349	64520
+ship/kestrel	24862
+ship/kaskhorade	15875
+ship/kestrelc	25382
+ship/kestrele	24740
+ship/kestrels	25359
+ship/kestrelw	25384
+ship/kimek briar	5360
+ship/kimek thistle	9655
+ship/kimek thorn	2165
+ship/kimek spire	27562
+ship/kestreloriginal	24472
+ship/kunai	8837
+ship/kvelqde	1888
+ship/kvelqde-khora	1959
+ship/lampyrid	15120
+ship/lance	1770
+ship/localworldship	61664
+ship/leviathan	20477
+ship/maeri'het	9449
+ship/marrowe	2982
+ship/marrows	2936
+ship/marroww	3020
+ship/manta	9173
+ship/mbactriane	51262
+ship/korsmanath a-awoj	291163
+ship/mbounders	7033
+ship/mboundere	7485
+ship/mbounderw	7186
+ship/embersylph/embersylph	4410.4499999999998
+ship/merganser	3452
+ship/mfalcons	18585
+ship/mfalcone	19268
+ship/mfalconw	18789
+ship/mfirebirds	10068
+ship/met par tek 53	22454
+ship/mfirebirdw	10310
+ship/mining drone	940
+ship/mfury	5339
+ship/mfirebirde	10236
+ship/mleviathane	20729
+ship/mmantae	9845
+ship/mleviathanw	21012
+ship/mmantaw	9358
+ship/mmantas	9175
+ship/model 16	7615
+ship/mleviathans	20645
+ship/model 32	9931
+ship/model 128	24842
+ship/model 8	4187
+ship/model 256	33912
+ship/modified argosy	9592
+ship/model 64	16062
+ship/modified boxwing	3277
+ship/model 512	45927
+ship/modified dromedary ghost	53637
+ship/modified carrier	46506
+ship/modified dromedary	55678
+ship/modified ladybug	17291
+ship/monitor	11457
+ship/mquicksilvere	5432
+ship/mosprey	16385
+ship/mquicksilvers	5282
+ship/modified dromedary wreck	55454
+ship/mquicksilverw	5389
+ship/mravens	9007
+ship/mravenw	9123
+ship/mravene	9037
+ship/modified dromedary specter	55239
+ship/msplintere	12134
+ship/msplinters	12006
+ship/msplinterw	12376
+ship/myaede	8036
+ship/mule	17748
+ship/nnaatej	5430
+ship/ojde	20539
+ship/nimbus	23971
+ship/osprey	16458
+ship/nnesaarau	4491
+ship/pelican	18579
+ship/petrel	2422
+ship/nest	18948
+ship/pirate cutthroat	4721
+ship/pirate bulwark	17392
+ship/pirate mammoth	29770
+ship/pirate scrapper	1949
+ship/pirate nighthawk	10746
+ship/pointedstick vanguard	19374
+ship/pirate valkyrie	15232
+ship/pollen	244
+ship/puffin	1838
+ship/protector	23845
+ship/penguin/penguin	1645.2
+ship/pug enfolta	9269
+ship/pug zibruka	6413
+ship/quarg drake	7809
+ship/pug arfecta	38252
+ship/pug maboro	33045
+ship/quarg hydra	32792
+ship/quarg guivre	41756
+ship/quarg lindwyrm	31868
+ship/queru luminous gaze	7053
+ship/quarg wardragon	12339
+ship/quicksilver	5140
+ship/quarg wyvern	16798
+ship/racing flivver	2754
+ship/raider	38057
+ship/remnant satellite	1727
+ship/raven	8967
+ship/resja of the nine eyes	10199
+ship/rainmaker	3763
+ship/riptide	27672
+ship/saryd runabout	4760
+ship/rai-alorej	86760
+ship/roost	25121
+ship/saryd traveler	14365
+ship/saryd visitor	10621
+ship/science drone	1475
+ship/saryd sojourner	27179
+ship/scout	2782
+ship/sasumata	18626
+ship/selii'mar	1840
+ship/seiitej	10581
+ship/silent harvester	3552
+ship/saber	10719
+ship/skylark	20235
+ship/shuttle	1637
+ship/smew	3485
+ship/sparrow	2055
+ship/squall	30696
+ship/star barge	2886
+ship/star queen	12607
+ship/splinter	11940
+ship/stolsaqra	2330
+ship/starling	9935
+ship/skein	30786
+ship/subsidurial	14922
+ship/strong wind	15591
+ship/summer leaf	5993
+ship/surveillance drone	1287
+ship/peregrine/peregrine	19989
+ship/stratus	5534
+ship/sunder	5892
+ship/tanto	25280
+ship/tek far 71 lek	27987
+ship/tek far 78 osk	32858
+ship/tekkan	7643
+ship/tek far 109	36202
+ship/telis'het	16994
+ship/tern	1047
+ship/avgi melodikos/melodikos	30543.755555555555
+ship/tempest	16376
+ship/vanguard	17812
+ship/vareti'het	37264
+ship/tubfalet	43121
+ship/veusade	7706
+ship/valkkyiara-khorasaqra	12144
+ship/vujlet	6118
+ship/vujlet modified	6107
+ship/venta	38806
+ship/vyrmeid/plankton	324.94117647058823
+ship/vyrmeid/boomerang	1424.375
+ship/vyrmeid/squid	2359.9032258064517
+ship/wardragon	8414
+ship/wasp	2290
+ship/waverider	7069
+ship/windjammer	35735
+ship/void sprite/void sprite infant	5131.6999999999998
+ship/winter gale	11813
+ship/world-ship a	74965
+ship/world-ship b	72176
+ship/world-ship c	72724
+ship/world-ship d	81413
+ship/astral cetacean/astral	49051.166666666664
+ship/world-ship e	99548
+ship/world-ship f	106767
+ship/shooting star/shooting star	3946.8499999999999
+ship/swan/swan	44040.73333333333
+ship/vyuir/vyuir	43299.599999999999
+ship/void sprite/void sprite adult	21178.166666666668
+ship/avgi tachytia/tachytia	68064

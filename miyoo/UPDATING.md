@@ -12,8 +12,27 @@ port's own work lives in a few places, so most updates merge cleanly.
 - `miyoo/data/_ui/`: data that replaces upstream definitions (colours, messages, Port info text).
 - `miyoo/tools/`: generators that read upstream files each time (layouts, help text, credits),
   the image tools, the uploader and `stage.sh`.
+- `miyoo/art/`: sprite sizes, collision masks and areas made from the art (see below).
+- `miyoo/docs/`: the README pictures.
 - `miyoo/onion/`: the Onion launcher (`Ports, Space`) and its list picture.
 - `miyoo/tests/`: self-tests and the screen tours.
+
+## First build from a fresh clone
+
+All commands run from the repository root; `es-zig` and `es-host` are the two Docker images.
+
+1. `docker build -t es-zig -f miyoo/Dockerfile miyoo` and
+   `docker build -t es-host -f miyoo/Dockerfile.host miyoo`.
+2. Libraries for the Miyoo (built once, checked against `miyoo/deps.lock`):
+   `docker run --rm -v "$PWD:/es" -w /es es-zig sh miyoo/deps.sh`.
+3. Configure, in es-zig: `cmake -G Ninja -B build-arm -DCMAKE_BUILD_TYPE=Release
+   -DCMAKE_TOOLCHAIN_FILE=/es/miyoo/cross/toolchain.cmake -DES_SOFT=ON -DES_MIYOO=ON
+   -DES_USE_VCPKG=OFF -DBUILD_TESTING=OFF`. The host check build is the same in es-host with
+   `-B build-soft`, no toolchain file and `-DES_MIYOO=OFF`.
+4. Build as in step 3 below, then `miyoo/tools/stage.sh`, then the images in es-host:
+   `sh miyoo/tools/art.sh` (several minutes the first time; later runs only redo changed files).
+
+The stage in `build-miyoo/stage` is then the whole SD card package.
 
 ## Routine update (code, data, story)
 
@@ -38,18 +57,19 @@ port's own work lives in a few places, so most updates merge cleanly.
 
 ## When upstream art changes
 
-Only new or changed images need this, in this order:
+The shipped images are made by `miyoo/tools/art.sh` (shrink all art to 0.625, redo the art that is
+always drawn at its own size at 0.8, cap the huge backgrounds). The game also needs three files in
+`miyoo/art/`, which describe the art and must be redone when upstream adds or changes images:
 
-1. `shrink_images.py images <out> 0.625` for all art.
-2. With a full-size (scale 1) host build: `ES_WRITE_MASKS=<file>` for `masks.txt` and
-   `ES_WRITE_AREAS=<file>` for `areas.txt` (collision shapes and areas come from full-size art).
-3. With the 0.625 art staged: `ES_WRITE_SIZES=<file>` on the host soft build for `sizes.txt`
-   (the size each sprite is drawn at).
-4. `shrink_images.py` at 0.8 for the folders in `FIXED_SIZE`, over the staged copies.
-5. `cap_images.py <stage images> <stage sizes.txt>` for the few huge backgrounds.
+1. With a full-size (scale 1) host build: `ES_WRITE_MASKS=miyoo/art/masks.txt` and
+   `ES_WRITE_AREAS=miyoo/art/areas.txt` (collision shapes and areas come from full-size art).
+2. With the 0.625 art staged (the first step of `art.sh`): `ES_WRITE_SIZES=miyoo/art/sizes.txt`
+   on the host soft build (the size each sprite is drawn at).
+3. `art.sh` again, so the 0.8 and capped files are made over the 0.625 ones.
 
 Order matters: `sizes.txt` must come from the 0.625 art, because the game keeps those sizes when
-it later loads the 0.8 and capped files.
+it later loads the 0.8 and capped files. `cap_images.py` refuses to cap an image `sizes.txt`
+doesn't list.
 
 ## Device notes
 
