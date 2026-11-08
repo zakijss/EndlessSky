@@ -569,7 +569,12 @@ void GameLoop(PlayerInfo &player, TaskQueue &queue, const Conversation &conversa
 
 			gpuLoadSum += chrono::steady_clock::now() - drawStart;
 
+#ifndef ES_MIYOO
 			if(Preferences::Has(Preferences::SHOW_PERFORMANCE_METRICS))
+#else
+			// The Miyoo window shows a frame rate in its place.
+			if(false)
+#endif
 			{
 				Information performanceInfo;
 				performanceInfo.SetString("cpu", cpuLoadString);

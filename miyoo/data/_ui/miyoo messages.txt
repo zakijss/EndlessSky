@@ -3,3 +3,7 @@
 
 message "basics 2"
 	text `For the main menu, press <Show main menu>. Tap Select to switch between flying and the pointer; hold Select or Start with another button for more commands. Preferences, Controls lists every button.`
+
+# Preferences, Settings: on the Miyoo "Show CPU / GPU load" is shown as this.
+tip "Show frame rate"
+	`Show how many frames a second the game draws, at the top left of the screen.`

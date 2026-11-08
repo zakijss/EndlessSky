@@ -85,6 +85,10 @@ LoadPanel::LoadPanel(PlayerInfo &player, UI &gamePanels)
 	tooltip(200, Alignment::LEFT, Tooltip::Direction::DOWN_LEFT, Tooltip::Corner::TOP_LEFT,
 		GameData::Colors().Get("tooltip background"), GameData::Colors().Get("medium"), true)
 {
+#ifdef ES_SOFT
+	// It clears the screen and draws the whole background: nothing under it needs drawing.
+	SetIsFullScreen(true);
+#endif
 	// If you have a player loaded, and the player is on a planet, make sure
 	// the player is saved so that any snapshot you create will be of the
 	// player's current state, rather than one planet ago. Only do this if the

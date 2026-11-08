@@ -1,5 +1,6 @@
 // Self-check for source/soft/Raster: c++ -std=c++20 -I source miyoo/tests/raster_test.cpp source/soft/Raster.cpp
 #include "soft/Raster.h"
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <cstdio>
@@ -127,6 +128,31 @@ int main()
 		const uint32_t r = (mixed >> 16) & 0xFF, b = mixed & 0xFF;
 		assert(r > b && b > 0 && (mixed >> 24) == 0xFF);
 		Raster::SetLinearFiltering(false);
+	}
+
+	// Fog: a 3x2 grid of alphas stretched over the whole view darkens white by the
+	// bilinear value at each pixel (the floating-point formula it replaced), within 2.
+	{
+		const uint8_t grid[6] = {0, 128, 255, 255, 60, 0};
+		Raster::Clear(0xFFFFFFFF);
+		Raster::Darken(-8., -8., 16., 16., grid, 3, 2);
+		for(int y = 0; y < 8; ++y)
+			for(int x = 0; x < 8; ++x)
+			{
+				auto sample = [&](double t, int count, int &i0, int &i1) {
+					i0 = std::clamp(static_cast<int>(std::floor(t)), 0, count - 1);
+					i1 = std::clamp(static_cast<int>(std::floor(t)) + 1, 0, count - 1);
+					return t < 0. ? 0. : t - std::floor(t);
+				};
+				int c0, c1, r0, r1;
+				double fx = sample((x + .5) / 8. * 3 - .5, 3, c0, c1);
+				double fy = std::min(1., sample((y + .5) / 8. * 2 - .5, 2, r0, r1));
+				double t = grid[r0 * 3 + c0] + (grid[r0 * 3 + c1] - grid[r0 * 3 + c0]) * fx;
+				double b = grid[r1 * 3 + c0] + (grid[r1 * 3 + c1] - grid[r1 * 3 + c0]) * fx;
+				int expected = 255 - static_cast<int>(t + (b - t) * fy + .5);
+				int got = At(x, y) & 0xFF;
+				assert(std::abs(got - expected) <= 2);
+			}
 	}
 
 	puts("raster ok");

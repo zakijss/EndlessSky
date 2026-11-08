@@ -71,14 +71,6 @@ void Interface::Load(const DataNode &node)
 	// Skip unnamed interfaces.
 	if(node.Size() < 2)
 		return;
-#ifdef ES_SOFT
-	// The Miyoo build ships its own layouts for the small screen; a later
-	// definition of an interface replaces the earlier one instead of adding to it.
-	elements.clear();
-	points.clear();
-	values.clear();
-	lists.clear();
-#endif
 
 	// First, figure out the anchor point of this interface.
 	Point anchor = ParseAlignment(node, 2);

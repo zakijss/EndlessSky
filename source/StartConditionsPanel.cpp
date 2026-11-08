@@ -56,6 +56,10 @@ StartConditionsPanel::StartConditionsPanel(PlayerInfo &player, UI &gamePanels,
 	bright(*GameData::Colors().Get("bright")), medium(*GameData::Colors().Get("medium")),
 	selectedBackground(*GameData::Colors().Get("faint"))
 {
+#ifdef ES_SOFT
+	// It clears the screen and draws the whole background: nothing under it needs drawing.
+	SetIsFullScreen(true);
+#endif
 	// Extract from all start scenarios those that are visible to the player.
 	for(const auto &scenario : allScenarios)
 		if(scenario.Visible())

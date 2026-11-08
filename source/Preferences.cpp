@@ -370,7 +370,12 @@ void Preferences::Init()
 	settings[SHIP_OUTLINES_HUD] = Setting::List("Ship outlines in HUD", {"fast", "fancy"}, 1, true);
 	settings[SHIP_OUTLINES_SHOP] = Setting::List("Ship outlines in shops", {"fast", "fancy"}, 1, true);
 	settings[SHOW_HYPERSPACE_FLASH] = Setting::OnOff("Show hyperspace flash", false);
+#ifdef ES_MIYOO
+	// The Miyoo shows its frame rate instead of the CPU / GPU panel (GameWindowMiyoo).
+	settings[SHOW_PERFORMANCE_METRICS] = Setting::OnOff("Show frame rate", false);
+#else
 	settings[SHOW_PERFORMANCE_METRICS] = Setting::OnOff("Show CPU / GPU load", false);
+#endif
 
 	settings[STATUS_OVERLAYS_ALL] = Setting::Unique("Show status overlays");
 	settings[STATUS_OVERLAYS_ALL].SetDisplayFunc([]() -> pair<string, bool> {

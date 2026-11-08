@@ -195,6 +195,12 @@ RULES = {
         'center 714 -16 bottom left': 'center 699 -16 bottom left',
         'center 654 -80 bottom left': 'center 639 -80 bottom left',
     }),
+    # The status bar (time, Wi-Fi, battery) takes the top 18 units of the top-right corner:
+    # the system and date lines move down a little, closer to the credits line.
+    "hud": Edit({
+        'from -160 25': 'from -160 29',
+        'from -20 45': 'from -20 47',
+    }),
     "info panel": Fit(info_panel, {"ui/info panel": (800, 502)}, post=stack_info_panel),
     # The controls tables are placed by code around the centre; only the note on the left
     # moves, into the part of its box the settings panel doesn't cover.
@@ -305,6 +311,8 @@ def main():
         # Positions in an interface anchored to a screen edge or corner are relative to it.
         anchored = len(body[0].split('"')[-1].split()) > 0 or any(l.strip().startswith('anchor ') for l in body)
         block = edit_block(name, body, rule) if isinstance(rule, Edit) else scale_block(body, rule, anchored)
+        # Loaded after interfaces.txt: replace the upstream definition instead of adding to it.
+        result.append('overwrite')
         result.extend(rule.post(block) if getattr(rule, 'post', None) else block)
         done.add(name)
     missing = set(RULES) - done

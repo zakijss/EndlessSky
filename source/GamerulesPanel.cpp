@@ -58,6 +58,10 @@ GamerulesPanel::GamerulesPanel(Gamerules &gamerules, bool existingPilot)
 		GameData::Colors().Get("tooltip background"), GameData::Colors().Get("medium")),
 	selectedPreset(gamerules.Name())
 {
+#ifdef ES_SOFT
+	// It clears the screen and draws the whole background: nothing under it needs drawing.
+	SetIsFullScreen(true);
+#endif
 	Rectangle presetListBox = presetUi->GetBox("preset list");
 	presetListScroll.SetDisplaySize(presetListBox.Height());
 	presetListScroll.SetMaxValue(GameData::GamerulesPresets().size() * 20);

@@ -16,6 +16,6 @@ help "miyoo port info"
 	`MENU BUTTON`
 	`Menu belongs to Onion: it opens the game switcher. Leaving that way is like quitting, so progress since you last landed is lost; land first to keep it.`
 	`TIPS`
-	`The bar at the top shows the time, Wi-Fi and battery. Texture filtering (smoother sprites) and motion blur look nicer but cost speed; both are in Preferences, Settings, and start off. Every control is listed in Preferences, Controls.`
+	`The bar at the top right shows the time, Wi-Fi and battery. Preferences, Settings, "Show frame rate" adds a frame counter at the top left. Texture filtering (smoother sprites) and motion blur look nicer but cost speed; both are in Preferences, Settings, and start off. Every control is listed in Preferences, Controls.`
 	`ABOUT`
 	`Endless Sky is free software under the GNU GPL version 3, created by Michael Zahniser with many contributors: endless-sky.github.io. This port follows the upstream game and keeps it unchanged; its changes are the renderer, the layouts, the controls and this page.`

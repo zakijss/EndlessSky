@@ -32,6 +32,9 @@ port's own work lives in a few places, so most updates merge cleanly.
 7. Bump `ES_PORT_VERSION` in `CMakeLists.txt` (the upstream version stays as it is).
 8. Upload with `miyoo/tools/push.sh` (one large file at a time, resumable), or copy the stage
    to the SD card.
+9. Release: `cd build-miyoo/stage && zip -qr -X ../EndlessSky-Miyoo-<version>.zip Roms`, then
+   `gh release create v<version> build-miyoo/EndlessSky-Miyoo-<version>.zip -R zakijss/EndlessSky`
+   with a few lines on what changed. The zip unpacks onto the SD card root as it is.
 
 ## When upstream art changes
 

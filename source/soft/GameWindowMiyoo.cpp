@@ -573,6 +573,10 @@ namespace {
 		int wifiBars = 0;
 		int battery = -1;
 		time_t nextRead = 0;
+		// Frames shown in the last second (drawn or reused), for the frame rate readout.
+		int fps = 0;
+		int frames = 0;
+		double since = 0.;
 	} status;
 
 	void ReadStatus()
@@ -635,12 +639,21 @@ namespace {
 		const Color &dim = *GameData::Colors().Get("dim");
 		// Onion's battery monitor writes 500 while charging.
 		const string percent = status.battery > 100 ? "chg" : status.battery >= 0 ? to_string(status.battery) + "%" : "";
-		// Right edge at x = 200: in flight that is the gap between the HUD's top boxes.
-		const double height = 18., right = 200., top = -LOGICAL_HEIGHT / 2.;
+		// In the top-right corner of the screen.
+		const double height = 18., right = LOGICAL_WIDTH / 2., top = -LOGICAL_HEIGHT / 2.;
 		const double width = 10. + font.Width(status.time) + 10. + 14. + 10. + 26. + 4. + font.Width(percent) + 8.;
 		double x = right - width;
 		FillShader::Fill(Point(x + width / 2., top + height / 2.), Point(width, height), Color(0.f, 0.f, 0.f, .55f));
 		const double textY = top + (height - font.Height()) / 2.;
+		// The frame rate, top left, when "Show frame rate" is on. It starts past the pause and
+		// fast-forward icons the game draws in the corner.
+		if(Preferences::Has(Preferences::SHOW_PERFORMANCE_METRICS) && status.fps)
+		{
+			const string fps = to_string(status.fps) + " fps";
+			const double fpsLeft = -LOGICAL_WIDTH / 2. + 20., fpsWidth = font.Width(fps) + 12.;
+			FillShader::Fill(Point(fpsLeft + fpsWidth / 2., top + height / 2.), Point(fpsWidth, height), Color(0.f, 0.f, 0.f, .55f));
+			font.Draw(fps, Point(fpsLeft + 6., textY), bright);
+		}
 		x += 10.;
 		font.Draw(status.time, Point(x, textY), bright);
 		x += font.Width(status.time) + 10.;
@@ -910,6 +923,16 @@ void GameWindow::Step()
 		keyboardDismissed = false;
 	keyboardVisible = keyboardOpened || (textWanted && !keyboardDismissed);
 	++frameNumber;
+	const double shownAt = Now();
+	if(!status.since)
+		status.since = shownAt;
+	++status.frames;
+	if(shownAt - status.since >= 1.)
+	{
+		status.fps = lround(status.frames / (shownAt - status.since));
+		status.frames = 0;
+		status.since = shownAt;
+	}
 	if(!reusing)
 		DrawStatus();
 	if(keyboardVisible && !reusing)

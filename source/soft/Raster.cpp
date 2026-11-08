@@ -575,29 +575,46 @@ void Raster::Darken(double left, double top, double width, double height,
 	const uint8_t *grid, int columns, int rows)
 {
 	ProfScope prof(PROF_FOG);
-	if(columns <= 0 || rows <= 0 || width == 0. || height == 0.)
+	if(columns <= 0 || rows <= 0 || width == 0. || height == 0. || clipX1 <= clipX0)
 		return;
+	// Bilinear, clamp to edge, in 8-bit fixed point. Texel centres sit at (i + 0.5) / count.
+	// The grid cell and weight of each screen column are the same on every row: work them out once.
+	const int span = clipX1 - clipX0;
+	vector<int> c0(span), c1(span), fx(span);
+	int first = columns - 1, last = 0;
+	for(int i = 0; i < span; ++i)
+	{
+		double u = ((clipX0 + i + .5 - fbWidth / 2.) / scale - left) / width * columns - .5;
+		int cell = static_cast<int>(floor(u));
+		c0[i] = clamp(cell, 0, columns - 1);
+		c1[i] = clamp(cell + 1, 0, columns - 1);
+		fx[i] = u < 0. ? 0 : static_cast<int>((u - cell) * 256. + .5);
+		first = min(first, c0[i]);
+		last = max(last, c1[i]);
+	}
+	// One row of the grid interpolated vertically, times 256.
+	vector<int> line(columns);
 	for(int py = clipY0; py < clipY1; ++py)
 	{
-		// Texel centres sit at (i + 0.5) / count in texture space.
 		double v = ((py + .5 - fbHeight / 2.) / scale - top) / height * rows - .5;
-		int r0 = clamp(static_cast<int>(floor(v)), 0, rows - 1);
-		int r1 = clamp(static_cast<int>(floor(v)) + 1, 0, rows - 1);
-		double fy = clamp(v - floor(v), 0., 1.);
-		if(v < 0.)
-			fy = 0.;
-		uint32_t *row = &frame[py * fbWidth];
-		for(int px = clipX0; px < clipX1; ++px)
+		int cell = static_cast<int>(floor(v));
+		const uint8_t *r0 = grid + clamp(cell, 0, rows - 1) * columns;
+		const uint8_t *r1 = grid + clamp(cell + 1, 0, rows - 1) * columns;
+		const int fy = v < 0. ? 0 : static_cast<int>(clamp(v - cell, 0., 1.) * 256. + .5);
+		bool any = false;
+		for(int c = first; c <= last; ++c)
 		{
-			double u = ((px + .5 - fbWidth / 2.) / scale - left) / width * columns - .5;
-			int c0 = clamp(static_cast<int>(floor(u)), 0, columns - 1);
-			int c1 = clamp(static_cast<int>(floor(u)) + 1, 0, columns - 1);
-			double fx = u < 0. ? 0. : u - floor(u);
-			double top0 = grid[r0 * columns + c0] + (grid[r0 * columns + c1] - grid[r0 * columns + c0]) * fx;
-			double bot0 = grid[r1 * columns + c0] + (grid[r1 * columns + c1] - grid[r1 * columns + c0]) * fx;
-			uint32_t a = static_cast<uint32_t>(top0 + (bot0 - top0) * fy + .5);
+			line[c] = r0[c] * (256 - fy) + r1[c] * fy;
+			any |= line[c] != 0;
+		}
+		if(!any)
+			continue;
+		uint32_t *row = &frame[py * fbWidth + clipX0];
+		for(int i = 0; i < span; ++i)
+		{
+			const uint32_t a = (line[c0[i]] * (256 - fx[i]) + line[c1[i]] * fx[i] + (1 << 15)) >> 16;
 			if(a)
-				row[px] = BlendPixel(row[px], min(a, 255u) << 24);
+				row[i] = BlendPixel(row[i], min(a, 255u) << 24);
 		}
 	}
 }
