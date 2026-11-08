@@ -14,6 +14,8 @@ runs all of it under Onion OS, on a 640x480 screen with no GPU, mouse or keyboar
 
 [![Release](https://img.shields.io/github/v/release/zakijss/EndlessSky?color=f2a541&labelColor=1e1d28)](https://github.com/zakijss/EndlessSky/releases/latest) [![Onion OS](https://img.shields.io/badge/Onion_OS-Ports-5aa9ff?labelColor=1e1d28)](https://github.com/OnionUI/Onion) [![Miyoo](https://img.shields.io/badge/Miyoo-Mini_Plus-e2d03c?labelColor=1e1d28)](https://github.com/OnionUI/Onion) [![Upstream](https://img.shields.io/badge/Endless_Sky-0.11.5-8a8a8a?labelColor=1e1d28)](https://github.com/endless-sky/endless-sky) [![License](https://img.shields.io/badge/license-GPLv3-8a8a8a?labelColor=1e1d28)](../license.txt)
 
+<img src="../miyoo/docs/hero.jpg" alt="A black Miyoo Mini Plus on a stand playing Endless Sky, flying through the Sol system, in a dark room with a wide window onto deep space: a spiral galaxy and a purple nebula glow out of focus behind it, a grey Miyoo lies on the counter showing Earth's landing screen" width="100%">
+
 <img src="../miyoo/docs/ui/h-screens.png" alt="01 Screens" width="100%">
 
 <p align="center"><img src="../miyoo/docs/menu.png" alt="The main menu: the Endless Sky title tagged Mini Plus by ZJSS, the pilot's ship, planet and credits, and a Port info button" width="49%"> <img src="../miyoo/docs/flight.png" alt="Flying in the Sol system on the Miyoo: radar, shields and energy bars, the frame counter at the top left and the time, Wi-Fi and battery at the top right" width="49%"></p>
@@ -21,7 +23,10 @@ runs all of it under Onion OS, on a 640x480 screen with no GPU, mouse or keyboar
 <p align="center"><img src="../miyoo/docs/map.png" alt="The star map around Sol, with its planets and their services, the commodity prices and the map buttons" width="49%"> <img src="../miyoo/docs/ship.png" alt="The ship info page: the ship's model, cost, shields, hull, mass, cargo, speed, outfits and its energy and heat table" width="49%"></p>
 
 The flight picture is a screen grab from a Miyoo Mini Plus. The others come from the same renderer
-on a computer, at the Miyoo's resolution.
+on a computer, at the Miyoo's resolution. The two room pictures are Blender renders with those
+screens on the devices.
+
+<img src="../miyoo/docs/desk.jpg" alt="A grey Miyoo Mini Plus on a stand showing Endless Sky's star map around Sol, a black Miyoo lying beside it in flight, a notebook and pencil on the counter, a window onto stars and a galaxy behind" width="100%">
 
 <img src="../miyoo/docs/ui/h-features.png" alt="02 What's in it" width="100%">
 
@@ -215,7 +220,8 @@ Problems with the game itself (missions, balance, story) belong upstream at
   version 3, and so is this port.
 - Art and sound: by many artists, under the licences listed in [copyright](../copyright). The
   banner and section headers here are made from the game's own art (the galaxy map and the main
-  menu planets).
+  menu planets), and so is the view out of the window in the room renders, which use Poly Haven
+  textures (CC0).
 - Onion OS: the launcher uses Onion's `launch_standalone.sh`, and Menu opens Onion's game switcher.
 - Fonts in the headers: Exo 2 (Natanael Gama) and Raleway (Matt McInerney, Pablo Impallari and
   Rodrigo Fuenzalida), under the SIL Open Font License.
