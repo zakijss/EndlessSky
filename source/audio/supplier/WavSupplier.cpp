@@ -26,11 +26,20 @@ using namespace std;
 
 WavSupplier::WavSupplier(const Sound &sound, bool is3x, bool looping)
 	: AudioSupplier(is3x, looping), sound(sound), wasStarted(false)
-#ifdef ES_MIYOO
-	, mono(sound.Samples(false)), mono3x(sound.Samples(true))
-#endif
 {
 }
+
+
+
+#ifdef ES_MIYOO
+const shared_ptr<const vector<AudioSupplier::sample_t>> &WavSupplier::Stored(bool fast) const
+{
+	auto &stored = fast ? mono3x : mono;
+	if(!stored)
+		stored = sound.Samples(fast);
+	return stored;
+}
+#endif
 
 
 
@@ -44,7 +53,7 @@ size_t WavSupplier::MaxChunks() const
 	{
 #ifdef ES_MIYOO
 		// Positions count stereo samples; the stored sound is mono.
-		const auto &input = is3x ? mono3x : mono;
+		const auto &input = Stored(is3x);
 		const size_t total = input ? 2 * input->size() : 0;
 #else
 		const size_t total = (is3x ? sound.Buffer3x() : sound.Buffer()).size();
@@ -78,7 +87,7 @@ vector<AudioSupplier::sample_t> WavSupplier::NextDataChunk()
 			wasStarted = true;
 		}
 #ifdef ES_MIYOO
-		const auto &stored = is3x ? mono3x : mono;
+		const auto &stored = Stored(is3x);
 		if(!stored || stored->empty())
 			break;
 		const size_t total = 2 * stored->size();

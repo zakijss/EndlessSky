@@ -291,6 +291,8 @@ namespace {
 	void TypeCharacter(char c)
 	{
 		const bool upper = shiftOn && c >= 'a' && c <= 'z';
+		// Fast-forward is Caps Lock, which SDL also keeps as a modifier: not for typing.
+		SDL_SetModState(static_cast<SDL_Keymod>(SDL_GetModState() & ~KMOD_CAPS));
 		if(upper)
 			SendKey(SDL_SCANCODE_LSHIFT, true);
 		Tap(CharacterKey(c));
@@ -425,11 +427,13 @@ namespace {
 			if(down)
 			{
 				used = false;
-				// Select and Start together, in either order: fast-forward.
+				// Select and Start together, in either order: fast-forward, in flight only. In
+				// pointer mode both held are Shift and Control (100 at once in shops).
 				if(otherHeld)
 				{
 					selectUsed = startUsed = true;
-					Tap(FlightKey(START, SELECT_HELD));
+					if(!cursorMode && !keyboardVisible)
+						Tap(FlightKey(START, SELECT_HELD));
 				}
 			}
 			else if(!used)
@@ -481,9 +485,13 @@ namespace {
 			{
 				static const bool logButtons = getenv("ES_PROFILE") != nullptr;
 				if(logButtons)
-					Logger::Log("button " + to_string(e.code) + (e.value ? " down" : " up") + " at "
-						+ to_string(e.time.tv_sec % 100) + "." + to_string(e.time.tv_usec / 1000)
-						+ ", frame " + to_string(frameNumber), Logger::Level::INFO);
+				{
+					char line[80];
+					snprintf(line, sizeof(line), "button %d %s at %ld.%03ld, frame %d", e.code,
+						e.value ? "down" : "up", static_cast<long>(e.time.tv_sec % 100),
+						static_cast<long>(e.time.tv_usec / 1000), frameNumber);
+					Logger::Log(line, Logger::Level::INFO);
+				}
 				HandleButton(e.code, e.value == 1);
 				inputQuiet = 0;
 			}
@@ -625,7 +633,8 @@ namespace {
 		const Font &font = FontSet::Get(14);
 		const Color &bright = *GameData::Colors().Get("bright");
 		const Color &dim = *GameData::Colors().Get("dim");
-		const string percent = status.battery >= 0 ? to_string(status.battery) + "%" : "";
+		// Onion's battery monitor writes 500 while charging.
+		const string percent = status.battery > 100 ? "chg" : status.battery >= 0 ? to_string(status.battery) + "%" : "";
 		// Right edge at x = 200: in flight that is the gap between the HUD's top boxes.
 		const double height = 18., right = 200., top = -LOGICAL_HEIGHT / 2.;
 		const double width = 10. + font.Width(status.time) + 10. + 14. + 10. + 26. + 4. + font.Width(percent) + 8.;

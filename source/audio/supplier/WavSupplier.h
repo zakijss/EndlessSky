@@ -40,7 +40,9 @@ private:
 	bool wasStarted;
 #ifdef ES_MIYOO
 	// Mono samples held while playing, so the sound cache can't drop them.
-	std::shared_ptr<const std::vector<sample_t>> mono;
-	std::shared_ptr<const std::vector<sample_t>> mono3x;
+	// The stored sound for normal and fast-forward play, each loaded when first played.
+	const std::shared_ptr<const std::vector<sample_t>> &Stored(bool fast) const;
+	mutable std::shared_ptr<const std::vector<sample_t>> mono;
+	mutable std::shared_ptr<const std::vector<sample_t>> mono3x;
 #endif
 };

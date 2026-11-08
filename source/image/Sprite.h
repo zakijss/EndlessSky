@@ -49,6 +49,8 @@ public:
 	// to be fully loaded.
 	void LoadDimensions(const ImageBuffer &buffer);
 #ifdef ES_SOFT
+	// Whether the image is in memory, without asking for it to be loaded (IsLoaded asks).
+	bool IsResident() const;
 	// Dimensions from the saved size list, in image pixels as LoadDimensions reads them.
 	void SetDimensions(int pixelWidth, int pixelHeight, int frameCount);
 #endif

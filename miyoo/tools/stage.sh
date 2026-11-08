@@ -7,10 +7,12 @@ cd "$(dirname "$0")/../.."
 P=build-miyoo/stage/Roms/PORTS
 G="$P/Games/Endless Sky"
 VERSION=$(sed -n 's/.*ES_PORT_VERSION="\([^"]*\)".*/\1/p' CMakeLists.txt)
-mkdir -p "$G/data" "$P/Shortcuts/Space" "$P/Imgs"
+mkdir -p "$G" "$P/Shortcuts/Space" "$P/Imgs"
 
-rsync -a --delete data/ "$G/data/"
-rsync -a --delete sounds/ "$G/sounds/"
+# Fresh copies, so files upstream removed don't linger (rsync isn't in every build image).
+rm -rf "$G/data" "$G/sounds"
+cp -R data "$G/data"
+cp -R sounds "$G/sounds"
 cp miyoo/data/_ui/*.txt "$G/data/_ui/"
 python3 miyoo/tools/layout_miyoo.py data/_ui/interfaces.txt "$G/data/_ui/miyoo interfaces.txt" images
 python3 miyoo/tools/help_miyoo.py data/_ui/help.txt "$G/data/_ui/miyoo help.txt"

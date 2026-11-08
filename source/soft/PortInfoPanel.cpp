@@ -89,7 +89,7 @@ void PortInfoPanel::Draw()
 	text.Draw(Point(left + PAD, textTop + 6. - scroll), bright);
 	Raster::ResetClip();
 
-	const string hint = text.Height() > VisibleHeight() ? "Up/Down or L1/R1: scroll    B or Start: close" : "B or Start: close";
+	const string hint = text.Height() > VisibleHeight() ? "L1/R1: scroll    B or Start: close" : "B or Start: close";
 	font.Draw(hint, Point(-font.Width(hint) / 2., top + BOX_HEIGHT - FOOTER + 8.), medium);
 }
 

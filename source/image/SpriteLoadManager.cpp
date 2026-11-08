@@ -30,6 +30,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <vector>
 #endif
 #include <atomic>
+#include <thread>
 #include <map>
 #include <queue>
 #include <set>
@@ -241,9 +242,17 @@ void SpriteLoadManager::LoadDeferred(TaskQueue &queue, const Sprite *sprite)
 {
 #ifdef ES_SOFT
 	// The software renderer loads sprites through its own cache (one path, so an image is
-	// never loaded twice at once); this preload becomes a request it handles next frame.
+	// never loaded twice at once). Single preloads become requests: the landscape before
+	// landing, the stellar objects of a system, a conversation scene. Bulk ones (every
+	// thumbnail on a sales map) are skipped: those load as they are drawn, within budget.
 	(void)queue;
-	RequestSprite(sprite);
+	if(sprite)
+	{
+		const string &name = sprite->Name();
+		if(name.starts_with("land/") || name.starts_with("star/") || name.starts_with("planet/")
+				|| name.starts_with("scene/"))
+			RequestSprite(sprite);
+	}
 	return;
 #endif
 	// Make sure this sprite actually is one that uses deferred loading.
@@ -413,6 +422,7 @@ namespace {
 	// Sprites asked for from any thread (preloads, IsLoaded checks), handled by PumpSprites.
 	mutex requestMutex;
 	vector<const Sprite *> requests;
+	atomic<thread::id> mainThread{};
 	int softFrame = 0;
 	// Frames a sprite stays safe from eviction after it was last drawn (about 2 s at 30 fps).
 	constexpr int KEEP_FRAMES = 60;
@@ -437,7 +447,7 @@ void SpriteLoadManager::UseSprite(const Sprite *sprite)
 		return;
 	SoftEntry &entry = softEntries[sprite];
 	entry.lastUsed = softFrame;
-	if(entry.pending || sprite->IsLoaded())
+	if(entry.pending || sprite->IsResident())
 		return;
 	auto it = deferred.find(sprite);
 	if(it == deferred.end())
@@ -464,8 +474,16 @@ void SpriteLoadManager::RequestSprite(const Sprite *sprite)
 
 
 
+bool SpriteLoadManager::OnMainThread()
+{
+	return this_thread::get_id() == mainThread.load();
+}
+
+
+
 void SpriteLoadManager::PumpSprites()
 {
+	mainThread = this_thread::get_id();
 	vector<const Sprite *> requested;
 	{
 		lock_guard<mutex> lock(requestMutex);
@@ -480,7 +498,7 @@ void SpriteLoadManager::PumpSprites()
 	// Evict the least recently drawn sprites until under budget, never ones drawn lately.
 	vector<pair<int, const Sprite *>> candidates;
 	for(const auto &[sprite, entry] : softEntries)
-		if(!entry.pending && sprite->IsLoaded() && softFrame - entry.lastUsed > KEEP_FRAMES)
+		if(!entry.pending && sprite->IsResident() && softFrame - entry.lastUsed > KEEP_FRAMES)
 			candidates.emplace_back(entry.lastUsed, sprite);
 	sort(candidates.begin(), candidates.end());
 	for(const auto &[lastUsed, sprite] : candidates)

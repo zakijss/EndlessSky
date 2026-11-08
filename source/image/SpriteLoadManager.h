@@ -61,6 +61,8 @@ public:
 	static void UseSprite(const Sprite *sprite);
 	// From any thread: ask for the sprite to be loaded (used) on the next PumpSprites.
 	static void RequestSprite(const Sprite *sprite);
+	// Whether this is the main (drawing) thread, which PumpSprites runs on.
+	static bool OnMainThread();
 	// Once per frame on the main thread: finish loads and evict.
 	static void PumpSprites();
 #endif

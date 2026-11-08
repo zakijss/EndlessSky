@@ -224,12 +224,22 @@ bool Sprite::IsLoaded() const
 {
 #ifdef ES_SOFT
 	// Panels that draw a sprite only once it is loaded (shop thumbnails) never draw it to
-	// trigger loading, and an evicted sprite must come back: asking is a request.
-	if(!isLoaded)
+	// trigger loading, and an evicted sprite must come back: asking is a request. Only on the
+	// drawing thread: the calculation thread asks about bodies it never draws (collisions).
+	if(!isLoaded && SpriteLoadManager::OnMainThread())
 		SpriteLoadManager::RequestSprite(this);
 #endif
 	return isLoaded;
 }
+
+
+
+#ifdef ES_SOFT
+bool Sprite::IsResident() const
+{
+	return isLoaded;
+}
+#endif
 
 
 
