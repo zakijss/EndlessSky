@@ -36,6 +36,14 @@ public:
 	bool IsLooping() const;
 
 	std::unique_ptr<AudioSupplier> CreateSupplier() const;
+	// Whether there is no audio to play.
+	bool IsEmpty() const;
+
+#ifdef ES_MIYOO
+	// Mono samples, read from the file when first needed and kept in a shared cache with a
+	// byte budget; the cache drops the least recently used sounds nobody is playing.
+	std::shared_ptr<const std::vector<AudioSupplier::sample_t>> Samples(bool is3x) const;
+#endif
 
 
 private:
@@ -43,4 +51,9 @@ private:
 	std::vector<AudioSupplier::sample_t> buffer;
 	std::vector<AudioSupplier::sample_t> buffer3x;
 	bool isLooped = false;
+#ifdef ES_MIYOO
+	// The whole sound set doesn't fit in memory there, so Load only records the files.
+	std::filesystem::path path;
+	std::filesystem::path path3x;
+#endif
 };

@@ -90,6 +90,13 @@ void ShipInfoDisplay::DrawAttributes(const Point &topLeft) const
 // Draw each of the panels.
 void ShipInfoDisplay::DrawAttributes(const Point &topLeft, const bool sale) const
 {
+	DrawAttributes(topLeft, sale, true);
+}
+
+
+
+void ShipInfoDisplay::DrawAttributes(const Point &topLeft, const bool sale, const bool energyHeat) const
+{
 	// Header.
 	Point point = Draw(topLeft, attributeHeaderLabels, attributeHeaderValues);
 
@@ -107,6 +114,22 @@ void ShipInfoDisplay::DrawAttributes(const Point &topLeft, const bool sale) cons
 	// Body.
 	point = Draw(point, attributeLabels, attributeValues);
 
+	if(energyHeat)
+		DrawEnergyHeat(point);
+}
+
+
+
+// The energy and heat table: a gap, a header row, then one row per state.
+double ShipInfoDisplay::EnergyHeatHeight() const
+{
+	return 30. + 20. * tableLabels.size();
+}
+
+
+
+void ShipInfoDisplay::DrawEnergyHeat(const Point &point) const
+{
 	// Get standard colors to draw with.
 	const Color &labelColor = *GameData::Colors().Get("medium");
 	const Color &valueColor = *GameData::Colors().Get("bright");

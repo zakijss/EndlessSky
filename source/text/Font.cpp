@@ -17,12 +17,16 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "Alignment.h"
 #include "../Color.h"
+#ifdef ES_SOFT
+#include "../soft/Raster.h"
+#endif
 #include "DisplayText.h"
 #include "../GameData.h"
 #include "../image/ImageBuffer.h"
 #include "../image/ImageFileData.h"
 #include "../Point.h"
 #include "../Preferences.h"
+#include "../Logger.h"
 #include "../Screen.h"
 #include "Truncate.h"
 
@@ -30,15 +34,21 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
+#include <set>
 
 using namespace std;
 
 namespace {
+#ifdef ES_SOFT
+	// Thickening for small text (1 = none).
+	constexpr double TEXT_GAMMA = .75;
+#endif
 	bool showUnderlines = false;
 	const int KERN = 2;
 	const float UNDERLINE_OFFSET = 2.f;
 
 	/// Shared VAO and VBO quad (0,0) -> (1,1)
+#ifndef ES_SOFT
 	GLuint vao = 0;
 	GLuint vbo = 0;
 
@@ -63,6 +73,8 @@ namespace {
 		glVertexAttribPointer(cornerI, 2, GL_FLOAT, GL_FALSE,
 			stride, reinterpret_cast<const GLvoid *>(2 * sizeof(GLfloat)));
 	}
+#endif
+
 }
 
 
@@ -122,6 +134,69 @@ void Font::Draw(const string &str, const Point &point, const Color &color) const
 
 void Font::DrawAliased(const string &str, double x, double y, const Color &color) const
 {
+#ifdef ES_SOFT
+	Raster::ProfScope prof(Raster::PROF_TEXT);
+#endif
+#ifdef ES_SOFT
+	// ES_TEXT_CHECK=1: log (once each) text drawn past the screen's edges, to find overflow.
+	static const bool checkText = getenv("ES_TEXT_CHECK") != nullptr;
+	if(checkText && !str.empty())
+	{
+		static set<string> reported;
+		const double right = x + Width(str), bottom = y + Height();
+		if((x < Screen::Left() - 1 || right > Screen::Right() + 1 || y < Screen::Top() - 1 || bottom > Screen::Bottom() + 1)
+				&& reported.insert(str).second)
+			Logger::Log("Text past the screen edge at (" + to_string(static_cast<int>(x)) + ", " + to_string(static_cast<int>(y))
+				+ ") to (" + to_string(static_cast<int>(right)) + ", " + to_string(static_cast<int>(bottom)) + "): " + str.substr(0, 60),
+				Logger::Level::WARNING);
+	}
+	// Same layout as the GL branch below; keep the two in step.
+	const float *rgba = color.Get();
+	auto drawGlyph = [&](int glyph, float aspect, float gx, float gy)
+	{
+		Raster::DrawGlyph(atlas.data(), atlasWidth, atlasHeight, GLYPHS, glyph,
+			gx, gy, aspect * glyphWidth, glyphHeight, rgba);
+	};
+	float textPos[2] = {static_cast<float>(x - 1.), static_cast<float>(y)};
+	int previous = 0;
+	bool isAfterSpace = true;
+	bool underlineChar = false;
+	bool doubleUnderlineChar = false;
+	const int underscoreGlyph = max(0, min(GLYPHS - 1, '_' - 32));
+	for(char c : str)
+	{
+		if(c == '_')
+		{
+			if(underlineChar)
+				doubleUnderlineChar = true;
+			underlineChar = showUnderlines;
+			continue;
+		}
+		int glyph = Glyph(c, isAfterSpace);
+		if(c != '"' && c != '\'')
+			isAfterSpace = !glyph;
+		if(!glyph)
+		{
+			textPos[0] += space;
+			continue;
+		}
+		textPos[0] += advance[previous * GLYPHS + glyph] + KERN;
+		drawGlyph(glyph, 1.f, textPos[0], textPos[1]);
+		if(underlineChar)
+		{
+			float aspect = static_cast<float>(advance[glyph * GLYPHS] + KERN)
+				/ (advance[underscoreGlyph * GLYPHS] + KERN);
+			drawGlyph(underscoreGlyph, aspect, textPos[0], textPos[1]);
+			if(doubleUnderlineChar)
+			{
+				drawGlyph(underscoreGlyph, aspect, textPos[0], textPos[1] + UNDERLINE_OFFSET);
+				doubleUnderlineChar = false;
+			}
+			underlineChar = false;
+		}
+		previous = glyph;
+	}
+#else
 	glUseProgram(shader->Object());
 	glBindTexture(GL_TEXTURE_2D, texture);
 	if(OpenGL::HasVaoSupport())
@@ -213,6 +288,7 @@ void Font::DrawAliased(const string &str, double x, double y, const Color &color
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	}
 	glUseProgram(0);
+#endif
 }
 
 
@@ -269,6 +345,17 @@ int Font::Glyph(char c, bool isAfterSpace) noexcept
 
 void Font::LoadTexture(ImageBuffer &image)
 {
+#ifdef ES_SOFT
+	// The atlas holds glyphs at the original's 1x size; the 800x600 screen draws them at 0.8,
+	// so the full atlas sampled bilinearly stays sharp. A gamma below 1 keeps the strokes of
+	// small text from thinning out when they fall between pixels.
+	atlasWidth = image.Width();
+	atlasHeight = image.Height();
+	atlas.assign(static_cast<size_t>(atlasWidth) * atlasHeight, 0);
+	const uint32_t *pixels = image.Pixels();
+	for(size_t i = 0; i < atlas.size(); ++i)
+		atlas[i] = static_cast<uint8_t>(255. * pow((pixels[i] >> 24) / 255., TEXT_GAMMA) + .5);
+#else
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -279,6 +366,7 @@ void Font::LoadTexture(ImageBuffer &image)
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.Width(), image.Height(), 0,
 		GL_RGBA, GL_UNSIGNED_BYTE, image.Pixels());
+#endif
 }
 
 
@@ -350,6 +438,7 @@ void Font::SetUpShader(float glyphW, float glyphH)
 	glyphWidth = glyphW * .5f;
 	glyphHeight = glyphH * .5f;
 
+#ifndef ES_SOFT
 	shader = GameData::Shaders().Get("font");
 	// Initialize the shared parameters only once
 	if(!vbo)
@@ -393,6 +482,7 @@ void Font::SetUpShader(float glyphW, float glyphH)
 		aspectI = shader->Uniform("aspect");
 		positionI = shader->Uniform("position");
 	}
+#endif
 
 	// We must update the screen size next time we draw.
 	screenWidth = 0;

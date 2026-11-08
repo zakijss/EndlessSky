@@ -22,6 +22,13 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "SpriteSet.h"
 #include "../TaskQueue.h"
 
+#ifdef ES_SOFT
+#include "../soft/Raster.h"
+
+#include <algorithm>
+#include <cstdlib>
+#include <vector>
+#endif
 #include <atomic>
 #include <map>
 #include <queue>
@@ -70,8 +77,13 @@ namespace {
 	{
 		if(path.empty())
 			return false;
+#ifdef ES_SOFT
+		// Software build (Miyoo): no image is decoded at startup; sprites load on demand.
+		return true;
+#else
 		filesystem::path pathStart = *path.begin();
 		return deferredFolders.contains(pathStart.string());
+#endif
 	}
 
 	// Loads a sprite and queues it for upload to the GPU.
@@ -107,8 +119,14 @@ namespace {
 		if(deferred.contains(sprite))
 		{
 			queue.Run([image, sprite] { image->LoadDimensions(sprite); },
-				[&queue]
+				[&queue, image, sprite]
 				{
+#ifdef ES_SOFT
+					image->UploadMasks(sprite);
+#else
+					(void)image;
+					(void)sprite;
+#endif
 					++spritesLoaded;
 					// Start loading the next image in the queue, if any.
 					lock_guard lock(imageQueueMutex);
@@ -221,6 +239,13 @@ void SpriteLoadManager::LoadDeferred(TaskQueue &queue, const Drawable &drawable)
 
 void SpriteLoadManager::LoadDeferred(TaskQueue &queue, const Sprite *sprite)
 {
+#ifdef ES_SOFT
+	// The software renderer loads sprites through its own cache (one path, so an image is
+	// never loaded twice at once); this preload becomes a request it handles next frame.
+	(void)queue;
+	RequestSprite(sprite);
+	return;
+#endif
 	// Make sure this sprite actually is one that uses deferred loading.
 	auto dit = deferred.find(sprite);
 	if(!sprite || dit == deferred.end())
@@ -373,3 +398,97 @@ void SpriteLoadManager::LoadScene(TaskQueue &queue, const Sprite *sprite, const 
 
 	LoadSprite(queue, image);
 }
+
+
+
+#ifdef ES_SOFT
+namespace {
+	// Never destroyed: at exit its workers may already be gone, and waiting would hang.
+	TaskQueue &softQueue = *new TaskQueue;
+	struct SoftEntry {
+		int lastUsed = 0;
+		bool pending = false;
+	};
+	map<const Sprite *, SoftEntry> softEntries;
+	// Sprites asked for from any thread (preloads, IsLoaded checks), handled by PumpSprites.
+	mutex requestMutex;
+	vector<const Sprite *> requests;
+	int softFrame = 0;
+	// Frames a sprite stays safe from eviction after it was last drawn (about 2 s at 30 fps).
+	constexpr int KEEP_FRAMES = 60;
+
+	uint64_t SoftBudget()
+	{
+		static const uint64_t budget = []
+		{
+			const char *mb = getenv("ES_SPRITE_BUDGET_MB");
+			return static_cast<uint64_t>(mb ? atoi(mb) : 20) << 20;
+		}();
+		return budget;
+	}
+}
+
+
+
+void SpriteLoadManager::UseSprite(const Sprite *sprite)
+{
+	// The list of deferred sprites is still being filled on a worker thread.
+	if(!sprite || !queuedAllImages)
+		return;
+	SoftEntry &entry = softEntries[sprite];
+	entry.lastUsed = softFrame;
+	if(entry.pending || sprite->IsLoaded())
+		return;
+	auto it = deferred.find(sprite);
+	if(it == deferred.end())
+		return;
+	entry.pending = true;
+	shared_ptr<ImageSet> image = it->second;
+	softQueue.Run([image] { image->Load(); },
+		[image, sprite]
+		{
+			image->Upload(SpriteSet::Modify(sprite->Name()), true);
+			softEntries[sprite].pending = false;
+		});
+}
+
+
+
+void SpriteLoadManager::RequestSprite(const Sprite *sprite)
+{
+	if(!sprite)
+		return;
+	lock_guard<mutex> lock(requestMutex);
+	requests.push_back(sprite);
+}
+
+
+
+void SpriteLoadManager::PumpSprites()
+{
+	vector<const Sprite *> requested;
+	{
+		lock_guard<mutex> lock(requestMutex);
+		requested.swap(requests);
+	}
+	for(const Sprite *sprite : requested)
+		UseSprite(sprite);
+	softQueue.ProcessSyncTasks();
+	++softFrame;
+	if(Raster::TextureBytes() <= SoftBudget())
+		return;
+	// Evict the least recently drawn sprites until under budget, never ones drawn lately.
+	vector<pair<int, const Sprite *>> candidates;
+	for(const auto &[sprite, entry] : softEntries)
+		if(!entry.pending && sprite->IsLoaded() && softFrame - entry.lastUsed > KEEP_FRAMES)
+			candidates.emplace_back(entry.lastUsed, sprite);
+	sort(candidates.begin(), candidates.end());
+	for(const auto &[lastUsed, sprite] : candidates)
+	{
+		SpriteSet::Modify(sprite->Name())->Unload();
+		softEntries.erase(sprite);
+		if(Raster::TextureBytes() <= SoftBudget())
+			break;
+	}
+}
+#endif

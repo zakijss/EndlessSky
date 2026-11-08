@@ -53,6 +53,12 @@ using namespace std;
 namespace {
 	constexpr double WIDTH = 250.;
 	constexpr int COLUMN_WIDTH = static_cast<int>(WIDTH) - 20;
+
+	// Whether the stats box is shorter than upstream's 570, which the full list needs.
+	bool StatsAreShort(const Rectangle &bounds)
+	{
+		return bounds.Height() < 560.;
+	}
 }
 
 
@@ -144,6 +150,8 @@ void ShipInfoPanel::Draw()
 	DrawOutfits(infoPanelUi->GetBox("outfits"), cargoBounds);
 	DrawWeapons(infoPanelUi->GetBox("weapons"));
 	DrawCargo(cargoBounds);
+	if(StatsAreShort(infoPanelUi->GetBox("stats")))
+		info.DrawEnergyHeat(Point(cargoBounds.Left(), cargoBounds.Bottom() - info.EnergyHeatHeight() - 10.));
 
 	// If the player hovers their mouse over a ship attribute, show its tooltip.
 	info.DrawTooltips();
@@ -419,7 +427,9 @@ void ShipInfoPanel::DrawShipStats(const Rectangle &bounds)
 		table.DrawHighlight(backColor);
 	table.DrawTruncatedPair("ship:", dim, ship.GivenName(), bright, Truncate::MIDDLE, true);
 
-	info.DrawAttributes(table.GetRowBounds().TopLeft() - Point(10., 10.));
+	// A box too short for the whole list (the Miyoo's 600-high screen) leaves the energy
+	// and heat table to the bottom of the cargo column.
+	info.DrawAttributes(table.GetRowBounds().TopLeft() - Point(10., 10.), false, !StatsAreShort(bounds));
 }
 
 
@@ -536,9 +546,11 @@ void ShipInfoPanel::DrawWeapons(const Rectangle &bounds)
 		++count[hardpoint.GetPoint().X() >= 0.][hardpoint.IsTurret()];
 	}
 	// If necessary, shrink the sprite to keep the hardpoints inside the labels.
-	// The width of this UI block will be 2 * (LABEL_WIDTH + HARDPOINT_DX).
-	static const double LABEL_WIDTH = 150.;
-	static const double LABEL_DX = 95.;
+	// The width of this UI block will be 2 * (LABEL_WIDTH + HARDPOINT_DX); a narrower
+	// box (the Miyoo's 800-wide screen) shrinks the labels and the gap between them.
+	const double fit = min(1., bounds.Width() / 490.);
+	const double LABEL_WIDTH = 150. * fit;
+	const double LABEL_DX = 95. * fit;
 	static const double LABEL_PAD = 5.;
 	if(maxX > (LABEL_DX - LABEL_PAD))
 		scale = min(scale, (LABEL_DX - LABEL_PAD) / (2. * maxX));
@@ -568,7 +580,7 @@ void ShipInfoPanel::DrawWeapons(const Rectangle &bounds)
 	const double fromX[2] = { centerX - LABEL_DX + LABEL_PAD, centerX + LABEL_DX - LABEL_PAD};
 	static const double LINE_HEIGHT = 20.;
 	static const double TEXT_OFF = .5 * (LINE_HEIGHT - font.Height());
-	static const Point LINE_SIZE(LABEL_WIDTH, LINE_HEIGHT);
+	const Point LINE_SIZE(LABEL_WIDTH, LINE_HEIGHT);
 	Point topFrom;
 	Point topTo;
 	Color topColor;

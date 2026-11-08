@@ -28,6 +28,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "../image/SpriteSet.h"
 #include "../System.h"
 
+#ifdef ES_SOFT
+#include "../soft/Raster.h"
+#endif
+
 #include <algorithm>
 #include <cmath>
 #include <numeric>
@@ -75,7 +79,9 @@ namespace {
 
 void StarField::Init(int stars, int width)
 {
+#ifndef ES_SOFT
 	SetUpGraphics();
+#endif
 	MakeStars(stars, width);
 
 	lastSprite = SpriteSet::Get("_menu/haze");
@@ -185,6 +191,9 @@ void StarField::Step(Point vel, double zoom)
 
 void StarField::Draw(const Point &blur, const System *system) const
 {
+#ifdef ES_SOFT
+	Raster::ProfScope prof(Raster::PROF_STARS);
+#endif
 	double density = system ? system->StarfieldDensity() : 1.;
 
 	// Check preferences for the parallax quality.
@@ -197,6 +206,7 @@ void StarField::Draw(const Point &blur, const System *system) const
 	double zoom = baseZoom;
 	if(Preferences::Has(Preferences::DRAW_STARFIELD) && density > 0.)
 	{
+#ifndef ES_SOFT
 		glUseProgram(shader->Object());
 		if(OpenGL::HasVaoSupport())
 			glBindVertexArray(vao);
@@ -205,6 +215,7 @@ void StarField::Draw(const Point &blur, const System *system) const
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			EnableAttribArrays();
 		}
+#endif
 
 		for(int pass = 1; pass <= layers; pass++)
 		{
@@ -218,6 +229,20 @@ void StarField::Draw(const Point &blur, const System *system) const
 			// farthest out zoom they are too small to draw well.
 			unit /= pow(zoom, .75);
 
+#ifdef ES_SOFT
+			const double elongation = length * zoom;
+			const double brightness = min(1., pow(zoom, .5));
+			const double unitSquared = unit.Dot(unit);
+			// Drawn at 0.625 scale, stars shrink below a pixel; bigger and brighter keeps them visible.
+			constexpr double SIZE_BOOST = 1.6;
+			constexpr double BRIGHTNESS_BOOST = 1.5;
+			const double pixelScale = Raster::Scale();
+			const double halfWidth = Raster::Width() / 2., halfHeight = Raster::Height() / 2.;
+			const int screenWidth = Raster::Width();
+			uint32_t *pixels = Raster::Pixels();
+			int clipX0, clipY0, clipX1, clipY1;
+			Raster::GetClip(clipX0, clipY0, clipX1, clipY1);
+#else
 			float baseZoom = static_cast<float>(2. * zoom);
 			GLfloat scale[2] = {baseZoom / Screen::Width(), -baseZoom / Screen::Height()};
 			glUniform2fv(scaleI, 1, scale);
@@ -229,6 +254,7 @@ void StarField::Draw(const Point &blur, const System *system) const
 
 			glUniform1f(elongationI, length * zoom);
 			glUniform1f(brightnessI, min(1., pow(zoom, .5)));
+#endif
 
 			// Stars this far beyond the border may still overlap the screen.
 			double borderX = fabs(blur.X()) + 1.;
@@ -247,19 +273,81 @@ void StarField::Draw(const Point &blur, const System *system) const
 				for(int gx = minX; gx < maxX; gx += TILE_SIZE)
 				{
 					Point off = Point(gx, gy) - pos;
+#ifndef ES_SOFT
 					GLfloat translate[2] = {
 						static_cast<float>(off.X()),
 						static_cast<float>(off.Y())
 					};
 					glUniform2fv(translateI, 1, translate);
+#endif
 
 					int index = (gx & widthMod) / TILE_SIZE + ((gy & widthMod) / TILE_SIZE) * tileCols;
 					int first = tileIndex[index];
 					int count = (tileIndex[index + 1] - first) * density / layers;
+#ifdef ES_SOFT
+					// Each star is a diamond, stretched along the motion and fading to its edges:
+					// alpha = fade * (1 - |ex| / size - |ey| / (size + elongation)), where ex and ey
+					// are linear in the pixel offset from the star's centre.
+					const double toLogical = 1. / (pixelScale * zoom * unitSquared);
+					const float ax = unit.Y() * toLogical, ay = -unit.X() * toLogical;
+					const float bx = unit.X() * toLogical, by = unit.Y() * toLogical;
+					const float det = ax * by - ay * bx;
+					const int begin = first + (pass - 1) * count;
+					for(int i = begin; i < begin + count / pass; ++i)
+					{
+						const float *star = &starData[3 * i];
+						const float size = star[2] * SIZE_BOOST;
+						const float fade = BRIGHTNESS_BOOST * (brightness * (4. / (4. + elongation)) * star[2] * .2 + .05);
+						const float invA = 1.f / size, invB = 1.f / (size + elongation);
+						const double cx = (off.X() + star[0]) * zoom * pixelScale + halfWidth;
+						const double cy = (off.Y() + star[1]) * zoom * pixelScale + halfHeight;
+						// The diamond's corners (ex = +-size or ey = +-(size + elongation)), as pixel
+						// offsets; each row then only visits the pixels between its edges.
+						const float cornerA[2] = {size * by / det, -size * bx / det};
+						const float stretched = size + elongation;
+						const float cornerB[2] = {-stretched * ay / det, stretched * ax / det};
+						const float corners[4][2] = {{cornerA[0], cornerA[1]}, {cornerB[0], cornerB[1]},
+							{-cornerA[0], -cornerA[1]}, {-cornerB[0], -cornerB[1]}};
+						const float extentY = max(fabs(cornerA[1]), fabs(cornerB[1]));
+						const int y0 = max(clipY0, static_cast<int>(floor(cy - extentY))), y1 = min(clipY1, static_cast<int>(ceil(cy + extentY)) + 1);
+						for(int py = y0; py < y1; ++py)
+						{
+							const float dy = py + .5 - cy;
+							float left = 1e9f, right = -1e9f;
+							for(int e = 0; e < 4; ++e)
+							{
+								const float *a = corners[e], *b = corners[(e + 1) % 4];
+								if((a[1] - dy) * (b[1] - dy) > 0.f || a[1] == b[1])
+									continue;
+								const float x = a[0] + (b[0] - a[0]) * (dy - a[1]) / (b[1] - a[1]);
+								left = min(left, x);
+								right = max(right, x);
+							}
+							if(left > right)
+								continue;
+							// A pixel of margin; the alpha test below trims it.
+							const int x0 = max(clipX0, static_cast<int>(floor(cx + left - .5)));
+							const int x1 = min(clipX1, static_cast<int>(ceil(cx + right + .5)));
+							uint32_t *row = pixels + py * screenWidth;
+							for(int px = x0; px < x1; ++px)
+							{
+								const float dx = px + .5 - cx;
+								const float alpha = fade * (1.f - fabs(ax * dx + ay * dy) * invA - fabs(bx * dx + by * dy) * invB);
+								if(alpha <= 0.f)
+									continue;
+								// White, premultiplied: every channel equals the alpha.
+								const uint32_t a = alpha >= 1.f ? 255u : static_cast<uint32_t>(alpha * 255.f + .5f);
+								row[px] = Raster::BlendPixel(row[px], a * 0x01010101u);
+							}
+						}
+					}
+#else
 					glDrawArrays(GL_TRIANGLES, 6 * (first + (pass - 1) * count), 6 * (count / pass));
+#endif
 				}
 			}
 		}
+#ifndef ES_SOFT
 		if(OpenGL::HasVaoSupport())
 			glBindVertexArray(0);
 		else
@@ -270,6 +358,7 @@ void StarField::Draw(const Point &blur, const System *system) const
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
 		glUseProgram(0);
+#endif
 	}
 
 	// Draw the background haze unless it is disabled in the preferences.
@@ -305,6 +394,7 @@ void StarField::Draw(const Point &blur, const System *system) const
 
 void StarField::EnableAttribArrays() const
 {
+#ifndef ES_SOFT
 	// Connect the xy to the "vert" attribute of the vertex shader.
 	constexpr auto stride = 4 * sizeof(GLfloat);
 	glEnableVertexAttribArray(offsetI);
@@ -318,12 +408,14 @@ void StarField::EnableAttribArrays() const
 	glEnableVertexAttribArray(cornerI);
 	glVertexAttribPointer(cornerI, 1, GL_FLOAT, GL_FALSE,
 		stride, reinterpret_cast<const GLvoid *>(3 * sizeof(GLfloat)));
+#endif
 }
 
 
 
 void StarField::SetUpGraphics()
 {
+#ifndef ES_SOFT
 	shader = GameData::Shaders().Get("starfield");
 	if(!shader->Object())
 		throw runtime_error("Could not find starfield shader!");
@@ -348,6 +440,7 @@ void StarField::SetUpGraphics()
 	elongationI = shader->Uniform("elongation");
 	translateI = shader->Uniform("translate");
 	brightnessI = shader->Uniform("brightness");
+#endif
 }
 
 
@@ -410,7 +503,11 @@ void StarField::MakeStars(int stars, int width)
 	partial_sum(tileIndex.begin(), tileIndex.end(), tileIndex.begin());
 
 	// Each star consists of six vertices, each with four data elements.
+#ifdef ES_SOFT
+	starData.assign(3 * stars, 0.f);
+#else
 	vector<GLfloat> data(6 * 4 * stars, 0.f);
+#endif
 	for(auto it = temp.begin(); it != temp.end(); )
 	{
 		// Figure out what tile this star is in.
@@ -424,6 +521,12 @@ void StarField::MakeStars(int stars, int width)
 		float fy = (y & (TILE_SIZE - 1)) + (random >> 8) * 0.0625f;
 		float size = (((random >> 4) & 15) + 20) * 0.0625f;
 
+#ifdef ES_SOFT
+		float *starIt = &starData[3 * tileIndex[index]++];
+		starIt[0] = fx;
+		starIt[1] = fy;
+		starIt[2] = size;
+#else
 		// Fill in the data array.
 		auto dataIt = data.begin() + 6 * 4 * tileIndex[index]++;
 		const float CORNER[6] = {
@@ -441,10 +544,12 @@ void StarField::MakeStars(int stars, int width)
 			*dataIt++ = size;
 			*dataIt++ = corner;
 		}
+#endif
 	}
 	// Adjust the tile indices so that tileIndex[i] is the start of tile i.
 	tileIndex.insert(tileIndex.begin(), 0);
 
+#ifndef ES_SOFT
 	glBufferData(GL_ARRAY_BUFFER, sizeof(data.front()) * data.size(), data.data(), GL_STATIC_DRAW);
 
 	if(OpenGL::HasVaoSupport())
@@ -454,4 +559,5 @@ void StarField::MakeStars(int stars, int width)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	if(OpenGL::HasVaoSupport())
 		glBindVertexArray(0);
+#endif
 }

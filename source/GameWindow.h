@@ -28,6 +28,22 @@ public:
 
 	// Paint the next frame in the main window.
 	static void Step();
+#ifdef ES_MIYOO
+	// Buttons fly the ship in flight and drive a pointer in menus; the main loop says which.
+	static void SetInFlight(bool inFlight);
+	// Each step is 1/60 s of game time. True when flight drawing has fallen behind
+	// real time and this step should be run without drawing it.
+	static bool SkipDraw();
+	// A step fast-forward runs without drawing, for SkipDraw's timing.
+	static void StepWithoutDraw();
+	// Off flight: true when the screen hasn't changed and this frame can be shown again
+	// instead of drawn. GameWindow::Step still runs.
+	static bool ReuseFrame();
+	// The game wants typed text this frame (shows the on-screen keyboard).
+	static void WantText();
+	// The Miyoo button (or combination) that sends this keycode, for showing key names.
+	static std::string ButtonName(int keycode);
+#endif
 
 	// Handle resize events of the main window.
 	static void AdjustViewport(bool noResizeEvent = false);

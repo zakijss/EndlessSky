@@ -75,6 +75,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "Wormhole.h"
 #include "text/WrappedText.h"
 
+#ifdef ES_SOFT
+#include "soft/Raster.h"
+#endif
+
 #include <algorithm>
 #include <cmath>
 #include <string>
@@ -444,6 +448,9 @@ void Engine::Place(const list<NPC> &npcs, const shared_ptr<Ship> &flagship)
 // Wait for the previous calculations (if any) to be done.
 void Engine::Wait()
 {
+#ifdef ES_SOFT
+	Raster::ProfScope prof(Raster::PROF_WAIT);
+#endif
 	queue.Wait();
 	currentDrawBuffer = currentCalcBuffer;
 }

@@ -15,6 +15,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #pragma once
 
+#include <cstdint>
+#include <vector>
+
 #include "Point.h"
 #include "Screen.h"
 
@@ -85,6 +88,13 @@ private:
 	int lastViewport[4] = {};
 
 	float fadePadding[4] = {};
+#ifdef ES_SOFT
+	// The canvas, at the screen's pixel scale.
+	std::vector<uint32_t> pixels;
+	int pixelWidth = 0;
+	int pixelHeight = 0;
+	bool isTarget = false;
+#endif
 
 	Point multiplier;
 };

@@ -21,7 +21,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <filesystem>
 #include <functional>
+#include <cstdint>
 #include <string>
+#include <vector>
 
 class Color;
 class DisplayText;
@@ -91,4 +93,10 @@ private:
 	static const int GLYPHS = 98;
 	int advance[GLYPHS * GLYPHS] = {};
 	int widthEllipses = 0;
+#ifdef ES_SOFT
+	// Half-size alpha copy of the glyph atlas (the software renderer draws text from it).
+	std::vector<uint8_t> atlas;
+	int atlasWidth = 0;
+	int atlasHeight = 0;
+#endif
 };

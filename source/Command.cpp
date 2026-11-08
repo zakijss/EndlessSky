@@ -15,6 +15,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "Command.h"
 
+#ifdef ES_MIYOO
+#include "GameWindow.h"
+#endif
+
 #include "DataFile.h"
 #include "DataNode.h"
 #include "DataWriter.h"
@@ -29,6 +33,16 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 using namespace std;
 
 namespace {
+	// The name shown for a key. The Miyoo has no keyboard, so it names the button that sends it.
+	string KeyLabel(int keycode)
+	{
+#ifdef ES_MIYOO
+		return GameWindow::ButtonName(keycode);
+#else
+		return SDL_GetKeyName(keycode);
+#endif
+	}
+
 	// These lookup tables make it possible to map a command to its description,
 	// the name of the key it is mapped to, or the SDL keycode it is mapped to.
 	map<Command, string> description;
@@ -168,7 +182,7 @@ void Command::LoadSettings(const filesystem::path &path)
 			Command command = it->second;
 			int keycode = node.Value(1);
 			keycodeForCommand[command] = keycode;
-			keyName[command] = SDL_GetKeyName(keycode);
+			keyName[command] = KeyLabel(keycode);
 		}
 	}
 
@@ -205,7 +219,7 @@ void Command::SetKey(Command command, int keycode)
 	// Always reset *all* the mappings when one is set. That way, if two commands
 	// are mapped to the same key and you change one of them, the other stays mapped.
 	keycodeForCommand[command] = keycode;
-	keyName[command] = SDL_GetKeyName(keycode);
+	keyName[command] = KeyLabel(keycode);
 
 	commandForKeycode.clear();
 	keycodeCount.clear();

@@ -20,6 +20,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "supplier/WavSupplier.h"
 
 #include <cstdint>
+#ifdef ES_MIYOO
+#include <cstdlib>
+#include <map>
+#include <mutex>
+#endif
 
 using namespace std;
 
@@ -42,6 +47,10 @@ bool Sound::Load(const filesystem::path &path, const string &name)
 
 	isLooped = path.stem().string().ends_with('~');
 	bool isFast = isLooped ? path.stem().string().ends_with("@3x~") : path.stem().string().ends_with("@3x");
+#ifdef ES_MIYOO
+	(isFast ? path3x : this->path) = path;
+	return true;
+#endif
 	vector<AudioSupplier::sample_t> &buf = isFast ? buffer3x : buffer;
 
 	shared_ptr<iostream> in = Files::Open(path);
@@ -68,6 +77,94 @@ bool Sound::Load(const filesystem::path &path, const string &name)
 	}
 	return true;
 }
+
+
+
+bool Sound::IsEmpty() const
+{
+#ifdef ES_MIYOO
+	return path.empty() && path3x.empty();
+#else
+	return buffer.empty() && buffer3x.empty();
+#endif
+}
+
+
+
+#ifdef ES_MIYOO
+namespace {
+	using Samples = vector<AudioSupplier::sample_t>;
+	struct CachedSound {
+		shared_ptr<const Samples> samples;
+		uint64_t lastUsed = 0;
+	};
+	mutex cacheMutex;
+	map<filesystem::path, CachedSound> cache;
+	size_t cacheBytes = 0;
+	uint64_t cacheClock = 0;
+
+	size_t Budget()
+	{
+		const char *env = getenv("ES_SOUND_BUDGET_MB");
+		static const size_t budget = (env ? atoi(env) : 6) << 20;
+		return budget;
+	}
+
+	shared_ptr<const Samples> ReadMono(const filesystem::path &path)
+	{
+		shared_ptr<iostream> in = Files::Open(path);
+		if(!in)
+			return nullptr;
+		uint32_t bytes = ReadHeader(in, AudioSupplier::SAMPLE_RATE);
+		if(!bytes)
+		{
+			Logger::Log("WAV file uses an unsupported format. Only 44100Hz little-endian 16-bit PCM is supported: "
+				+ path.string(), Logger::Level::WARNING);
+			return nullptr;
+		}
+		auto samples = make_shared<Samples>(bytes / sizeof(AudioSupplier::sample_t));
+		in->read(reinterpret_cast<char *>(samples->data()), samples->size() * sizeof(AudioSupplier::sample_t));
+		return samples;
+	}
+}
+
+
+
+shared_ptr<const vector<AudioSupplier::sample_t>> Sound::Samples(bool is3x) const
+{
+	const filesystem::path &file = (is3x && !path3x.empty()) || path.empty() ? path3x : path;
+	if(file.empty())
+		return nullptr;
+
+	lock_guard<mutex> lock(cacheMutex);
+	CachedSound &entry = cache[file];
+	entry.lastUsed = ++cacheClock;
+	if(entry.samples)
+		return entry.samples;
+	entry.samples = ReadMono(file);
+	if(!entry.samples)
+	{
+		cache.erase(file);
+		return nullptr;
+	}
+	cacheBytes += entry.samples->size() * sizeof(AudioSupplier::sample_t);
+	shared_ptr<const ::Samples> result = entry.samples;
+
+	// Over budget: drop the least recently used sounds that no player holds.
+	while(cacheBytes > Budget())
+	{
+		auto oldest = cache.end();
+		for(auto it = cache.begin(); it != cache.end(); ++it)
+			if(it->second.samples.use_count() == 1 && (oldest == cache.end() || it->second.lastUsed < oldest->second.lastUsed))
+				oldest = it;
+		if(oldest == cache.end())
+			break;
+		cacheBytes -= oldest->second.samples->size() * sizeof(AudioSupplier::sample_t);
+		cache.erase(oldest);
+	}
+	return result;
+}
+#endif
 
 
 

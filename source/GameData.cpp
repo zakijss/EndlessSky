@@ -253,11 +253,13 @@ void GameData::LoadShaders()
 			font18Path = fontCandidate;
 	}
 
+#ifndef ES_SOFT
 	// If there is both a fragment and a vertex shader available,
 	// it can be turned into a shader object.
 	for(const auto &[key, s] : loaded)
 		if(!s.first.empty() && !s.second.empty())
 			objects.shaders.Get(key)->Load(Files::Read(s.first).c_str(), Files::Read(s.second).c_str());
+#endif
 
 	FillShader::Init();
 	FogShader::Init();

@@ -261,7 +261,7 @@ void Audio::Play(const Sound *sound, SoundCategory category)
 // "listener". This will make it softer and change the left / right balance.
 void Audio::Play(const Sound *sound, const Point &position, SoundCategory category)
 {
-	if(!isInitialized || !sound || sound->Buffer().empty() || !volume[SoundCategory::MASTER])
+	if(!isInitialized || !sound || sound->IsEmpty() || !volume[SoundCategory::MASTER])
 		return;
 
 	// Place sounds from the main thread directly into the queue. They are from
@@ -446,6 +446,12 @@ void Audio::Quit()
 	// Free the memory buffers for all the sound resources.
 	sounds.clear();
 
+#ifdef ES_MIYOO
+	// Onion's /dev/dsp shim (libpadsp, preloaded for every port) crashes on the reset
+	// without an argument that OpenAL's OSS backend sends as the device closes. The game is
+	// quitting, so leave the device for the system to close.
+	return;
+#endif
 	// Close the connection to the OpenAL library.
 	if(context)
 	{

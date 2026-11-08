@@ -43,6 +43,9 @@ Logger::Session::Session(bool quiet)
 		return;
 
 	string message = "Logger session beginning. Game version: " + GameVersion::Running().ToString()
+#ifdef ES_MIYOO
+		+ ", Miyoo Mini Plus port " ES_PORT_VERSION
+#endif
 		+ ". Detected operating system version: ";
 #ifdef _WIN32
 	message += WinVersion::ToString() + '.';

@@ -1,0 +1,21 @@
+# The Port info page (main menu, Miyoo Mini Plus). Command names in <angle brackets>
+# become the buttons that send them, so this stays right if the controls change.
+
+help "miyoo port info"
+	`This is the full Endless Sky (same story, ships and missions), with a renderer, screen layouts and controls made for the Miyoo Mini Plus. Saves go to Saves/CurrentProfile/saves/EndlessSky on the SD card; the game saves whenever you land, as the original does.`
+	`FLYING`
+	`Steer with <Turn left> and <Turn right>, thrust with <Forward thrust>, reverse with <Reverse>. Fire with <Fire primary weapon> and <Fire secondary weapon>, boost with <Fire afterburner>. Target the nearest enemy with <Select nearest hostile ship>. Land with <Land on planet / station>, jump with <Initiate hyperspace jump>, open the map with <View star map>, board with <Board selected ship>. <Show main menu> opens the main menu.`
+	`HOLD SELECT FOR MORE`
+	`Hail: <Talk to selected ship>. Next ship: <Select next ship>. Switch secondary weapon: <Select secondary weapon>. Fighters: <Deploy / recall fighters>. Scan: <Scan selected ship>. Auto steer: <Auto steer>. Messages: <View message log>. Nearest asteroid: <Select nearest asteroid>. Fleet orders: <Fleet: Fight my target>, <Fleet: Gather around me>, <Fleet: Hold position>, <Fleet: Toggle hold fire>.`
+	`HOLD START FOR MORE`
+	`Player info: <View player info>. Cloak: <Toggle cloaking device>. Fleet harvest: <Fleet: Harvest flotsam>. Fleet ammo: <Fleet: Toggle ammo usage>. Pause: <Pause>. Help: <Show help>. Fast-forward: <Toggle fast-forward>.`
+	`POINTER (MENUS AND PLANETS)`
+	`Tap Select to switch between flying and the pointer; landing and taking off switch for you. The D-pad moves the pointer (a tap nudges it, holding speeds up), A clicks, X right-clicks, B goes back, Start confirms. L1 and R1 scroll, L2 and R2 page up and down, and Select with the D-pad sends arrow keys. Hold Select or Start while clicking to buy or sell 5 or 20 at once (both together: 100), or to add ships to a selection.`
+	`TYPING`
+	`A keyboard appears whenever the game asks for text (pilot name, renaming a ship, searching the map). The D-pad picks a key, A types it, B deletes, X is Shift, Start is done, L2 and R2 scroll the text behind, and Y hides the keyboard. In pointer mode, Y brings it back.`
+	`MENU BUTTON`
+	`Menu belongs to Onion: it opens the game switcher. Leaving that way is like quitting, so progress since you last landed is lost; land first to keep it.`
+	`TIPS`
+	`The bar at the top shows the time, Wi-Fi and battery. Texture filtering (smoother sprites) and motion blur look nicer but cost speed; both are in Preferences, Settings, and start off. Every control is listed in Preferences, Controls.`
+	`ABOUT`
+	`Endless Sky is free software under the GNU GPL version 3, created by Michael Zahniser with many contributors: endless-sky.github.io. This port follows the upstream game and keeps it unchanged; its changes are the renderer, the layouts, the controls and this page.`

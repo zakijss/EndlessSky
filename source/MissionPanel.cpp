@@ -17,6 +17,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "MissionPanel.h"
 
+#ifdef ES_SOFT
+#include "soft/Raster.h"
+#endif
+
 #include "text/Alignment.h"
 #include "audio/Audio.h"
 #include "Command.h"
@@ -56,6 +60,39 @@ using namespace std;
 namespace {
 	constexpr int SIDE_WIDTH = 280;
 
+	// Below this width (the Miyoo's 800) the two lists, the selected-system box and the
+	// mission box can't sit side by side. The lists then start under the selected-system
+	// box and stop above the mission box, which the Miyoo layout raises above the map buttons.
+	bool IsNarrow()
+	{
+		return Screen::Width() < 2 * SIDE_WIDTH + 420;
+	}
+
+	int ListTop()
+	{
+		return Screen::Top() + (IsNarrow() ? 40 : 0);
+	}
+
+	// On narrow screens the lists stop this far above the bottom, clear of the raised mission box.
+	constexpr int BELOW_LISTS = 330;
+
+	int ListBottom()
+	{
+		return Screen::Bottom() - (IsNarrow() ? BELOW_LISTS : 0);
+	}
+
+	// Whether a point at this height can be on a list (always, unless the screen is narrow).
+	bool InListBand(int y)
+	{
+		return y >= ListTop() && y < ListBottom();
+	}
+
+	// Screen height a list can't use: its header and edges, and everything above and below it.
+	double ListReserve(bool onRight)
+	{
+		return IsNarrow() ? 40. + 40. + BELOW_LISTS : onRight ? 160. : 190.;
+	}
+
 	// Check if the mission involves the given system,
 	bool Involves(const Mission &mission, const System *system)
 	{
@@ -82,7 +119,7 @@ namespace {
 
 	size_t MaxDisplayedMissions(bool onRight)
 	{
-		return static_cast<unsigned>(max(0, static_cast<int>(floor((Screen::Height() - (onRight ? 160. : 190.)) / 20.))));
+		return static_cast<unsigned>(max(0, static_cast<int>(floor((Screen::Height() - ListReserve(onRight)) / 20.))));
 	}
 
 	// Compute the required scroll amount for the given list of jobs/missions.
@@ -288,11 +325,22 @@ void MissionPanel::Draw()
 	if(acceptedIt != accepted.end() && acceptedIt->Destination())
 		DrawMissionSystem(*acceptedIt, IsSatisfied(*acceptedIt) ? currentColor : blockedColor);
 
+#ifdef ES_SOFT
+	// Narrow screens exist only in the software build: keep the lists in their band.
+	const bool clipLists = IsNarrow();
+	if(clipLists)
+	{
+		const double scale = Raster::Scale();
+		const int top = lround((ListTop() - Screen::Top()) * scale);
+		const int bottom = lround((ListBottom() - Screen::Top()) * scale);
+		Raster::SetClip(0, top, Raster::Width(), bottom - top);
+	}
+#endif
 	Point pos;
 	if(player.GetPlanet())
 	{
 		pos = DrawPanel(
-			Screen::TopLeft() + Point(0., -availableScroll),
+			Point(Screen::Left(), ListTop() - availableScroll),
 			"Missions available here:",
 			available.size(),
 			true);
@@ -300,10 +348,14 @@ void MissionPanel::Draw()
 	}
 
 	pos = DrawPanel(
-		Screen::TopRight() + Point(-SIDE_WIDTH, -acceptedScroll),
+		Point(Screen::Right() - SIDE_WIDTH, ListTop() - acceptedScroll),
 		"Your current missions:",
 		AcceptedVisible());
 	DrawList(accepted, pos, acceptedIt, hoverAcceptedIt);
+#ifdef ES_SOFT
+	if(clipLists)
+		Raster::ResetClip();
+#endif
 
 	// Now that the mission lists and map elements are drawn, draw the top-most UI elements.
 	DrawKey();
@@ -423,13 +475,13 @@ bool MissionPanel::Click(int x, int y, MouseButton button, int clicks)
 	if(x > Screen::Right() - 80 && y > Screen::Bottom() - 50)
 		return DoKey('p');
 
-	if(x < Screen::Left() + SIDE_WIDTH)
+	if(x < Screen::Left() + SIDE_WIDTH && InListBand(y))
 	{
 		// Panel header:
-		if(y + static_cast<int>(availableScroll) < Screen::Top() + 30)
+		if(y + static_cast<int>(availableScroll) < ListTop() + 30)
 		{
 			dragSide = -1;
-			if(y + static_cast<int>(availableScroll) < Screen::Top() + 10)
+			if(y + static_cast<int>(availableScroll) < ListTop() + 10)
 			{
 				// Empty space.
 				return false;
@@ -454,7 +506,7 @@ bool MissionPanel::Click(int x, int y, MouseButton button, int clicks)
 			return false;
 		}
 		// Available missions:
-		unsigned index = max(0, (y + static_cast<int>(availableScroll) - 36 - Screen::Top()) / 20);
+		unsigned index = max(0, (y + static_cast<int>(availableScroll) - 36 - ListTop()) / 20);
 		if(index < available.size())
 		{
 			const auto lastAvailableIt = availableIt;
@@ -472,13 +524,13 @@ bool MissionPanel::Click(int x, int y, MouseButton button, int clicks)
 			return true;
 		}
 	}
-	else if(x >= Screen::Right() - SIDE_WIDTH)
+	else if(x >= Screen::Right() - SIDE_WIDTH && InListBand(y))
 	{
 		// Panel header:
-		if(y + static_cast<int>(acceptedScroll) < Screen::Top() + 30)
+		if(y + static_cast<int>(acceptedScroll) < ListTop() + 30)
 			return false;
 		// Accepted missions:
-		int index = max(0, (y + static_cast<int>(acceptedScroll) - 36 - Screen::Top()) / 20);
+		int index = max(0, (y + static_cast<int>(acceptedScroll) - 36 - ListTop()) / 20);
 		if(index < AcceptedVisible())
 		{
 			const auto lastAcceptedIt = acceptedIt;
@@ -594,13 +646,13 @@ bool MissionPanel::Drag(double dx, double dy)
 	if(dragSide < 0)
 	{
 		availableScroll = max(0.,
-			min(available.size() * 20. + 190. - Screen::Height(),
+			min(available.size() * 20. + ListReserve(false) - Screen::Height(),
 				availableScroll - dy));
 	}
 	else if(dragSide > 0)
 	{
 		acceptedScroll = max(0.,
-			min(accepted.size() * 20. + 160. - Screen::Height(),
+			min(accepted.size() * 20. + ListReserve(true) - Screen::Height(),
 				acceptedScroll - dy));
 	}
 	else if(canDrag)
@@ -619,18 +671,18 @@ bool MissionPanel::Hover(int x, int y)
 	hoverSort = -1;
 	hoverAcceptedIt = accepted.end();
 	hoverAvailableIt = available.end();
-	unsigned index = max(0, (y + static_cast<int>(availableScroll) - 36 - Screen::Top()) / 20);
-	if(x < Screen::Left() + SIDE_WIDTH)
+	unsigned index = max(0, (y + static_cast<int>(availableScroll) - 36 - ListTop()) / 20);
+	if(x < Screen::Left() + SIDE_WIDTH && InListBand(y))
 	{
 		if(index < available.size())
 		{
 			dragSide = -1;
 
 			// Panel header:
-			if(y + static_cast<int>(availableScroll) < Screen::Top() + 30)
+			if(y + static_cast<int>(availableScroll) < ListTop() + 30)
 			{
 				// Hovering over sort buttons.
-				if(y >= Screen::Top() + 10 && x >= Screen::Left() + SIDE_WIDTH - 110)
+				if(y >= ListTop() + 10 && x >= Screen::Left() + SIDE_WIDTH - 110)
 				{
 					hoverSort = (x - Screen::Left() - SIDE_WIDTH + 110) / 30;
 					if(hoverSort > 3)
@@ -645,7 +697,7 @@ bool MissionPanel::Hover(int x, int y)
 			}
 		}
 	}
-	else if(x >= Screen::Right() - SIDE_WIDTH && y + static_cast<int>(acceptedScroll) >= Screen::Top() + 30)
+	else if(x >= Screen::Right() - SIDE_WIDTH && InListBand(y) && y + static_cast<int>(acceptedScroll) >= ListTop() + 30)
 	{
 		if(static_cast<int>(index) < AcceptedVisible())
 		{
@@ -810,7 +862,7 @@ Point MissionPanel::DrawPanel(Point pos, const string &label, int entries, bool 
 	double dy = .5 * left->Height();
 	Point leftOff(-.5 * (size.X() + left->Width()), 0.);
 	Point rightOff(.5 * (size.X() + right->Width()), 0.);
-	while(dy && edgePos.Y() > Screen::Top())
+	while(dy && edgePos.Y() > ListTop())
 	{
 		edgePos.Y() -= dy;
 		SpriteShader::Draw(left, edgePos + leftOff);

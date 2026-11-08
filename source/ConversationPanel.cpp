@@ -15,6 +15,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "ConversationPanel.h"
 
+#ifdef ES_MIYOO
+#include "GameWindow.h"
+#endif
+
 #include "text/Alignment.h"
 #include "audio/Audio.h"
 #include "BoardingPanel.h"
@@ -130,6 +134,11 @@ void ConversationPanel::Step()
 // Draw this panel.
 void ConversationPanel::Draw()
 {
+#ifdef ES_MIYOO
+	// Asking for the pilot's name: show the on-screen keyboard.
+	if(node >= 0 && choices.empty())
+		GameWindow::WantText();
+#endif
 	// Dim out everything outside this panel.
 	DrawBackdrop();
 
@@ -247,6 +256,15 @@ void ConversationPanel::Draw()
 	}
 	// Store the total height of the text.
 	maxScroll = min(0., Screen::Top() - (point.Y() - scroll) + font.Height() + 15.);
+#ifdef ES_MIYOO
+	// On the Miyoo's short screen the name fields can sit below the text shown first: show
+	// them once when the prompt begins (the reader can still scroll back up).
+	const bool askingName = node >= 0 && choices.empty();
+	// (maxScroll would put the end of the text at the top of the screen; keep it near the bottom.)
+	if(askingName && !scrolledToName)
+		scroll = min(0., maxScroll + Screen::Height() - 80.);
+	scrolledToName = askingName;
+#endif
 
 	// Reset the hover flag. If the mouse is still moving than the flag will be set in the next frame.
 	isHovering = false;

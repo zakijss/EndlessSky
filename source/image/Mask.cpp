@@ -15,16 +15,75 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "Mask.h"
 
+#include "Sprite.h"
+
 #include "ImageBuffer.h"
+#include "../Files.h"
 #include "../Logger.h"
 
 #include <algorithm>
 #include <cmath>
+#include <cstdlib>
+#include <fstream>
 #include <limits>
+#include <mutex>
+#include <sstream>
+#include <unordered_map>
 
 using namespace std;
 
 namespace {
+	// Masks traced from full-size art (masks.txt), used when the images on disk are shrunk.
+	// One line per frame: key<TAB>radius<TAB>outlines, then per outline: count x y x y ...
+	mutex maskFileMutex;
+	unordered_map<string, pair<double, vector<vector<Point>>>> savedMasks;
+	bool savedMasksRead = false;
+
+	void ReadSavedMasks()
+	{
+		savedMasksRead = true;
+		ifstream in(Files::Resources() / "masks.txt");
+		string line;
+		while(getline(in, line))
+		{
+			size_t tab = line.find('\t');
+			if(tab == string::npos)
+				continue;
+			istringstream fields(line.substr(tab + 1));
+			double radius = 0.;
+			size_t count = 0;
+			fields >> radius >> count;
+			vector<vector<Point>> outlines(count);
+			for(auto &outline : outlines)
+			{
+				size_t points = 0;
+				fields >> points;
+				outline.reserve(points);
+				for(double x, y; points-- && fields >> x >> y; )
+					outline.emplace_back(x, y);
+			}
+			if(fields)
+				savedMasks[line.substr(0, tab)] = {radius, std::move(outlines)};
+		}
+		if(savedMasks.empty())
+			Logger::Log("No saved collision masks found; tracing shrunk images instead.", Logger::Level::WARNING);
+	}
+
+	void WriteSavedMask(const char *path, const string &key, double radius, const vector<vector<Point>> &outlines)
+	{
+		ostringstream out;
+		out.precision(9);
+		out << key << '\t' << radius << ' ' << outlines.size();
+		for(const auto &outline : outlines)
+		{
+			out << ' ' << outline.size();
+			for(const Point &p : outline)
+				out << ' ' << p.X() << ' ' << p.Y();
+		}
+		out << '\n';
+		lock_guard<mutex> lock(maskFileMutex);
+		ofstream(path, ios::app) << out.str();
+	}
 	// Trace out outlines from an image frame.
 	void Trace(const ImageBuffer &image, int frame, vector<vector<Point>> &raw, const string &fileName)
 	{
@@ -286,15 +345,42 @@ void Mask::Create(const ImageBuffer &image, int frame, const string &fileName)
 	outlines.clear();
 	radius = 0.;
 
+	if(ASSET_SCALE != 1.f)
+	{
+		lock_guard<mutex> lock(maskFileMutex);
+		if(!savedMasksRead)
+			ReadSavedMasks();
+		auto it = savedMasks.find(fileName);
+		if(it != savedMasks.end())
+		{
+			radius = it->second.first;
+			outlines = std::move(it->second.second);
+			savedMasks.erase(it);
+			return;
+		}
+	}
+
+	if(!image.Pixels())
+	{
+		Logger::Log("No saved collision mask for " + fileName + ".", Logger::Level::WARNING);
+		return;
+	}
+
 	vector<vector<Point>> raw;
 	Trace(image, frame, raw, fileName);
 	if(raw.empty())
+	{
+		if(const char *path = getenv("ES_WRITE_MASKS"))
+			WriteSavedMask(path, fileName, radius, outlines);
 		return;
+	}
 
 	outlines.reserve(raw.size());
 	for(auto &edge : raw)
 	{
 		SmoothAndCenter(edge, Point(image.Width(), image.Height()));
+		for(Point &p : edge)
+			p /= ASSET_SCALE;
 
 		auto outline = Simplify(edge);
 		// Skip any outlines that have no area.
@@ -306,6 +392,9 @@ void Mask::Create(const ImageBuffer &image, int frame, const string &fileName)
 		outlines.back().shrink_to_fit();
 	}
 	outlines.shrink_to_fit();
+
+	if(const char *path = getenv("ES_WRITE_MASKS"))
+		WriteSavedMask(path, fileName, radius, outlines);
 }
 
 

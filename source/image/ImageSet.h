@@ -62,6 +62,10 @@ public:
 	// called, the internal image buffers and mask vector will be cleared, but
 	// the paths are saved in case the sprite needs to be loaded again.
 	void Upload(Sprite *sprite, bool enableUpload);
+#ifdef ES_SOFT
+	// Give the collision masks made by LoadDimensions to the MaskManager (main thread).
+	void UploadMasks(Sprite *sprite);
+#endif
 
 
 private:

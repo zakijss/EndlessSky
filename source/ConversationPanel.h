@@ -129,6 +129,10 @@ private:
 
 	// Current scroll position.
 	double scroll = 0.;
+#ifdef ES_MIYOO
+	// Whether the view was moved down to the name fields when the name prompt began.
+	bool scrolledToName = false;
+#endif
 
 	// Whether the scenes from the conversation have been preloaded yet.
 	bool hasLoadedScenes = false;

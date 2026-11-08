@@ -1007,10 +1007,11 @@ void ShopPanel::DrawMain()
 	// First, figure out how many columns we can draw.
 	const int TILE_SIZE = TileSize();
 	const int mainWidth = (Screen::Width() - SIDE_WIDTH - 1);
-	// If the user horizontally compresses the window too far, draw nothing.
-	if(mainWidth < TILE_SIZE)
+	// If the user horizontally compresses the window too far, draw nothing. One column a
+	// little narrower than a tile still works (an 800-wide screen leaves 244 for 250).
+	if(mainWidth < TILE_SIZE * 9 / 10)
 		return;
-	const int columns = mainWidth / TILE_SIZE;
+	const int columns = max(1, mainWidth / TILE_SIZE);
 	const int columnWidth = mainWidth / columns;
 
 	const Point begin(

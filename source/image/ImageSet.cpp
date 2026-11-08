@@ -24,8 +24,15 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "MaskManager.h"
 #include "Sprite.h"
 
+#include "../Files.h"
+
 #include <algorithm>
 #include <cassert>
+#include <cstdlib>
+#include <fstream>
+#include <iomanip>
+#include <map>
+#include <mutex>
 
 using namespace std;
 
@@ -39,6 +46,73 @@ namespace {
 		filesystem::path directory = *path.begin();
 		return directory == "ship" || directory == "asteroid";
 	}
+
+#ifdef ES_SOFT
+	// Areas of masked sprites, measured from full-size art (areas.txt, "name<TAB>area"):
+	// the shrunk images on disk would give areas about 0.39 times too small.
+	mutex areaMutex;
+	bool areasRead = false;
+	map<string, double> savedAreas;
+
+	double SavedArea(const string &name)
+	{
+		lock_guard<mutex> lock(areaMutex);
+		if(!areasRead)
+		{
+			areasRead = true;
+			ifstream in(Files::Resources() / "areas.txt");
+			string line;
+			while(getline(in, line))
+			{
+				size_t tab = line.find('\t');
+				if(tab != string::npos)
+					savedAreas[line.substr(0, tab)] = atof(line.c_str() + tab + 1);
+			}
+			if(savedAreas.empty())
+				Logger::Log("No saved sprite areas found (areas.txt).", Logger::Level::WARNING);
+		}
+		auto it = savedAreas.find(name);
+		return it == savedAreas.end() ? 0. : it->second;
+	}
+
+	// First-frame pixel sizes of the shipped images (sizes.txt, "name<TAB>width<TAB>height"),
+	// so startup needn't open thousands of image files. ES_WRITE_SIZES=<file> writes one.
+	mutex sizeMutex;
+	bool sizesRead = false;
+	map<string, pair<int, int>> savedSizes;
+
+	bool SavedSize(const string &name, int &width, int &height)
+	{
+		lock_guard<mutex> lock(sizeMutex);
+		if(!sizesRead)
+		{
+			sizesRead = true;
+			ifstream in(Files::Resources() / "sizes.txt");
+			string line;
+			while(getline(in, line))
+			{
+				size_t tab = line.find('\t'), tab2 = line.find('\t', tab + 1);
+				if(tab2 != string::npos)
+					savedSizes[line.substr(0, tab)] = {atoi(line.c_str() + tab + 1), atoi(line.c_str() + tab2 + 1)};
+			}
+		}
+		auto it = savedSizes.find(name);
+		if(it == savedSizes.end())
+			return false;
+		width = it->second.first;
+		height = it->second.second;
+		return true;
+	}
+
+	void WriteSavedSize(const string &name, int width, int height)
+	{
+		const char *path = getenv("ES_WRITE_SIZES");
+		if(!path)
+			return;
+		lock_guard<mutex> lock(sizeMutex);
+		ofstream(path, ios::app) << name << '\t' << width << '\t' << height << '\n';
+	}
+#endif
 
 	// Add consecutive frames from the given map to the given vector. Issue warnings for missing or mislabeled frames.
 	void AddValid(const map<size_t, filesystem::path> &frameData, vector<filesystem::path> &sequence,
@@ -211,7 +285,12 @@ void ImageSet::Load() noexcept(false)
 	size_t swizzleMaskFrames = paths[2].size();
 
 	// Check whether we need to generate collision masks.
+#ifdef ES_SOFT
+	// Masks were made once from the saved file by LoadDimensions; loading for display skips them.
+	bool makeMasks = false;
+#else
 	bool makeMasks = IsMasked(name);
+#endif
 
 	const auto UpdateFrameCount = [&]()
 	{
@@ -288,6 +367,25 @@ void ImageSet::LoadDimensions(Sprite *sprite) noexcept(false)
 	// An ImageSet might exist for a sprite that only had 2x images defined, in which case it will have no frames.
 	if(!frames)
 		return;
+#ifdef ES_SOFT
+	int savedWidth, savedHeight;
+	if(!getenv("ES_WRITE_SIZES") && SavedSize(name, savedWidth, savedHeight))
+	{
+		if(IsMasked(name))
+		{
+			if(!sprite->Area())
+				sprite->SetArea(SavedArea(name));
+			masks.resize(frames);
+			// Saved masks are looked up by name; the empty buffer is never read.
+			buffer[0].Clear(frames);
+			for(size_t i = 0; i < frames; ++i)
+				masks[i].Create(buffer[0], i, "\"" + name + "\" frame #" + to_string(i));
+			buffer[0].Clear();
+		}
+		sprite->SetDimensions(savedWidth, savedHeight, frames);
+		return;
+	}
+#endif
 	buffer[0].Clear(frames);
 	int loadedFrames = buffer[0].Read(paths[0][0], 0, true);
 	if(!loadedFrames)
@@ -295,10 +393,25 @@ void ImageSet::LoadDimensions(Sprite *sprite) noexcept(false)
 		Logger::Log("Failed to read image data for \"" + name + "\" frame #0.", Logger::Level::WARNING);
 		return;
 	}
+#ifdef ES_SOFT
+	// Only the dimensions were read; area and collision masks come from the saved files.
+	if(IsMasked(name))
+	{
+		if(!sprite->Area())
+			sprite->SetArea(SavedArea(name));
+		masks.resize(frames);
+		for(size_t i = 0; i < frames; ++i)
+			masks[i].Create(buffer[0], i, "\"" + name + "\" frame #" + to_string(i));
+	}
+#else
 	// Only masked sprites need to know their area.
 	if(IsMasked(name) && !sprite->Area())
 		sprite->SetArea(buffer[0].CalculateArea());
+#endif
 	sprite->LoadDimensions(buffer[0]);
+#ifdef ES_SOFT
+	WriteSavedSize(name, buffer[0].Width(), buffer[0].Height());
+#endif
 	// Clear the buffer since no image data was actually uploaded.
 	buffer[0].Clear();
 }
@@ -310,18 +423,42 @@ void ImageSet::LoadDimensions(Sprite *sprite) noexcept(false)
 // the paths are saved in case the sprite needs to be loaded again.
 void ImageSet::Upload(Sprite *sprite, bool enableUpload)
 {
+#ifndef ES_SOFT
+	// Record full-size areas for the shrunk-art build (see SavedArea). Measured before the
+	// buffers are cleared below, the same value a normal run gives the sprite.
+	if(const char *path = getenv("ES_WRITE_AREAS"); path && IsMasked(name))
+		ofstream(path, ios::app) << name << '\t' << setprecision(17) << buffer[0].CalculateArea() << '\n';
+#endif
 	// Clear all the buffers if we are not uploading the image data.
 	if(!enableUpload)
 		for(ImageBuffer &it : buffer)
 			it.Clear();
 
+#ifndef ES_SOFT
 	// Only masked sprites need to know their area.
 	if(IsMasked(name) && !sprite->Area())
 		sprite->SetArea(buffer[0].CalculateArea());
+#endif
 	// Load the frames (this will clear the buffers).
 	sprite->AddFrames(buffer[0], buffer[1], noReduction);
 	sprite->AddSwizzleMaskFrames(buffer[2], buffer[3], noReduction);
 
+#ifdef ES_SOFT
+	// Masks were set once at startup; a reload for display must not replace them.
+	if(!masks.empty())
+#endif
 	GameData::GetMaskManager().SetMasks(sprite, std::move(masks));
 	masks.clear();
 }
+
+
+
+#ifdef ES_SOFT
+void ImageSet::UploadMasks(Sprite *sprite)
+{
+	if(masks.empty())
+		return;
+	GameData::GetMaskManager().SetMasks(sprite, std::move(masks));
+	masks.clear();
+}
+#endif

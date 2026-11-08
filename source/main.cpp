@@ -50,6 +50,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "test/TestContext.h"
 #include "UI.h"
 
+#ifdef ES_SOFT
+#include "soft/Raster.h"
+#endif
+
 #ifdef _WIN32
 #include "windows/TimerResolutionGuard.h"
 #include "windows/WinConsole.h"
@@ -460,6 +464,9 @@ void GameLoop(PlayerInfo &player, TaskQueue &queue, const Conversation &conversa
 			// In full-screen mode, hide the cursor if inactive for ten seconds,
 			// but only if the player is flying around in the main view.
 			bool inFlight = (menuPanels.IsEmpty() && gamePanels.Root() == gamePanels.Top());
+#ifdef ES_MIYOO
+			GameWindow::SetInFlight(inFlight);
+#endif
 			++cursorTime;
 			bool shouldShowCursor = (!GameWindow::IsFullscreen() || cursorTime < 600 || !inFlight);
 			if(shouldShowCursor != showCursor)
@@ -483,7 +490,12 @@ void GameLoop(PlayerInfo &player, TaskQueue &queue, const Conversation &conversa
 				isFastForward = false;
 
 			// Tell all the panels to step forward, then draw them.
-			((!isDebugPaused && menuPanels.IsEmpty()) ? gamePanels : menuPanels).StepAll();
+			{
+#ifdef ES_SOFT
+				Raster::ProfScope prof(Raster::PROF_STEP);
+#endif
+				((!isDebugPaused && menuPanels.IsEmpty()) ? gamePanels : menuPanels).StepAll();
+			}
 
 			// Caps lock slows the frame rate in debug mode.
 			// Slowing eases in and out over a couple of frames.
@@ -505,10 +517,34 @@ void GameLoop(PlayerInfo &player, TaskQueue &queue, const Conversation &conversa
 
 				if(isFastForward && inFlight && step % 3)
 				{
+#ifdef ES_MIYOO
+					GameWindow::StepWithoutDraw();
+#endif
 					cpuLoadSum += chrono::steady_clock::now() - start;
 					continue;
 				}
 			}
+
+#ifdef ES_MIYOO
+			// Drawing every step is too slow here; skip some, as fast-forward does, so
+			// flight keeps its real speed.
+			if(inFlight && GameWindow::SkipDraw())
+			{
+				cpuLoadSum += chrono::steady_clock::now() - start;
+				continue;
+			}
+#endif
+#ifdef ES_MIYOO
+			// Menus and landed screens that haven't changed are shown again, not redrawn.
+			if(!inFlight && GameWindow::ReuseFrame())
+			{
+				Audio::Step(isFastForward);
+				GameWindow::Step();
+				timer.Wait();
+				stats.AddPlayTime(chrono::steady_clock::now() - start, menuPanels.IsEmpty(), !GameWindow::IsInFocus());
+				continue;
+			}
+#endif
 
 			Audio::Step(isFastForward);
 
@@ -518,7 +554,12 @@ void GameLoop(PlayerInfo &player, TaskQueue &queue, const Conversation &conversa
 
 			// Events in this frame may have cleared out the menu, in which case
 			// we should draw the game panels instead:
-			(menuPanels.IsEmpty() ? gamePanels : menuPanels).DrawAll();
+			{
+#ifdef ES_SOFT
+				Raster::ProfScope prof(Raster::PROF_DRAW);
+#endif
+				(menuPanels.IsEmpty() ? gamePanels : menuPanels).DrawAll();
+			}
 
 			MainPanel *mainPanel = static_cast<MainPanel *>(gamePanels.Root().get());
 			if(mainPanel && mainPanel->GetEngine().IsPaused())
@@ -637,6 +678,12 @@ void GameLoop(PlayerInfo &player, TaskQueue &queue, const Conversation &conversa
 
 			if(!isHeadless)
 			{
+#ifdef ES_MIYOO
+				const bool inFlight = (menuPanels.IsEmpty() && gamePanels.Root() == gamePanels.Top());
+				GameWindow::SetInFlight(inFlight);
+				if(inFlight && GameWindow::SkipDraw())
+					continue;
+#endif
 				Audio::Step(isFastForward);
 
 				// Events in this frame may have cleared out the menu, in which case

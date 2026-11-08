@@ -15,6 +15,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #pragma once
 
+#ifdef ES_SOFT
+#include "soft/gl_stub.h"
+#else
 // Include whichever header is used for OpenGL on this operating system.
 #ifdef __APPLE__
 #include <OpenGL/gl3.h>
@@ -33,6 +36,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define glFramebufferTexture2DEXT glFramebufferTexture2D
 #define glGenFramebuffersEXT glGenFramebuffers
 #endif
+#endif // ES_SOFT
 
 
 

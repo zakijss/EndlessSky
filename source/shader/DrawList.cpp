@@ -177,6 +177,9 @@ void DrawList::Push(const Drawable &drawable, const Point &pos, const Angle &fac
 	SpriteShader::Item item;
 
 	item.texture = drawable.GetSprite()->Texture();
+#ifdef ES_SOFT
+	item.sprite = drawable.GetSprite();
+#endif
 	item.swizzleMask = drawable.GetSprite()->SwizzleMask();
 	item.frame = drawable.GetFrame(step);
 	item.frameCount = drawable.GetSprite()->Frames();

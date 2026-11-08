@@ -15,6 +15,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "MenuPanel.h"
 
+#ifdef ES_SOFT
+#include "soft/PortInfoPanel.h"
+#endif
+
 #include "audio/Audio.h"
 #include "Command.h"
 #include "Files.h"
@@ -202,6 +206,10 @@ bool MenuPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, boo
 	}
 	else if(key == 'p')
 		GetUI().Push(new PreferencesPanel(player));
+#ifdef ES_SOFT
+	else if(key == 'i')
+		GetUI().Push(new PortInfoPanel());
+#endif
 	else if(key == 'l' || key == 'm')
 		GetUI().Push(new LoadPanel(player, gamePanels));
 	else if(key == 'n' && (!player.IsLoaded() || (player.Pilot()->IsLocked() && player.IsDead())))

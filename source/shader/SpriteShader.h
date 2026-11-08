@@ -44,6 +44,11 @@ public:
 		float blur[2] = {0.f, 0.f};
 		float clip = 1.f;
 		float alpha = 1.f;
+#ifdef ES_SOFT
+		// The software renderer loads sprites when first drawn and may unload them, so a
+		// draw list (built on the calculation thread) keeps the sprite, not only its texture.
+		const Sprite *sprite = nullptr;
+#endif
 	};
 
 

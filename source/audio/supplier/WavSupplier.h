@@ -17,6 +17,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "AudioSupplier.h"
 
+#include <memory>
+#include <vector>
+
 class Sound;
 
 
@@ -35,4 +38,9 @@ public:
 private:
 	const Sound &sound;
 	bool wasStarted;
+#ifdef ES_MIYOO
+	// Mono samples held while playing, so the sound cache can't drop them.
+	std::shared_ptr<const std::vector<sample_t>> mono;
+	std::shared_ptr<const std::vector<sample_t>> mono3x;
+#endif
 };

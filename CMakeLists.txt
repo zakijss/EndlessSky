@@ -7,6 +7,11 @@ else()
 	option(ES_USE_VCPKG "Use vcpkg to get dependencies." ON)
 endif()
 cmake_dependent_option(ES_GLES "Build the game with OpenGL ES" OFF UNIX OFF)
+option(ES_SOFT "Software renderer without a GPU (Miyoo Mini Plus)" OFF)
+option(ES_MIYOO "Build for the Miyoo Mini Plus (cross-compiled, implies ES_SOFT)" OFF)
+if(ES_MIYOO)
+	set(ES_SOFT ON CACHE BOOL "" FORCE)
+endif()
 option(ES_USE_SDL3 "Use the newer SDL3 libraries instead of SDL2" OFF)
 cmake_dependent_option(ES_STEAM "Build the game for the Steam Linux runtime" OFF UNIX OFF)
 cmake_dependent_option(ES_USE_SYSTEM_LIBRARIES "Use system libraries instead of the vcpkg ones." ON "APPLE OR ES_STEAM" OFF)
@@ -25,7 +30,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 # Use LTO for Release builds only.
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_DEBUG FALSE)
-set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE)
+# Not for the Miyoo cross build: linking the whole game with LTO needs more memory than the build machine has.
+if(NOT ES_MIYOO)
+	set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE)
+endif()
 # On Linux use relative RPATH.
 set(CMAKE_BUILD_RPATH_USE_ORIGIN ON)
 
@@ -79,12 +87,18 @@ if(ES_USE_SDL3)
 	set(SDL_LIBRARIES ${SDL3_LIBRARIES})
 else()
 	find_package(SDL2 CONFIG REQUIRED)
-	set(SDL_LIBRARIES SDL2::SDL2)
+	if(ES_MIYOO)
+		set(SDL_LIBRARIES SDL2::SDL2-static)
+	else()
+		set(SDL_LIBRARIES SDL2::SDL2)
+	endif()
 endif()
 find_package(PNG REQUIRED)
 find_package(JPEG REQUIRED)
-find_package(libavif REQUIRED)
-if(NOT APPLE)
+if(NOT ES_MIYOO)
+	find_package(libavif REQUIRED)
+endif()
+if(NOT APPLE AND NOT ES_SOFT)
 	find_package(GLEW REQUIRED)
 endif()
 
@@ -104,7 +118,9 @@ find_library(LIBMAD_LIB_RELEASE NAMES mad libmad NAMES_PER_DIR PATHS "${_VCPKG_I
 
 # FLAC's config is missing find_dependency(Threads), so include it here.
 find_package(Threads REQUIRED)
-if((UNIX AND NOT ES_USE_VCPKG) OR (APPLE AND ES_USE_SYSTEM_LIBRARIES))
+if(ES_MIYOO)
+	# The Miyoo build plays no FLAC (the game ships none).
+elseif((UNIX AND NOT ES_USE_VCPKG) OR (APPLE AND ES_USE_SYSTEM_LIBRARIES))
 	find_package(FLAC CONFIG QUIET)
 	if(NOT FLAC_FOUND)
 		# Many linux distros and Homebrew on MacOS use the autotools build of flac,
@@ -120,7 +136,9 @@ endif()
 # Find the zip-reading component of zlib.
 find_package(ZLIB REQUIRED)
 
-if(APPLE AND ES_USE_SYSTEM_LIBRARIES)
+if(ES_MIYOO)
+	set(MINIZIP_LIBRARIES "${MIYOO_PREFIX}/lib/libminizip.a")
+elseif(APPLE AND ES_USE_SYSTEM_LIBRARIES)
 	# Use pkg-config for minizip from Homebrew on macOS because it doesn't provide CMake configuration files.
 	find_package(PkgConfig REQUIRED)
 	pkg_check_modules(minizip REQUIRED IMPORTED_TARGET minizip)
@@ -187,8 +205,15 @@ if(MINGW)
 endif()
 
 # Link with the general libraries.
-target_link_libraries(ExternalLibraries INTERFACE ${SDL_LIBRARIES} PNG::PNG JPEG::JPEG avif
-	OpenAL::OpenAL ${MINIZIP_LIBRARIES} FLAC::FLAC++ "$<IF:$<CONFIG:Debug>,${LIBMAD_LIB_DEBUG},${LIBMAD_LIB_RELEASE}>")
+if(ES_MIYOO)
+	set(ES_IMAGE_EXTRA_LIBS "")
+	set(ES_AUDIO_EXTRA_LIBS "")
+else()
+	set(ES_IMAGE_EXTRA_LIBS avif)
+	set(ES_AUDIO_EXTRA_LIBS FLAC::FLAC++)
+endif()
+target_link_libraries(ExternalLibraries INTERFACE ${SDL_LIBRARIES} PNG::PNG JPEG::JPEG ${ES_IMAGE_EXTRA_LIBS}
+	OpenAL::OpenAL ${MINIZIP_LIBRARIES} ${ES_AUDIO_EXTRA_LIBS} "$<IF:$<CONFIG:Debug>,${LIBMAD_LIB_DEBUG},${LIBMAD_LIB_RELEASE}>")
 
 # Link the needed OS-specific dependencies, if any.
 if(WIN32)
@@ -200,7 +225,11 @@ else()
 endif()
 
 # Link with the UUID library, which is different for each OS.
-if(UNIX)
+if(ES_MIYOO)
+	# EsUuid uses a small drop-in for libuuid (source/soft/compat); minizip headers live in the prefix.
+	target_include_directories(ExternalLibraries INTERFACE ${CMAKE_SOURCE_DIR}/source/soft/compat
+		${MIYOO_PREFIX}/include/minizip ${MIYOO_PREFIX}/include)
+elseif(UNIX)
 	if(APPLE)
 		find_library(UUID_LIB NAMES System PATHS /lib /usr/lib /usr/local/lib)
 		find_path(UUID_INCLUDE uuid/uuid.h /usr/local/include /usr/include)
@@ -215,8 +244,15 @@ if(UNIX)
 	endif()
 endif()
 
-# Link with OpenGL or OpenGL ES.
-if(ES_GLES)
+# Link with OpenGL or OpenGL ES, or nothing for the software renderer.
+if(ES_SOFT)
+	# The software build is the Miyoo build: its images are shrunk to 0.625 (miyoo/tools/shrink_images.py).
+	target_compile_definitions(EndlessSkyLib PUBLIC ES_SOFT ES_ASSET_SCALE=0.625f)
+	if(ES_MIYOO)
+		# The port's own release number, shown next to the upstream version it is built on.
+		target_compile_definitions(EndlessSkyLib PUBLIC ES_MIYOO ES_PORT_VERSION="1.0")
+	endif()
+elseif(ES_GLES)
 	find_package(OpenGL REQUIRED OpenGL EGL)
 	target_link_libraries(ExternalLibraries INTERFACE OpenGL::OpenGL OpenGL::EGL)
 	target_compile_definitions(EndlessSkyLib PUBLIC ES_GLES)

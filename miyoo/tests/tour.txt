@@ -1,0 +1,216 @@
+# Screen tour for checking the Miyoo layouts: opens each screen and holds it so the
+# screenshot hook (ES_SHOT_EVERY) catches it. Copy into a config's plugins folder
+# next to the integration tests, then run one of the tests below with --debug.
+
+test "Tour Hold"
+	status partial
+	sequence
+		apply
+			"tour: wait" = 10
+		label "hold"
+		input
+		apply
+			"tour: wait" = "tour: wait" - 1
+		branch "hold"
+			"tour: wait" > 0
+
+
+test "Miyoo Tour Landed"
+	status active
+	description "Main menu, load panel, the planet and every landed screen, info, map, menu and preferences."
+	sequence
+		inject "Three Earthly Barges Save"
+		call "Tour Hold"
+		input
+			key l
+		call "Tour Hold"
+		input
+			key l
+		call "Tour Hold"
+		input
+			key t
+		call "Tour Hold"
+		input
+			key b
+		call "Tour Hold"
+		input
+			key h
+		call "Tour Hold"
+		input
+			key p
+		call "Tour Hold"
+		input
+			key l
+		input
+			key j
+		call "Tour Hold"
+		input
+			key d
+		input
+			key s
+		call "Tour Hold"
+		input
+			key l
+		input
+			key o
+		call "Tour Hold"
+		input
+			key l
+		input
+			key i
+		call "Tour Hold"
+		input
+			key "return"
+		call "Tour Hold"
+		input
+			key s
+		call "Tour Hold"
+		input
+			key d
+		input
+			key m
+		call "Tour Hold"
+		input
+			key "escape"
+		input
+			key "escape"
+		call "Tour Hold"
+		input
+			key p
+		call "Tour Hold"
+		input
+			key s
+		call "Tour Hold"
+		input
+			key p
+		call "Tour Hold"
+		input
+			key a
+		call "Tour Hold"
+
+
+test "Miyoo Tour New Pilot"
+	status active
+	description "New pilot conversation with name entry, then the first landing."
+	sequence
+		input
+			key l
+		input
+			key n
+		call "Tour Hold"
+		input
+			key s
+		call "Tour Hold"
+		input
+			key a
+		call "Tour Hold"
+		input
+			key "return"
+		input
+			key b
+		input
+			key "return"
+		call "Tour Hold"
+		input
+			key "return"
+		call "Tour Hold"
+		input
+			key l
+		call "Tour Hold"
+		input
+			key j
+		call "Tour Hold"
+		input
+			key d
+		input
+			key s
+		call "Tour Hold"
+
+
+test "Miyoo Tour Flight"
+	status active
+	description "Flight HUD, then a targeted ship (outline and rings). Keys don't reach flight in tests."
+	sequence
+		inject "Three Earthly Barges Save"
+		call "Load First Savegame"
+		call "Depart"
+		call "Tour Hold"
+		input
+			command nearest
+		call "Tour Hold"
+		call "Tour Hold"
+		call "Tour Hold"
+		call "Tour Hold"
+		call "Tour Hold"
+		call "Tour Hold"
+		call "Tour Hold"
+		call "Tour Hold"
+
+
+test "Miyoo Tour Name Entry"
+	status active
+	description "Stops at the pilot name prompt for a while, for typing with the on-screen keyboard."
+	sequence
+		input
+			key l
+		input
+			key n
+		call "Tour Hold"
+		input
+			key s
+		call "Tour Hold"
+		call "Tour Hold"
+		call "Tour Hold"
+		call "Tour Hold"
+		call "Tour Hold"
+		call "Tour Hold"
+		call "Tour Hold"
+		call "Tour Hold"
+
+
+test "Miyoo Tour Port Info"
+	status active
+	description "The main menu with the port title, then the Port info page, scrolled."
+	sequence
+		call "Tour Hold"
+		input
+			key i
+		call "Tour Hold"
+		input
+			key "pagedown"
+		call "Tour Hold"
+		input
+			key "pagedown"
+		call "Tour Hold"
+
+
+test "Miyoo Tour Fresh Start"
+	status active
+	description "A new pilot with first-time help on: the help popups and New Boston's spaceport, trade and job board."
+	sequence
+		call "Create New Pilot"
+		call "Tour Hold"
+		input
+			key "return"
+		call "Tour Hold"
+		input
+			key "return"
+		call "Tour Hold"
+		input
+			key p
+		call "Tour Hold"
+		input
+			key "return"
+		call "Tour Hold"
+		input
+			key t
+		call "Tour Hold"
+		input
+			key "return"
+		call "Tour Hold"
+		input
+			key j
+		call "Tour Hold"
+		input
+			key "return"
+		call "Tour Hold"

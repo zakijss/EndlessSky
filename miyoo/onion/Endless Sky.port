@@ -1,0 +1,22 @@
+#!/bin/sh
+# Standalone Ports Script Template
+
+# main configuration :
+GameName="Endless Sky (Port)"
+GameDir="Endless Sky"
+GameExecutable="endless-sky"
+GameDataFile="credits.txt"
+
+# additional configuration
+KillAudioserver=0
+PerformanceMode=1
+
+# specific to this port :
+# Saves go in the Onion profile like other games' saves. The parasyte libraries
+# are left out on purpose: the game uses the device's own glibc.
+Saves="/mnt/SDCARD/Saves/CurrentProfile/saves/EndlessSky"
+mkdir -p "$Saves"
+Arguments="--resources . --config $Saves"
+
+# running command line :
+/mnt/SDCARD/Emu/PORTS/launch_standalone.sh "$GameName" "$GameDir" "$GameExecutable" "$Arguments" "$GameDataFile" "$KillAudioserver" "$PerformanceMode" > "$Saves/last-run.log" 2>&1

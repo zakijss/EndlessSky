@@ -1,0 +1,3 @@
+#!/bin/sh
+# C compiler for the Miyoo Mini Plus: ARMv7 Cortex-A7, hard float, glibc 2.28 (Onion OS).
+exec zig cc -target arm-linux-gnueabihf.2.28 -mcpu=cortex_a7 -mfpu=neon-vfpv4 "$@"

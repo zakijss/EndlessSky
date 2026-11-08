@@ -495,6 +495,20 @@ target_sources(EndlessSkyLib PRIVATE
 	text/WrappedText.h
 )
 
+if(ES_SOFT)
+	# The software renderer replaces every file that talks to OpenGL.
+	set_source_files_properties(
+		GameWindow.cpp RenderBuffer.cpp opengl.cpp
+		shader/BatchShader.cpp shader/FillShader.cpp shader/FogShader.cpp shader/LineShader.cpp
+		shader/OutlineShader.cpp shader/PointerShader.cpp shader/RingShader.cpp shader/Shader.cpp
+		shader/SpriteShader.cpp
+		PROPERTIES HEADER_FILE_ONLY TRUE)
+	if(ES_MIYOO)
+		set_source_files_properties(audio/supplier/FlacSupplier.cpp PROPERTIES HEADER_FILE_ONLY TRUE)
+	endif()
+	file(GLOB SOFT_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/soft/*.cpp)
+	target_sources(EndlessSkyLib PRIVATE ${SOFT_SOURCES})
+endif()
 if(WIN32)
 	target_sources(EndlessSkyLib PRIVATE
 		windows/TimerResolutionGuard.cpp

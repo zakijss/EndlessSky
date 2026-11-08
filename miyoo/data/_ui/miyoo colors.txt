@@ -1,0 +1,15 @@
+# Miyoo Mini Plus: brighter interface greys for a small, dim handheld screen.
+# Loads after interfaces.txt and redefines the same colours; same order of emphasis.
+
+color "hover" 1. 1. 1. 0.
+color "active" .95 .95 .95 0.
+color "inactive" .45 .45 .45 0.
+
+color "bright" 1. 1. 1. 0.
+color "medium" .78 .78 .78 0.
+color "dim" .5 .5 .5 0.
+color "dimmer" .38 .38 .38 0.
+color "faint" .22 .22 .22 0.
+color "dark" .1 .1 .1 0.
+
+color "panel outline" .6 .6 .6 1.

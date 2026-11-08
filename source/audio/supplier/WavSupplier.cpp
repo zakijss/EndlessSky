@@ -26,6 +26,9 @@ using namespace std;
 
 WavSupplier::WavSupplier(const Sound &sound, bool is3x, bool looping)
 	: AudioSupplier(is3x, looping), sound(sound), wasStarted(false)
+#ifdef ES_MIYOO
+	, mono(sound.Samples(false)), mono3x(sound.Samples(true))
+#endif
 {
 }
 
@@ -38,7 +41,16 @@ size_t WavSupplier::MaxChunks() const
 	else if(wasStarted && !currentSample)
 		return 0;
 	else
-		return ceil(((is3x ? sound.Buffer3x() : sound.Buffer()).size() - currentSample) / static_cast<float>(OUTPUT_CHUNK));
+	{
+#ifdef ES_MIYOO
+		// Positions count stereo samples; the stored sound is mono.
+		const auto &input = is3x ? mono3x : mono;
+		const size_t total = input ? 2 * input->size() : 0;
+#else
+		const size_t total = (is3x ? sound.Buffer3x() : sound.Buffer()).size();
+#endif
+		return ceil((total - currentSample) / static_cast<float>(OUTPUT_CHUNK));
+	}
 }
 
 
@@ -65,11 +77,24 @@ vector<AudioSupplier::sample_t> WavSupplier::NextDataChunk()
 			is3x = nextPlaybackIs3x;
 			wasStarted = true;
 		}
+#ifdef ES_MIYOO
+		const auto &stored = is3x ? mono3x : mono;
+		if(!stored || stored->empty())
+			break;
+		const size_t total = 2 * stored->size();
+		size_t readChunk = min(total - currentSample, samples.size() - currentSampleCount);
+		// Both channels get the mono sample.
+		for(size_t i = 0; i < readChunk; ++i)
+			samples[currentSampleCount + i] = (*stored)[(currentSample + i) / 2];
+		currentSampleCount += readChunk;
+		currentSample = (currentSample + readChunk) % total;
+#else
 		const vector<sample_t> &input = is3x ? sound.Buffer3x() : sound.Buffer();
 		size_t readChunk = min(input.size() - currentSample, samples.size() - currentSampleCount);
 		std::copy_n(input.begin() + currentSample, readChunk, samples.begin() + currentSampleCount);
 		currentSampleCount += readChunk;
 		currentSample = (currentSample + readChunk) % input.size();
+#endif
 	} while(currentSampleCount < samples.size() && isLooping);
 	return samples;
 }

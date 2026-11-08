@@ -297,7 +297,12 @@ void Preferences::Init()
 	settings[MAP_SHOW_OUTFITS] = Setting::OnOff("Show stored outfits on map", true);
 	settings[MAP_PARENTHESIZE_PROFIT] = Setting::OnOff("Parenthesize trade profits", false);
 	settings[MINIMAP_DISPLAY] = Setting::List("Show mini-map", {"off", "when jumping", "always on"}, 1);
+#ifdef ES_MIYOO
+	// Off by default on the Miyoo: blur triples the cost of drawing moving sprites.
+	settings[MOTION_BLUR] = Setting::OnOff("Render motion blur", false);
+#else
 	settings[MOTION_BLUR] = Setting::OnOff("Render motion blur", true);
+#endif
 	settings[MOUSE_CONTROL_FLAGSHIP] = Setting::OnOff("Control ship with mouse", false);
 	settings[MOUSE_CONTROL_TURRETS] = Setting::OnOff("Aim turrets with mouse", false);
 	settings[PARALLAX] = Setting::List("Parallax background", {"off", "fancy", "fast"}, 2);
@@ -420,7 +425,12 @@ void Preferences::Init()
 	settings[TEXT_ALIGNMENT] = Setting::List("Text alignment", {"left", "center", "right", "justified"}, 3, true);
 	settings[TEXT_ALIGNMENT].SetOnToggleFunc([](UI *) -> void { CustomEvents::SendAdjustText(); });
 
+#ifdef ES_MIYOO
+	// Nearest by default on the Miyoo: linear filtering costs about 2.5 times as much per sprite pixel.
+	settings[TEXTURE_FILTERING] = Setting::List("Texture filtering", {"nearest", "linear"}, 0, true);
+#else
 	settings[TEXTURE_FILTERING] = Setting::List("Texture filtering", {"nearest", "linear"}, 1, true);
+#endif
 
 	settings[TOOLTIP_ACTIVATION_TIME] = Setting::Unique("Tooltip activation time");
 	settings[TOOLTIP_ACTIVATION_TIME].SetDisplayFunc([]() -> pair<string, bool> {

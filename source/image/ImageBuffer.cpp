@@ -19,7 +19,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "ImageFileData.h"
 #include "../Logger.h"
 
+#ifndef ES_MIYOO
 #include <avif/avif.h>
+#endif
 #include <jpeglib.h>
 #include <png.h>
 
@@ -34,7 +36,12 @@ using namespace std;
 namespace {
 	const set<string> PNG_EXTENSIONS{".png"};
 	const set<string> JPG_EXTENSIONS{".jpg", ".jpeg", ".jpe"};
+#ifdef ES_MIYOO
+	// The Miyoo build has no AVIF decoder; the game ships no AVIF images.
+	const set<string> AVIF_EXTENSIONS;
+#else
 	const set<string> AVIF_EXTENSIONS{".avif", ".avifs"};
+#endif
 	const set<string> IMAGE_EXTENSIONS = []()
 	{
 		set<string> extensions(PNG_EXTENSIONS);
@@ -46,8 +53,10 @@ namespace {
 
 	bool ReadPNG(const filesystem::path &path, ImageBuffer &buffer, int frame, bool onlyDimensions);
 	bool ReadJPG(const filesystem::path &path, ImageBuffer &buffer, int frame, bool onlyDimensions);
+#ifndef ES_MIYOO
 	int ReadAVIF(const filesystem::path &path, ImageBuffer &buffer, int frame, bool alphaPreMultiplied,
 		bool onlyDimensions);
+#endif
 	void Premultiply(ImageBuffer &buffer, int frame, BlendingMode additive);
 }
 
@@ -224,8 +233,13 @@ int ImageBuffer::Read(const ImageFileData &data, int frame, bool onlyDimensions)
 		loaded = ReadPNG(data.path, *this, frame, onlyDimensions);
 	else if(isJPG)
 		loaded = ReadJPG(data.path, *this, frame, onlyDimensions);
+#ifdef ES_MIYOO
+	else
+		loaded = 0;
+#else
 	else
 		loaded = ReadAVIF(data.path, *this, frame, isAlphaPreMultiplied, onlyDimensions);
+#endif
 
 	if(loaded <= 0)
 		return 0;
@@ -430,6 +444,7 @@ namespace {
 	// based on how much longer its duration is compared to this unit.
 	// TODO: If animation properties are exposed here, we can have custom presentation
 	// logic that avoids duplicating the frames.
+#ifndef ES_MIYOO
 	int ReadAVIF(const filesystem::path &path, ImageBuffer &buffer, int frame, bool alphaPreMultiplied,
 		bool onlyDimensions)
 	{
@@ -555,6 +570,7 @@ namespace {
 
 		return bufferFrameCount;
 	}
+#endif
 
 
 

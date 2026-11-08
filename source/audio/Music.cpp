@@ -16,7 +16,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "Music.h"
 
 #include "../Files.h"
+#ifndef ES_MIYOO
 #include "supplier/FlacSupplier.h"
+#endif
 #include "../text/Format.h"
 #include "supplier/Mp3Supplier.h"
 
@@ -49,8 +51,10 @@ void Music::Init(const vector<filesystem::path> &sources)
 			string extension = Format::LowerCase(path.extension().string());
 			if(extension == ".mp3")
 				paths[name] = {path, MusicFileType::MP3};
+#ifndef ES_MIYOO
 			else if(extension == ".flac")
 				paths[name] = {path, MusicFileType::FLAC};
+#endif
 		}
 	}
 }
@@ -66,8 +70,12 @@ unique_ptr<AudioSupplier> Music::CreateSupplier(const string &name, bool looping
 				return unique_ptr<AudioSupplier>{
 					new Mp3Supplier{Files::Open(paths[name].first), looping}};
 			case MusicFileType::FLAC:
+#ifdef ES_MIYOO
+				break;
+#else
 				return unique_ptr<AudioSupplier>{
 					new FlacSupplier{Files::Open(paths[name].first), looping}};
+#endif
 		}
 	return {};
 }

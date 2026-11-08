@@ -57,6 +57,10 @@ private:
 	int widthMod;
 	int tileCols;
 	std::vector<int> tileIndex;
+#ifdef ES_SOFT
+	// x, y and size of each star, sorted by tile (the GL build keeps these in a vertex buffer).
+	std::vector<float> starData;
+#endif
 
 	// Constants from an Interface that modify the starfield's behavior.
 	double fixedZoom = 1.;

@@ -28,6 +28,15 @@ class ImageBuffer;
 // animation. Each frame is stored in a separate OpenGL texture object. This may
 // not be as efficient as sprite sheets, but with modern graphics cards it will
 // not matter much and it makes working with the graphics a lot simpler.
+#ifndef ES_ASSET_SCALE
+#define ES_ASSET_SCALE 1.f
+#endif
+
+// Images on disk may be shrunk by ES_ASSET_SCALE (Miyoo build). Sprite sizes stay in original units.
+constexpr float ASSET_SCALE = ES_ASSET_SCALE;
+
+
+
 class Sprite {
 public:
 	explicit Sprite(const std::string &name = "");
@@ -39,6 +48,10 @@ public:
 	// size for certain panels that rely on knowing a sprite's size without needing the sprite
 	// to be fully loaded.
 	void LoadDimensions(const ImageBuffer &buffer);
+#ifdef ES_SOFT
+	// Dimensions from the saved size list, in image pixels as LoadDimensions reads them.
+	void SetDimensions(int pixelWidth, int pixelHeight, int frameCount);
+#endif
 	// Whether this sprite has any dimensions, guaranteeing that it exists even if it needs to be loaded.
 	bool HasDimensions() const;
 

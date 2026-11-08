@@ -44,6 +44,10 @@ public:
 
 	virtual void DrawAttributes(const Point &topLeft) const override;
 	virtual void DrawAttributes(const Point &topLeft, const bool sale) const;
+	// Without the energy and heat table, for layouts that put it elsewhere.
+	void DrawAttributes(const Point &topLeft, const bool sale, const bool energyHeat) const;
+	void DrawEnergyHeat(const Point &topLeft) const;
+	double EnergyHeatHeight() const;
 	void DrawOutfits(const Point &topLeft) const;
 
 

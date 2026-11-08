@@ -15,8 +15,15 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "Sprite.h"
 
+#ifdef ES_SOFT
+#include "SpriteLoadManager.h"
+#endif
+
 #include "../text/Format.h"
 #include "ImageBuffer.h"
+#ifdef ES_SOFT
+#include "../soft/Raster.h"
+#endif
 #include "../Logger.h"
 #include "../Preferences.h"
 
@@ -34,6 +41,13 @@ namespace {
 				&& buffer.Width() * buffer.Height() >= 1000000)))
 			buffer.ShrinkToHalfSize();
 
+#ifdef ES_SOFT
+		// Never leak a texture this one replaces.
+		if(*target)
+			Raster::DeleteTexture(*target);
+		*target = Raster::CreateTexture(buffer.Width(), buffer.Height(), buffer.Frames(), buffer.Pixels());
+		(void)name;
+#else
 		// Upload the images as a single array texture.
 		int type = OpenGL::HasTexture2DArraySupport() ? GL_TEXTURE_2D_ARRAY : GL_TEXTURE_3D;
 		glGenTextures(1, target);
@@ -95,6 +109,7 @@ namespace {
 		// Unbind the texture.
 		glBindTexture(type, 0);
 
+#endif
 		// Free the ImageBuffer memory.
 		buffer.Clear();
 	}
@@ -118,13 +133,24 @@ const string &Sprite::Name() const
 
 void Sprite::LoadDimensions(const ImageBuffer &buffer)
 {
-	width = buffer.Width();
-	height = buffer.Height();
+	width = buffer.Width() / ASSET_SCALE;
+	height = buffer.Height() / ASSET_SCALE;
 	frames = buffer.Frames();
 }
 
 
 
+#ifdef ES_SOFT
+void Sprite::SetDimensions(int pixelWidth, int pixelHeight, int frameCount)
+{
+	width = pixelWidth / ASSET_SCALE;
+	height = pixelHeight / ASSET_SCALE;
+	frames = frameCount;
+}
+
+
+
+#endif
 bool Sprite::HasDimensions() const
 {
 	return width != 0 && height != 0 && frames != 0;
@@ -141,8 +167,15 @@ void Sprite::AddFrames(ImageBuffer &buffer1x, ImageBuffer &buffer2x, bool noRedu
 	// and its number of frames. ImageSet should ensure that either 1x
 	// and 2x buffers contain the same number of frames, or the 2x buffer
 	// is empty.
-	width = buffer1x.Width();
-	height = buffer1x.Height();
+#ifdef ES_SOFT
+	// The size saved for the shipped art (sizes.txt) wins: a few huge backgrounds ship
+	// smaller than the rest and are drawn at their original size, just softer.
+	if(!width || !height)
+#endif
+	{
+		width = buffer1x.Width() / ASSET_SCALE;
+		height = buffer1x.Height() / ASSET_SCALE;
+	}
 	frames = buffer1x.Frames();
 	// Do nothing else if the buffer is empty.
 	// (The buffer can be empty yet still have a width and height if uploading is disabled.)
@@ -189,6 +222,12 @@ void Sprite::AddSwizzleMaskFrames(ImageBuffer &buffer1x, ImageBuffer &buffer2x, 
 
 bool Sprite::IsLoaded() const
 {
+#ifdef ES_SOFT
+	// Panels that draw a sprite only once it is loaded (shop thumbnails) never draw it to
+	// trigger loading, and an evicted sprite must come back: asking is a request.
+	if(!isLoaded)
+		SpriteLoadManager::RequestSprite(this);
+#endif
 	return isLoaded;
 }
 
@@ -197,6 +236,11 @@ bool Sprite::IsLoaded() const
 // Free up all textures loaded for this sprite.
 void Sprite::Unload()
 {
+#ifdef ES_SOFT
+	Raster::DeleteTexture(texture);
+	Raster::DeleteTexture(swizzleMask);
+	texture = swizzleMask = 0;
+#else
 	if(texture)
 	{
 		glDeleteTextures(1, &texture);
@@ -207,6 +251,7 @@ void Sprite::Unload()
 		glDeleteTextures(1, &swizzleMask);
 		swizzleMask = 0;
 	}
+#endif
 	isLoaded = false;
 	// Dimension and frame information is retained.
 }

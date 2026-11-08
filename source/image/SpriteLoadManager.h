@@ -55,6 +55,15 @@ public:
 	static bool RecheckThumbnails();
 	static void SetRecheckStellarObjects();
 	static bool RecheckStellarObjects();
+#ifdef ES_SOFT
+	// Software build: sprites load the first time they are drawn and are evicted,
+	// least recently used first, when texture memory is over budget.
+	static void UseSprite(const Sprite *sprite);
+	// From any thread: ask for the sprite to be loaded (used) on the next PumpSprites.
+	static void RequestSprite(const Sprite *sprite);
+	// Once per frame on the main thread: finish loads and evict.
+	static void PumpSprites();
+#endif
 
 
 private:

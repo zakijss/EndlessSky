@@ -1,0 +1,5 @@
+# Miyoo Mini Plus: the first-flight tips explain the button layers, which a keyboard player
+# doesn't need. Loaded after messages.txt, so this definition replaces the original.
+
+message "basics 2"
+	text `For the main menu, press <Show main menu>. Tap Select to switch between flying and the pointer; hold Select or Start with another button for more commands. Preferences, Controls lists every button.`

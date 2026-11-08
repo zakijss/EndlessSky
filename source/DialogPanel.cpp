@@ -15,6 +15,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "DialogPanel.h"
 
+#ifdef ES_MIYOO
+#include "GameWindow.h"
+#endif
+
 #include "audio/Audio.h"
 #include "text/Clipboard.h"
 #include "Color.h"
@@ -210,6 +214,10 @@ DialogPanel *DialogPanel::RequestDoubleWithValidation(function<void(double)> fun
 // Draw this panel.
 void DialogPanel::Draw()
 {
+#ifdef ES_MIYOO
+	if(AcceptsInput())
+		GameWindow::WantText();
+#endif
 	DrawBackdrop();
 
 	const Sprite *top = SpriteSet::Get(isWide ? "ui/dialog top wide" : "ui/dialog top");

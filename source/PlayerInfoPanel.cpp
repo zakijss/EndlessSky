@@ -708,9 +708,18 @@ void PlayerInfoPanel::DrawPlayer(const Rectangle &bounds)
 
 void PlayerInfoPanel::DrawFleet(const Rectangle &bounds)
 {
-	// Check that the specified area is big enough.
-	if(bounds.Width() < 750.)
+	// Check that the specified area is big enough. Boxes narrower than the table (the
+	// Miyoo's 800-wide screen) squeeze every column to fit.
+	if(bounds.Width() < 500.)
 		return;
+	const double squeeze = min(1., (bounds.Width() - 30.) / 730.);
+	vector<SortableColumn> fitted(begin(columns), end(columns));
+	for(SortableColumn &column : fitted)
+	{
+		column.offset *= squeeze;
+		column.endX *= squeeze;
+		column.layout.width = static_cast<int>(column.layout.width * squeeze);
+	}
 
 	// Colors to draw with.
 	const Color &back = *GameData::Colors().Get("faint");
@@ -724,16 +733,16 @@ void PlayerInfoPanel::DrawFleet(const Rectangle &bounds)
 
 	// Table attributes.
 	Table table;
-	for(const auto &col : columns)
+	for(const auto &col : fitted)
 		table.AddColumn(col.offset, col.layout);
 
-	table.SetUnderline(0, 730);
+	table.SetUnderline(0, static_cast<int>(730. * squeeze));
 	table.DrawAt(bounds.TopLeft() + Point(10., 8.));
 	table.DrawUnderline(dim);
 
 	// Header row.
 	const Point tablePoint = table.GetPoint();
-	for(const auto &column : columns)
+	for(const auto &column : fitted)
 	{
 		Rectangle zone = Rectangle(
 			tablePoint + Point((column.offset + column.endX) / 2, table.GetRowSize().Y() / 2),
