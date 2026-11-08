@@ -198,15 +198,14 @@ checking layouts, and making a release.
 
 Where the port's work lives:
 
-| Path | What it is |
-| --- | --- |
-| `source/soft/` | Renderer, the Miyoo window (framebuffer, buttons, keyboard, status bar, frame pacing) and the Port info page |
-| `#ifdef ES_SOFT` / `ES_MIYOO` | The port's changes inside upstream source files |
-| `miyoo/data/_ui/` | Text the port replaces: colours, help messages, the Port info page |
-| `miyoo/art/` | Sprite sizes, collision masks and areas made from the art |
-| `miyoo/tools/` | Layout and help generators, image tools, `stage.sh`, `art.sh` |
-| `miyoo/onion/` | The Onion launcher and its list picture |
-| `miyoo/tests/` | Renderer and sound self-checks, screen tours |
+- `source/soft/`: the renderer, the Miyoo window (framebuffer, buttons, keyboard, status bar,
+  frame pacing) and the Port info page.
+- `#ifdef ES_SOFT` and `ES_MIYOO` blocks: the port's changes inside upstream source files.
+- `miyoo/data/_ui/`: text the port replaces (colours, help messages, the Port info page).
+- `miyoo/art/`: sprite sizes, collision masks and areas made from the art.
+- `miyoo/tools/`: layout and help generators, image tools, `stage.sh` and `art.sh`.
+- `miyoo/onion/`: the Onion launcher and its list picture.
+- `miyoo/tests/`: renderer and sound self-checks, and screen tours.
 
 Problems with the port go in this repo's [issues](https://github.com/zakijss/EndlessSky/issues).
 Problems with the game itself (missions, balance, story) belong upstream at
