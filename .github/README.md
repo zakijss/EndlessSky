@@ -1,6 +1,4 @@
 <a id="top"></a>
-<table>
-<tr><td>
 
 <img src="../miyoo/docs/ui/top.png" alt="Endless Sky, Mini Plus by ZJSS: a space trading and combat game for the Miyoo Mini Plus, ported by ZJSS from Endless Sky by Michael Zahniser and contributors" width="100%">
 
@@ -226,6 +224,3 @@ Problems with the game itself (missions, balance, story) belong upstream at
   Rodrigo Fuenzalida), under the SIL Open Font License.
 
 <a href="https://github.com/zakijss/EndlessSky/releases/latest"><img src="../miyoo/docs/ui/bottom-a.png" alt="A: Download" width="50%"></a><a href="#top"><img src="../miyoo/docs/ui/bottom-b.png" alt="B: Back to top" width="50%"></a>
-
-</td></tr>
-</table>
