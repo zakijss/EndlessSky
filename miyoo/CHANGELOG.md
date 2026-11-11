@@ -8,7 +8,7 @@ built on.
 Built on Endless Sky 0.11.5 (upstream development branch, 10 November 2026).
 
 - Upstream changes: the game saves right after landing, fleet cargo use and capacity in Player
-  Info, custom capacities in Ship Info, the map recentres on your system, NPC placement and
+  Info, custom capacities in Ship Info, NPC placement and
   spawning options for missions, "unremovable" and "nondepreciable" outfits, game data
   conditions, and fixes for new-pilot gamerules and NPC ships loaded from saves.
 
