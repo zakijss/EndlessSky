@@ -745,6 +745,13 @@ const Set<Gamerules> &GameData::GamerulesPresets()
 
 
 
+const Set<ConditionAlias> &GameData::ConditionAliases()
+{
+	return objects.conditionAliases;
+}
+
+
+
 const std::set<std::string> &GameData::UniverseWormholeRequirements()
 {
 	return objects.universeWormholeRequirements;
@@ -811,9 +818,16 @@ const string &GameData::Rating(const string &type, int level)
 
 
 // Collections for ship, bay type, outfit, and other categories.
-const CategoryList &GameData::GetCategory(const CategoryType type)
+const CategoryList &GameData::GetCategory(CategoryType type)
 {
 	return objects.categories[type];
+}
+
+
+
+const CapacityList &GameData::GetCapacities()
+{
+	return objects.capacities;
 }
 
 
