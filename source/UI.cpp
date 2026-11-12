@@ -142,13 +142,21 @@ void UI::DrawAll()
 		if((*--it)->IsFullScreen())
 			break;
 
+#ifdef ES_SOFT
+	bool firstDrawn = true;
+#endif
 	for( ; it != stack.end(); ++it)
 	{
 		// Panels that are about to be popped shouldn't get drawn.
 		if(count(toPop.begin(), toPop.end(), it->get()))
 			continue;
 #ifdef ES_SOFT
-		Navigation::BeginPanel();
+		// Only the top panel's buttons can be clicked, unless it lets clicks through to the
+		// panels below (the planet's trading, bank, spaceport and hiring screens): then the
+		// D-pad keeps their buttons too (Depart, the other planet screens).
+		if(firstDrawn || (*it)->TrapAllEvents())
+			Navigation::BeginPanel();
+		firstDrawn = false;
 #endif
 		(*it)->DoDraw();
 	}

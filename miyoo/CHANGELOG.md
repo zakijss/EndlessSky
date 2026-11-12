@@ -3,6 +3,15 @@
 Port versions of Endless Sky for the Miyoo Mini Plus. Each one names the upstream version it is
 built on.
 
+## 1.2.1 (12 November 2026)
+
+Built on Endless Sky 0.11.5 (upstream development branch, 10 November 2026).
+
+- On a planet, the D-pad can again reach Depart and the other screen tabs once Trading, Bank,
+  Hire Crew or the Spaceport is open. Those screens pass their clicks through to the planet
+  beneath them, but the D-pad had been keeping only the open screen's own buttons; it now keeps
+  the planet's as well.
+
 ## 1.2 (11 November 2026)
 
 Built on Endless Sky 0.11.5 (upstream development branch, 10 November 2026).

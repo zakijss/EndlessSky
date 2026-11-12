@@ -250,7 +250,7 @@ if(ES_SOFT)
 	target_compile_definitions(EndlessSkyLib PUBLIC ES_SOFT ES_ASSET_SCALE=0.625f)
 	if(ES_MIYOO)
 		# The port's own release number, shown next to the upstream version it is built on.
-		target_compile_definitions(EndlessSkyLib PUBLIC ES_MIYOO ES_PORT_VERSION="1.2")
+		target_compile_definitions(EndlessSkyLib PUBLIC ES_MIYOO ES_PORT_VERSION="1.2.1")
 	endif()
 elseif(ES_GLES)
 	find_package(OpenGL REQUIRED OpenGL EGL)
