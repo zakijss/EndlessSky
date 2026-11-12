@@ -49,7 +49,7 @@ screens on the devices.
   warning at 15% and 5% battery, and at Onion's cut-off the game saves on a planet and lets Onion
   power off. Waking from sleep in flight opens the main menu so nothing hits you first. Onion's
   sleep timer doesn't stop a long autopilot trip. A battery saver (fewer frames and a slower CPU
-  on planets and menus), and an option to start straight in your last save. Saves are written to
+  on planets and menus), screen dimming when idle, and an option to start straight in your last save. Saves are written to
   a temporary file and renamed into place, so power loss can't leave a broken save. All of these
   are in Preferences, Settings, on the last page.
 - **A status bar.** Time, Wi-Fi and battery sit in the top-right corner, as on Onion's own
@@ -57,9 +57,10 @@ screens on the devices.
 - **Port info page.** Main menu, Port info: the version, every control and tips for playing on the
   Miyoo, on a page you can scroll.
 - **Sound.** All of the game's sound effects and its ambient loops. Endless Sky has no music.
-- **Onion's game switcher.** The Menu button leaves for Onion's game switcher. On a planet the
-  game saves first. In flight it asks for a second press, since progress since your last landing
-  is lost, as in the PC game.
+- **Save anywhere.** Start+R2 saves in flight, and leaving the game in flight (Menu, a flat
+  battery, Onion's sleep) saves first, so a handheld session can stop at any moment. Loading such
+  a save starts in flight where you were. Turn "Save in flight" off for the PC rule (only landing
+  saves). The Menu button leaves for Onion's game switcher.
 - **Kept up to date.** This fork follows upstream Endless Sky. New ships, missions and fixes from
   upstream come in by merge, and each release says which upstream version it is built on.
 
@@ -96,14 +97,14 @@ Hold Start and press:
 | A | Cloak | R1 | Help |
 | B | Fleet: harvest flotsam | X | Fleet: use ammo or not |
 | Up | Fleet jump | Down | Fleet: scan my target |
-| Left | Turret tracking on or off | | |
+| Left | Turret tracking on or off | R2 | Save here (in flight) |
 
 **Pointer (menus and planets).** Tap Select to switch between flying and the pointer; landing and
 taking off switch for you. The D-pad jumps the pointer to the next button or row, outlined in
 orange (hold to keep going). On the map, or where nothing more is that way, it moves freely (a tap
 nudges it, holding speeds it up). A clicks, X right-clicks, B goes back and Start confirms. L1 and
 R1 scroll, L2 and R2 page up and down, and Select with the D-pad sends the arrow keys. Start with
-B centres the map on your system. Hold Select or Start while you click to buy or sell 5 or 20 at
+B centres the map on your system; hold Start while moving for a slow pointer. Hold Select or Start while you click to buy or sell 5 or 20 at
 a time (both together: 100), or to add ships to a selection.
 
 **Keyboard.** When the game asks for text (your pilot's name, a ship's name, a map search) a
@@ -143,8 +144,8 @@ and `Roms/PORTS/Imgs/Endless Sky.png`. Your saves stay in the `Saves` folder unt
 **Known limits**
 
 - Made and tested on the Miyoo Mini Plus. Other Miyoo models are untested.
-- Texture filtering (smoother sprites) and motion blur look nicer but cost a lot of speed. They
-  are in Preferences, Settings, and start off.
+- Motion blur looks nicer but costs a lot of speed; it is in Preferences, Settings, and starts off.
+  Smooth sprites ("Sprite smoothing", auto) switch off by themselves in the heaviest scenes.
 - Large battles and planet screens run nearer 20 frames a second. The game keeps its speed by
   drawing fewer frames.
 - Plugins load from `Saves/CurrentProfile/saves/EndlessSky/plugins`, but big ones with lots of art
@@ -158,7 +159,12 @@ is written for OpenGL, so the port replaces the graphics layer and leaves the ga
 - **Software renderer** (`source/soft/`). The OpenGL shaders the game uses (sprites, text, rings,
   lines, outlines, the map fog and the starfield) are rewritten for the CPU: fixed-point sprite
   drawing with fast paths for unrotated sprites, cached glyphs and ship outlines, and row spans for
-  rings and stars. Frames go straight to the framebuffer.
+  rings and stars. Both cores draw: big jobs are split into bands of rows that each core takes as
+  it is free, and blending and smooth sampling use NEON, four pixels at a time. Frames go
+  straight to the framebuffer.
+- **Art at the size it is drawn.** Ships, planets, asteroids and effects ship at 0.4, 0.56 and 0.8
+  of their original size as well, and the game loads the set drawn pixel for pixel at your view
+  zoom.
 - **Frame pacing.** The game logic runs 60 steps a second. When drawing can't keep up in flight,
   up to three steps run between drawn frames, so time in the game stays real. Outside flight an
   unchanged screen is shown again instead of drawn again.

@@ -18,6 +18,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include <atomic>
+#include <functional>
+
+#if defined(__ARM_NEON)
+#include <arm_neon.h>
+#endif
 
 
 
@@ -55,6 +61,10 @@ namespace Raster {
 	double Scale();
 	// Sprites sample four texels (true, the default) or the nearest one.
 	void SetLinearFiltering(bool linear);
+	bool LinearFiltering();
+	// Soft, large art (the background haze): always nearest, and its time is not counted in
+	// TakeSpriteSeconds, since smoothing it would look the same.
+	void SetSmoothingAllowed(bool allowed);
 
 	// Pixels are drawn only inside this rectangle (framebuffer pixels).
 	void SetClip(int x, int y, int width, int height);
@@ -99,10 +109,22 @@ namespace Raster {
 	void DrawBatchQuad(uint32_t texture, float frame, int frameCount, const double corner[2],
 		const double width[2], const double height[2], float clip, float alpha);
 
+	// Run body(from, to) over the rows [y0, y1). With a second core and enough pixels
+	// (area), the bottom half runs on a helper thread at the same time; body must only
+	// write the rows it is given. ES_THREADS=1 keeps everything on one core.
+	// band: rows per piece handed out (bigger when each call of body has a high fixed cost).
+	void ParallelRows(int y0, int y1, int64_t area, const std::function<void(int, int)> &body, int band = 8);
+	// Turn the helper thread off or back on (tests compare the two).
+	void SetThreads(bool on);
+	// Seconds spent drawing sprites since the last call (for choosing the filtering).
+	double TakeSpriteSeconds();
+
 	// ES_PROFILE: time per kind of drawing, logged with the frame rate. Nested scopes overlap.
 	enum ProfSlot { PROF_STEP, PROF_WAIT, PROF_DRAW, PROF_STARS, PROF_SPRITE, PROF_BATCH, PROF_TEXT, PROF_LINE,
 		PROF_RING, PROF_POINTER, PROF_FILL, PROF_OUTLINE, PROF_FOG, PROF_COMPOSITE, PROF_CLEAR, PROF_FLIP, PROF_COUNT };
 	extern bool profOn;
+	// Stars drawn and pixels they touched (both threads), for the profile log.
+	extern std::atomic<long> profStars, profStarPixels;
 	extern double profTime[PROF_COUNT];
 	extern int profCalls[PROF_COUNT];
 	extern const char *const profNames[PROF_COUNT];
@@ -128,6 +150,38 @@ namespace Raster {
 		rb |= ((rb >> 8) & 0x00010001) * 0xFF;
 		ag |= ((ag >> 8) & 0x00010001) * 0xFF;
 		return (rb & 0x00FF00FF) | ((ag & 0x00FF00FF) << 8);
+	}
+
+	// BlendPixel on four pixels at once: the same result, bit for bit (a zero source pixel
+	// leaves the destination as it was). dst and src point to four pixels each.
+	inline void BlendPixels4(uint32_t *dst, const uint32_t *src)
+	{
+		// Four opaque pixels just replace what is there (most of a ship's body).
+		if((src[0] & src[1] & src[2] & src[3]) >= 0xFF000000u)
+		{
+			dst[0] = src[0];
+			dst[1] = src[1];
+			dst[2] = src[2];
+			dst[3] = src[3];
+			return;
+		}
+#if defined(__ARM_NEON)
+		const uint32x4_t s = vld1q_u32(src);
+		const uint32x4_t a = vshrq_n_u32(s, 24);
+		const uint16x4_t inv = vmovn_u32(vsubq_u32(vsubq_u32(vdupq_n_u32(256), a), vshrq_n_u32(a, 7)));
+		// Each pixel's factor on all four of its channels.
+		const uint16x4x2_t pairs = vzip_u16(inv, inv);
+		const uint16x4x2_t first = vzip_u16(pairs.val[0], pairs.val[0]);
+		const uint16x4x2_t second = vzip_u16(pairs.val[1], pairs.val[1]);
+		const uint8x16_t d = vreinterpretq_u8_u32(vld1q_u32(dst));
+		const uint16x8_t low = vmulq_u16(vmovl_u8(vget_low_u8(d)), vcombine_u16(first.val[0], first.val[1]));
+		const uint16x8_t high = vmulq_u16(vmovl_u8(vget_high_u8(d)), vcombine_u16(second.val[0], second.val[1]));
+		const uint8x16_t scaled = vcombine_u8(vrshrn_n_u16(low, 8), vrshrn_n_u16(high, 8));
+		vst1q_u32(dst, vreinterpretq_u32_u8(vqaddq_u8(scaled, vreinterpretq_u8_u32(s))));
+#else
+		for(int i = 0; i < 4; ++i)
+			dst[i] = BlendPixel(dst[i], src[i]);
+#endif
 	}
 
 	// Every channel of a premultiplied colour times k / 256, k in 0..256.
@@ -158,28 +212,33 @@ namespace Raster {
 		y0 = std::max(y0, static_cast<int>(std::floor(minY * s + cy)));
 		y1 = std::min(y1, static_cast<int>(std::ceil(maxY * s + cy)));
 		uint32_t *pixels = Pixels();
-		for(int py = y0; py < y1; ++py)
+		const int width = Width();
+		// coverage and spans are pure functions of their arguments, so both halves can run at once.
+		ParallelRows(y0, y1, static_cast<int64_t>(y1 - y0) * (x1 - x0), [&](int from, int to)
 		{
-			const double ly = (py + .5 - cy) / s;
-			uint32_t *row = pixels + py * Width();
-			double range[4];
-			const int count = spans(ly, range);
-			for(int i = 0; i < count; ++i)
+			for(int py = from; py < to; ++py)
 			{
-				const int xa = std::max(x0, static_cast<int>(std::floor(range[2 * i] * s + cx - .5)));
-				const int xb = std::min(x1, static_cast<int>(std::ceil(range[2 * i + 1] * s + cx - .5)) + 1);
-				for(int px = xa; px < xb; ++px)
+				const double ly = (py + .5 - cy) / s;
+				uint32_t *row = pixels + py * width;
+				double range[4];
+				const int count = spans(ly, range);
+				for(int i = 0; i < count; ++i)
 				{
-					const double lx = (px + .5 - cx) / s;
-					float rgba[4] = {color[0], color[1], color[2], color[3]};
-					float alpha = coverage(lx, ly, rgba);
-					if(alpha <= 0.f)
-						continue;
-					alpha = std::min(alpha, 1.f);
-					row[px] = BlendPixel(row[px], PackColor(rgba[0] * alpha, rgba[1] * alpha, rgba[2] * alpha, rgba[3] * alpha));
+					const int xa = std::max(x0, static_cast<int>(std::floor(range[2 * i] * s + cx - .5)));
+					const int xb = std::min(x1, static_cast<int>(std::ceil(range[2 * i + 1] * s + cx - .5)) + 1);
+					for(int px = xa; px < xb; ++px)
+					{
+						const double lx = (px + .5 - cx) / s;
+						float rgba[4] = {color[0], color[1], color[2], color[3]};
+						float alpha = coverage(lx, ly, rgba);
+						if(alpha <= 0.f)
+							continue;
+						alpha = std::min(alpha, 1.f);
+						row[px] = BlendPixel(row[px], PackColor(rgba[0] * alpha, rgba[1] * alpha, rgba[2] * alpha, rgba[3] * alpha));
+					}
 				}
 			}
-		}
+		});
 	}
 
 	template <class Coverage>

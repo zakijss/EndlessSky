@@ -7,3 +7,40 @@ message "basics 2"
 # Preferences, Settings: on the Miyoo "Show CPU / GPU load" is shown as this.
 tip "Show frame rate"
 	`Show how many frames a second the game draws, at the top left of the screen.`
+
+# Quick save in flight (Start+R2), and leaving in flight with "Save in flight" on.
+message "miyoo saved in flight"
+	text "Game saved here. Loading it starts in flight at this spot."
+	category "high"
+
+message "miyoo cannot save in flight"
+	text "Can't save right now (no flagship, or the pilot can't be saved)."
+	category "high"
+
+# Preferences, Settings, Mini Plus.
+tip "Sprite smoothing"
+	`Smooth (bilinear) sprites look less jagged when they turn. "auto" smooths them whenever the frame has time for it and switches back in heavy scenes, so the frame rate holds.`
+
+tip "D-pad jumps between buttons"
+	`In menus and on planets the D-pad jumps the pointer from button to button and row to row. Off: the D-pad always moves a free pointer.`
+
+tip "Button hints"
+	`Hold Select or Start for a moment to see what each button does with it, and show a short notice when Select switches between flying and the pointer.`
+
+tip "Rumble"
+	`Vibration on hull hits, failing shields, jumps and losing the flagship. Changing this gives a short buzz at the new strength.`
+
+tip "Battery saver"
+	`On planets and in menus, draw at most 20 frames a second and let the CPU slow down. Flight is unchanged.`
+
+tip "Start in last save"
+	`Skip the main menu when the game starts and go straight to your ship.`
+
+tip "Stay awake in flight"
+	`Keep Onion's sleep timer from stopping a long autopilot trip. The console still sleeps on the planet and in menus.`
+
+tip "Save in flight"
+	`Start+R2 saves the game wherever you are, and leaving the game in flight (Menu, a flat battery, Onion's sleep) saves first. Off: as on the PC, only landing saves.`
+
+tip "Dim when idle"
+	`Dim the screen after this long without a button press; any button brings it back.`

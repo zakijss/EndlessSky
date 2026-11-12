@@ -8,6 +8,12 @@ M=$(pgrep MainUI); OLD=$(cat $GOV)
 kill -STOP $M; trap 'kill -CONT $M; echo $OLD > $GOV' EXIT
 echo performance > $GOV
 rm -rf $D/c && mkdir -p $D/c && cp -r ${CONF:-/tmp/es-tests/config}/* $D/c/
+# recent.txt names the last save by full path: point it into the copy, or the game would load
+# and save the real pilot (this happened once; never let a test touch the real saves).
+if [ -f $D/c/recent.txt ]; then
+  sed -i "s#^.*/saves/#$D/c/saves/#" $D/c/recent.txt
+  grep -q "^$D/c/" $D/c/recent.txt || { echo "recent.txt not in the copy; stopping" >&2; exit 1; }
+fi
 cd "$G" || exit 1
 if [ "$T" = "-" ]; then
   ES_GRAB_INPUT=1 ES_PROFILE=1 LD_LIBRARY_PATH=/mnt/SDCARD/miyoo/lib:/config/lib:/lib LD_PRELOAD=/mnt/SDCARD/miyoo/lib/libpadsp.so HOME=$D $D/endless-sky --resources . --config $D/c > $D/log 2>&1 &

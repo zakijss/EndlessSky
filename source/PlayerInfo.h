@@ -99,6 +99,11 @@ public:
 	bool LoadRecent();
 	// Save this player (using the Identifier() as the file name).
 	void Save() const;
+#ifdef ES_MIYOO
+	// Save while flying (handheld quick save): the system and where your ships are. Loading it
+	// starts in flight there; other ships are placed anew. False if it can't be saved now.
+	bool SaveInFlight();
+#endif
 	// Apply the effects of permadeath, if this player has permadeath mode enabled.
 	void ApplyPermadeath() const;
 
@@ -625,4 +630,8 @@ private:
 	// Death benefits may need to be paid on a per-ship basis.
 	typedef std::owner_less<std::weak_ptr<const Ship>> Comp;
 	std::map<std::weak_ptr<Ship>, int, Comp> boardingCasualties;
+#ifdef ES_MIYOO
+	// Set while SaveInFlight writes the save (no planet).
+	bool savingInFlight = false;
+#endif
 };

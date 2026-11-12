@@ -34,6 +34,12 @@ class ShipEvent;
 class MainPanel : public Panel {
 public:
 	explicit MainPanel(PlayerInfo &player);
+#ifdef ES_MIYOO
+	~MainPanel();
+	// Let the engine finish the step it is computing on its own thread, so the player's ships
+	// can be read safely (saving in flight). Does nothing without a main panel.
+	static void FinishEngineStep();
+#endif
 
 	virtual void Step() override;
 	virtual void Draw() override;
@@ -91,4 +97,11 @@ private:
 	bool hasControl = false;
 	bool canClick = false;
 	bool canDrag = false;
+#ifdef ES_MIYOO
+	// Whether the fleet has been placed in flight yet (OnCallback), for saves made in flight.
+	bool placed = false;
+	// Steps so far: the first one runs while the main menu is being built (MenuPanel), and a
+	// save made in flight must not start the engine behind the menu.
+	int steps = 0;
+#endif
 };

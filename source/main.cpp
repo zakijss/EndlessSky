@@ -707,6 +707,14 @@ void GameLoop(PlayerInfo &player, TaskQueue &queue, const Conversation &conversa
 	// If player quit while landed on a planet, save the game if there are changes.
 	if(player.GetPlanet() && gamePanels.CanSave())
 		player.Save();
+#ifdef ES_MIYOO
+	// Leaving in flight (Menu, a flat battery, Onion's sleep, Quit): save where the player is.
+	else if(!player.GetPlanet() && Preferences::Has(Preferences::MIYOO_SAVE_IN_FLIGHT))
+	{
+		MainPanel::FinishEngineStep();
+		player.SaveInFlight();
+	}
+#endif
 	// Always save statistics on the way out, regardless of the player state.
 	stats.Save();
 }

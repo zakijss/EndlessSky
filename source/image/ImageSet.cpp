@@ -23,6 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "Mask.h"
 #include "MaskManager.h"
 #include "Sprite.h"
+#include "SpriteLoadManager.h"
 
 #include "../Files.h"
 
@@ -283,6 +284,13 @@ void ImageSet::Load() noexcept(false)
 	// the sprite's dimensions will be known).
 	size_t frames = paths[0].size();
 	size_t swizzleMaskFrames = paths[2].size();
+#ifdef ES_SOFT
+	// Every frame from the same art level (SpriteLoadManager), chosen once for this load.
+	const int level = SpriteLoadManager::ArtLevel();
+	auto artPath = [level](const filesystem::path &path) { return SpriteLoadManager::ArtPath(path, level); };
+#else
+	auto artPath = [](const filesystem::path &path) -> const filesystem::path & { return path; };
+#endif
 
 	// Check whether we need to generate collision masks.
 #ifdef ES_SOFT
@@ -309,7 +317,7 @@ void ImageSet::Load() noexcept(false)
 	// to be in separate locations on the disk. Create masks if needed.
 	for(size_t i = 0; i < paths[0].size(); ++i)
 	{
-		int loadedFrames = buffer[0].Read(paths[0][i], i);
+		int loadedFrames = buffer[0].Read(artPath(paths[0][i]), i);
 		const string fileName = "\"" + name + "\" frame #" + to_string(i);
 		if(!loadedFrames)
 		{
@@ -334,7 +342,7 @@ void ImageSet::Load() noexcept(false)
 	auto LoadSprites = [&](const vector<filesystem::path> &toLoad, ImageBuffer &buffer, const string &specifier)
 	{
 		for(size_t i = 0; i < frames && i < toLoad.size(); ++i)
-			if(!buffer.Read(toLoad[i], i))
+			if(!buffer.Read(artPath(toLoad[i]), i))
 			{
 				Logger::Log("Removing " + specifier + " frames for \"" + name + "\" due to read error",
 					Logger::Level::WARNING);

@@ -68,6 +68,10 @@ class Weather;
 class Engine {
 public:
 	explicit Engine(PlayerInfo &player);
+#ifdef ES_MIYOO
+	// The next Place() resumes a save made in flight: entering the system doesn't start a new day.
+	void ResumeSave() { resumingSave = true; }
+#endif
 	~Engine();
 
 	// Place all the player's ships, and "enter" the system the player is in.
@@ -350,4 +354,7 @@ private:
 	Zoom zoom;
 	// Tracks the next zoom change so that objects aren't drawn at different zooms in a single frame.
 	Zoom nextZoom;
+#ifdef ES_MIYOO
+	bool resumingSave = false;
+#endif
 };

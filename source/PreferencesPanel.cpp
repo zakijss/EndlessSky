@@ -676,7 +676,11 @@ void PreferencesPanel::DrawSettings()
 		Preferences::SHOW_HYPERSPACE_FLASH,
 		Preferences::EXTENDED_JUMP_EFFECTS,
 		Preferences::SHIP_OUTLINES_CLOAKED,
+#ifdef ES_MIYOO
+		// "Sprite smoothing" (Mini Plus page) chooses the filtering on the Miyoo.
+#else
 		Preferences::TEXTURE_FILTERING,
+#endif
 		"\t",
 		"Performance",
 		Preferences::SHOW_PERFORMANCE_METRICS,
@@ -751,12 +755,15 @@ void PreferencesPanel::DrawSettings()
 #ifdef ES_MIYOO
 		"\t",
 		"Mini Plus",
+		Preferences::MIYOO_SMOOTHING,
 		Preferences::MIYOO_DPAD_JUMPS,
 		Preferences::MIYOO_BUTTON_HINTS,
 		Preferences::MIYOO_RUMBLE,
 		Preferences::MIYOO_BATTERY_SAVER,
 		Preferences::MIYOO_CONTINUE,
 		Preferences::MIYOO_STAY_AWAKE,
+		Preferences::MIYOO_SAVE_IN_FLIGHT,
+		Preferences::MIYOO_DIM_IDLE,
 #endif
 #ifdef _WIN32
 		"\t",

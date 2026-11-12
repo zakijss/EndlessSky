@@ -15,6 +15,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #pragma once
 
+#include <filesystem>
+
 #include <map>
 #include <memory>
 #include <string>
@@ -65,6 +67,11 @@ public:
 	static bool OnMainThread();
 	// Once per frame on the main thread: finish loads and evict.
 	static void PumpSprites();
+	// Art drawn at the camera's zoom also ships at the sizes it is drawn at (images@<scale>):
+	// the level for the current view zoom (-1 for the plain images), read once per load.
+	static int ArtLevel();
+	// The file to read for this path at that level (the path itself if the level lacks it).
+	static std::filesystem::path ArtPath(const std::filesystem::path &path, int level);
 #endif
 
 

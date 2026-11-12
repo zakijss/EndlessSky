@@ -229,6 +229,9 @@ const string Preferences::MIYOO_RUMBLE = "miyoo rumble";
 const string Preferences::MIYOO_BATTERY_SAVER = "miyoo battery saver";
 const string Preferences::MIYOO_CONTINUE = "miyoo continue";
 const string Preferences::MIYOO_STAY_AWAKE = "miyoo stay awake";
+const string Preferences::MIYOO_SMOOTHING = "miyoo sprite smoothing";
+const string Preferences::MIYOO_SAVE_IN_FLIGHT = "miyoo save in flight";
+const string Preferences::MIYOO_DIM_IDLE = "miyoo dim when idle";
 #endif
 #ifdef _WIN32
 const string Preferences::TITLE_BAR_THEME = "Title bar theme";
@@ -453,6 +456,11 @@ void Preferences::Init()
 	settings[MIYOO_CONTINUE] = Setting::OnOff("Start in last save", false);
 	// Keeps Onion's sleep timer from stopping a long autopilot trip (GameWindowMiyoo).
 	settings[MIYOO_STAY_AWAKE] = Setting::OnOff("Stay awake in flight", true);
+	// Smooth (bilinear) sprites: never, when the frame has time for it, or always.
+	settings[MIYOO_SMOOTHING] = Setting::List("Sprite smoothing", {"off", "auto", "always"}, 1, true);
+	settings[MIYOO_SAVE_IN_FLIGHT] = Setting::OnOff("Save in flight", true);
+	// Seconds without a button press before the screen dims (GameWindowMiyoo: DIM_SECONDS).
+	settings[MIYOO_DIM_IDLE] = Setting::List("Dim when idle", {"off", "30 s", "1 min", "2 min", "5 min"}, 2);
 #else
 	settings[TEXTURE_FILTERING] = Setting::List("Texture filtering", {"nearest", "linear"}, 1, true);
 #endif

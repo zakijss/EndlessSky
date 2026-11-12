@@ -153,6 +153,7 @@ namespace {
 		{UP, START_HELD, SDL_SCANCODE_K, "Start+Up"},            // fleet jump (miyoo/data/keys.txt)
 		{DOWN, START_HELD, SDL_SCANCODE_O, "Start+Down"},        // fleet: scan my target
 		{LEFT, START_HELD, SDL_SCANCODE_X, "Start+Left"},        // toggle turret tracking
+		{R2, START_HELD, SDL_SCANCODE_F5, "Start+R2"},           // quick save (MainPanel, "Save in flight")
 		// Pointer mode (see CursorButton): named so menus and dialogs show buttons too.
 		{START, PLAIN, SDL_SCANCODE_RETURN, "Start"},
 		{L2, PLAIN, SDL_SCANCODE_PAGEUP, "L2"},
@@ -220,6 +221,7 @@ namespace {
 	// With jumps on but nothing that way, a tap stays put; holding this long moves freely.
 	double freeAfter = 0.;
 	constexpr double FIRST_REPEAT = .35, REPEAT = .12;
+	constexpr double SLOW_POINTER = 140.;
 	// Keys currently held down through SDL, so a mode switch can release them.
 	bool keyDown[SDL_NUM_SCANCODES] = {};
 	// Select and Start: held now, and whether another button was pressed while held (then
@@ -413,11 +415,12 @@ namespace {
 			else if(down)
 			{
 				dpad[direction] = true;
-				jumping = Jump(direction);
+				// Start held: a slow, free pointer for fine aim (the map), never a jump.
+				jumping = !startHeld && Jump(direction);
 				nextJump = Now() + FIRST_REPEAT;
 				const bool canJump = Preferences::Has(Preferences::MIYOO_DPAD_JUMPS) && !Navigation::IsFree()
 					&& !Navigation::Targets().empty();
-				freeAfter = canJump ? Now() + FIRST_REPEAT : 0.;
+				freeAfter = canJump && !startHeld ? Now() + FIRST_REPEAT : 0.;
 				cursorHeldTime = 0.;
 			}
 			else
@@ -472,6 +475,61 @@ namespace {
 		}
 	}
 
+	// "Dim when idle": the backlight (Onion's PWM, duty 0 is off) turned down after a while
+	// without a button press, and restored exactly on the next one, on quit or on a crash.
+	const char *const BACKLIGHT = "/sys/devices/soc0/soc/1f003400.pwm/pwm/pwmchip0/pwm0/duty_cycle";
+	constexpr double DIM_SECONDS[] = {0., 30., 60., 120., 300.};
+	double lastInput = 0.;
+	// The duty cycle before dimming, or -1 while not dimmed (read by the crash handler).
+	volatile int dimmedFrom = -1;
+	char dimmedText[16] = {};
+	int dimmedLength = 0;
+
+	int ReadBacklight()
+	{
+		int value = -1;
+		if(FILE *file = fopen(BACKLIGHT, "r"))
+		{
+			if(fscanf(file, "%d", &value) != 1)
+				value = -1;
+			fclose(file);
+		}
+		return value;
+	}
+
+	void WriteBacklight(const char *text, int length)
+	{
+		if(const int fd = open(BACKLIGHT, O_WRONLY | O_CLOEXEC); fd >= 0)
+		{
+			if(write(fd, text, length) < 0)
+				Logger::Log("Unable to set the backlight.", Logger::Level::WARNING);
+			close(fd);
+		}
+	}
+
+	void Undim()
+	{
+		if(dimmedFrom < 0)
+			return;
+		WriteBacklight(dimmedText, dimmedLength);
+		dimmedFrom = -1;
+	}
+
+	void DimIfIdle()
+	{
+		const double after = DIM_SECONDS[clamp(Preferences::Index(Preferences::MIYOO_DIM_IDLE), 0, 4)];
+		if(!after || dimmedFrom >= 0 || Now() - lastInput < after)
+			return;
+		const int current = ReadBacklight();
+		// Already off (Onion's sleep) or as low as it goes: nothing to dim.
+		if(current <= 1)
+			return;
+		dimmedLength = snprintf(dimmedText, sizeof(dimmedText), "%d", current);
+		dimmedFrom = current;
+		char low[16];
+		WriteBacklight(low, snprintf(low, sizeof(low), "%d", max(1, current / 3)));
+	}
+
 	void HandleButton(int code, bool down)
 	{
 		// Menu: quit to Onion's game switcher (its key monitor leaves ports alone). Quitting saves
@@ -480,7 +538,7 @@ namespace {
 		{
 			if(down)
 				return;
-			if(inFlightNow && Now() > menuArmedUntil)
+			if(inFlightNow && !Preferences::Has(Preferences::MIYOO_SAVE_IN_FLIGHT) && Now() > menuArmedUntil)
 			{
 				menuArmedUntil = Now() + MENU_CONFIRM;
 				ShowToast("Menu again to leave for Onion's game switcher. Progress since landing is not saved.",
@@ -579,6 +637,13 @@ namespace {
 						static_cast<long>(e.time.tv_usec / 1000), frameNumber);
 					Logger::Log(line, Logger::Level::INFO);
 				}
+				lastInput = Now();
+				if(dimmedFrom >= 0 && e.value == 1)
+				{
+					Undim();
+					inputQuiet = 0;
+					continue;
+				}
 				HandleButton(e.code, e.value == 1);
 				inputQuiet = 0;
 			}
@@ -619,9 +684,10 @@ namespace {
 			return;
 		focusShown = false;
 		// Starts slow for precise clicks (a tap moves a few units), then speeds up to
-		// crossing the screen in about half a second; units are logical, per second.
+		// crossing the screen in about half a second; units are logical, per second. With
+		// Start held it stays slow (about a sixth of the screen a second) for fine aim.
 		cursorHeldTime += elapsed;
-		const double speed = min(1600., 120. + cursorHeldTime * 2400.);
+		const double speed = startHeld ? SLOW_POINTER : min(1600., 120. + cursorHeldTime * 2400.);
 		cursorX = clamp(cursorX + dx * speed * elapsed, 0., LOGICAL_WIDTH - 1.);
 		cursorY = clamp(cursorY + dy * speed * elapsed, 0., LOGICAL_HEIGHT - 1.);
 		SDL_SendMouseMotion(window, 0, 0, static_cast<int>(cursorX), static_cast<int>(cursorY));
@@ -700,6 +766,14 @@ namespace {
 		Rumble::Off();
 		// Let Onion's sleep timer work again (this game may have kept it awake).
 		unlink("/tmp/stay_awake");
+		// And give the screen its brightness back.
+		if(dimmedFrom >= 0)
+			if(const int fd = open(BACKLIGHT, O_WRONLY | O_CLOEXEC); fd >= 0)
+			{
+				if(write(fd, dimmedText, dimmedLength) < 0)
+					dimmedFrom = -1;
+				close(fd);
+			}
 		if(write(STDERR_FILENO, line, length) < 0)
 			_exit(128 + signal);
 		// The code mappings, to tell which library an address is in.
@@ -961,6 +1035,46 @@ namespace {
 		}
 	}
 
+	// When the last GameWindow::Step ended (after the flip).
+	double lastStepEnd = 0.;
+
+	// "Sprite smoothing" auto: smooth (bilinear) sprites when the frames have time for them.
+	// Bilinear costs about 2.5 times as much per sprite pixel as nearest, so while sharp, the
+	// frame's work plus 1.5 times its sprite time must fit; while smooth, back off if frames
+	// run long. Each back-off waits twice as long before trying again (up to a minute), so a
+	// scene that can't afford it settles on sharp instead of flickering between the two.
+	bool ChooseSmoothing()
+	{
+		static bool smooth = false;
+		static double work = 0., retryAt = 0., retryDelay = 4., smoothSince = 0.;
+		const double now = Now(), sprites = Raster::TakeSpriteSeconds();
+		// The time from the end of the last frame (after its flip) to now: update and drawing.
+		const double frameWork = lastStepEnd ? now - lastStepEnd : 0.;
+		const int mode = Preferences::Index(Preferences::MIYOO_SMOOTHING);
+		if(mode != 1)
+			return smooth = (mode == 2);
+		constexpr double BUDGET = 1. / 30., FIT = .75 * BUDGET, LIMIT = .92 * BUDGET;
+		constexpr double FIRST_RETRY = 4., LAST_RETRY = 64., SETTLED = 20.;
+		const double estimate = smooth ? frameWork : frameWork + 1.5 * sprites;
+		work += (estimate - work) * .1;
+		if(smooth && work > LIMIT)
+		{
+			smooth = false;
+			retryAt = now + retryDelay;
+			retryDelay = min(LAST_RETRY, 2. * retryDelay);
+			work = 0.;
+		}
+		else if(!smooth && work < FIT && now >= retryAt)
+		{
+			smooth = true;
+			smoothSince = now;
+		}
+		// Smooth for a while without trouble: the next back-off starts short again.
+		if(smooth && now - smoothSince > SETTLED)
+			retryDelay = FIRST_RETRY;
+		return smooth;
+	}
+
 	// An outline around the button or row the D-pad put the pointer on.
 	void DrawFocus()
 	{
@@ -1123,6 +1237,7 @@ bool GameWindow::Init(bool headless)
 	fbMap = static_cast<uint8_t *>(map);
 
 	Rumble::Init();
+	lastInput = Now();
 	struct sigaction wake = {};
 	wake.sa_handler = OnContinue;
 	sigaction(SIGCONT, &wake, nullptr);
@@ -1143,6 +1258,7 @@ void GameWindow::Quit()
 {
 	ReleaseAll();
 	Rumble::Off();
+	Undim();
 	StayAwake(false);
 	if(!governorSet.empty())
 		SetGovernor("performance");
@@ -1221,7 +1337,7 @@ bool GameWindow::ReuseFrame()
 void GameWindow::Step()
 {
 	const double start = profile.enabled ? Now() : 0.;
-	Raster::SetLinearFiltering(Preferences::Has(Preferences::TEXTURE_FILTERING));
+	Raster::SetLinearFiltering(ChooseSmoothing());
 	// The keyboard shows while the game wants text (re-armed once it stops) or when opened by hand.
 	const bool textWanted = SDL_IsTextInputActive() || frameNumber - textWantedFrame <= 1;
 	if(!textWanted)
@@ -1275,6 +1391,8 @@ void GameWindow::Step()
 	ReadButtons();
 	MoveCursor();
 	Rumble::Update();
+	DimIfIdle();
+	lastStepEnd = Now();
 	StayAwake(inFlightNow && Preferences::Has(Preferences::MIYOO_STAY_AWAKE));
 	// Back from sleep in the middle of a fight: open the main menu, which pauses the game.
 	if(woke)
@@ -1295,6 +1413,8 @@ void GameWindow::Step()
 		if(wait > 0.)
 			usleep(static_cast<useconds_t>(wait * 1e6));
 		lastFrame = Now();
+		// The pause is not work (sprite smoothing measures from here).
+		lastStepEnd = lastFrame;
 	}
 	if(!profile.enabled)
 		return;
@@ -1313,7 +1433,9 @@ void GameWindow::Step()
 			+ to_string(static_cast<int>(profile.game / 120 * 1000 + .5)) + " ms, present "
 			+ to_string(static_cast<int>(profile.present / 120 * 1000 + .5)) + " ms, textures "
 			+ to_string(Raster::TextureBytes() >> 20) + " MB, pointer " + to_string(static_cast<int>(cursorX)) + ","
-			+ to_string(static_cast<int>(cursorY)) + (cursorMode ? " on" : " off"), Logger::Level::INFO);
+			+ to_string(static_cast<int>(cursorY)) + (cursorMode ? " on" : " off") + ", smoothing "
+			+ (Raster::LinearFiltering() ? "on" : "off") + ", stars " + to_string(Raster::profStars.exchange(0) / 120)
+			+ " (" + to_string(Raster::profStarPixels.exchange(0) / 120) + " px)", Logger::Level::INFO);
 		string parts = "profile ms/frame (calls):";
 		for(int i = 0; i < Raster::PROF_COUNT; ++i)
 		{

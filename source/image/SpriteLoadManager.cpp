@@ -17,6 +17,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "../Drawable.h"
 #include "ImageSet.h"
+#include "../Files.h"
+#include "../Logger.h"
 #include "../Preferences.h"
 #include "Sprite.h"
 #include "SpriteSet.h"
@@ -34,6 +36,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <map>
 #include <queue>
 #include <set>
+#include <string_view>
 
 using namespace std;
 
@@ -427,6 +430,21 @@ namespace {
 	// Frames a sprite stays safe from eviction after it was last drawn (about 2 s at 30 fps).
 	constexpr int KEEP_FRAMES = 60;
 
+	// Zoom levels of the art (folder suffix, drawn scale it is made for), smallest first.
+	const char *const LEVEL_FOLDERS[] = {"images@0.4", "images@0.56", "images@0.8"};
+	constexpr double LEVEL_SCALES[] = {.4, .56, .8};
+	constexpr int LEVEL_COUNT = 3;
+	// Sprite categories drawn at the camera's zoom (the level folders hold only these).
+	// A plain array: loader threads still run while the program exits, after static objects
+	// with destructors (a std::set here once) are gone.
+	bool IsZoomed(const string &name)
+	{
+		static constexpr string_view ZOOMED[] = {"asteroid", "effect", "hardpoint", "planet", "projectile", "ship", "star"};
+		const string_view category = string_view(name).substr(0, name.find('/'));
+		return find(begin(ZOOMED), end(ZOOMED), category) != end(ZOOMED);
+	}
+	atomic<int> artLevel{-1};
+
 	uint64_t SoftBudget()
 	{
 		static const uint64_t budget = []
@@ -464,6 +482,38 @@ void SpriteLoadManager::UseSprite(const Sprite *sprite)
 
 
 
+int SpriteLoadManager::ArtLevel()
+{
+	return artLevel.load(memory_order_relaxed);
+}
+
+
+
+filesystem::path SpriteLoadManager::ArtPath(const filesystem::path &path, int level)
+{
+	if(level < 0 || level >= LEVEL_COUNT)
+		return path;
+	// .../images/<category>/... -> .../images@<scale>/<category>/...
+	filesystem::path result;
+	bool replaced = false;
+	for(auto it = path.begin(); it != path.end(); ++it)
+	{
+		auto next = it;
+		++next;
+		if(!replaced && *it == "images" && next != path.end() && IsZoomed(next->string()))
+		{
+			result /= LEVEL_FOLDERS[level];
+			replaced = true;
+		}
+		else
+			result /= *it;
+	}
+	error_code error;
+	return replaced && filesystem::exists(result, error) ? result : path;
+}
+
+
+
 void SpriteLoadManager::RequestSprite(const Sprite *sprite)
 {
 	if(!sprite)
@@ -493,6 +543,30 @@ void SpriteLoadManager::PumpSprites()
 		UseSprite(sprite);
 	softQueue.ProcessSyncTasks();
 	++softFrame;
+	// The art level for the view zoom: the smallest made for at least the drawn scale.
+	static const bool haveLevels = filesystem::exists(Files::Resources() / LEVEL_FOLDERS[0]);
+	if(haveLevels)
+	{
+		const double drawn = Preferences::ViewZoom() * Raster::Scale();
+		int level = LEVEL_COUNT - 1;
+		while(level > 0 && LEVEL_SCALES[level - 1] >= drawn - .01)
+			--level;
+		if(level != artLevel.load(memory_order_relaxed))
+		{
+			// shortcut: a load already under way finishes at the old level; it is replaced the
+			// next time the zoom changes or the sprite is evicted.
+			artLevel.store(level, memory_order_relaxed);
+			Logger::Log(string("Art level for this zoom: ") + LEVEL_FOLDERS[level], Logger::Level::INFO);
+			for(auto it = softEntries.begin(); it != softEntries.end(); )
+				if(!it->second.pending && it->first->IsResident() && IsZoomed(it->first->Name()))
+				{
+					SpriteSet::Modify(it->first->Name())->Unload();
+					it = softEntries.erase(it);
+				}
+				else
+					++it;
+		}
+	}
 	if(Raster::TextureBytes() <= SoftBudget())
 		return;
 	// Evict the least recently drawn sprites until under budget, never ones drawn lately.

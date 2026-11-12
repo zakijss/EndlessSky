@@ -16,18 +16,28 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "Raster.h"
 
 #include <algorithm>
+#include <atomic>
 #include <cmath>
+#include <condition_variable>
 #include <cstdlib>
+#include <cstring>
 #include <ctime>
+#include <mutex>
+#include <thread>
 #include <type_traits>
 #include <unordered_map>
 #include <vector>
+
+#if defined(__ARM_NEON)
+#include <arm_neon.h>
+#endif
 
 using namespace std;
 using Raster::BlendPixel;
 using Raster::ScalePixel;
 
 bool Raster::profOn = getenv("ES_PROFILE") != nullptr;
+std::atomic<long> Raster::profStars{0}, Raster::profStarPixels{0};
 double Raster::profTime[PROF_COUNT] = {};
 int Raster::profCalls[PROF_COUNT] = {};
 const char *const Raster::profNames[PROF_COUNT] = {"step", "wait", "draw", "stars", "sprite", "batch", "text",
@@ -38,6 +48,120 @@ double Raster::Now()
 	timespec t;
 	clock_gettime(CLOCK_MONOTONIC, &t);
 	return t.tv_sec + t.tv_nsec * 1e-9;
+}
+
+
+
+namespace {
+	// The helper thread for ParallelRows. Both threads take bands of BAND rows from a shared
+	// counter, so the work splits by how much time each core really has: the game's own step
+	// thread often holds the second core, and then the main thread simply does more.
+	// Never destroyed (it may be waiting when the program exits).
+	struct Helper {
+		std::mutex mutex;
+		std::condition_variable ready, done;
+		const std::function<void(int, int)> *job = nullptr;
+		int end = 0, band = 8;
+		std::atomic<int> next{0};
+		// 0 idle, 1 job offered, 2 helper working, 3 helper finished.
+		std::atomic<int> state{0};
+	};
+	Helper *helper = nullptr;
+	bool useThreads = []
+	{
+		const char *env = getenv("ES_THREADS");
+		return !(env && !strcmp(env, "1")) && std::thread::hardware_concurrency() > 1;
+	}();
+	// Below this many pixels, handing work over costs more than it saves.
+	constexpr int64_t MIN_PARALLEL_AREA = 6000;
+	// Checks before the helper sleeps: jobs come in bursts while a frame is drawn, but a
+	// spinning helper would take the core from the game's step thread.
+	constexpr int SPINS = 200;
+
+	void RunBands(const std::function<void(int, int)> &body, std::atomic<int> &next, int end, int band)
+	{
+		for(int from; (from = next.fetch_add(band, std::memory_order_relaxed)) < end; )
+			body(from, std::min(end, from + band));
+	}
+
+	void HelperLoop()
+	{
+		for(;;)
+		{
+			for(int i = 0; i < SPINS && helper->state.load(std::memory_order_acquire) != 1; ++i)
+				std::this_thread::yield();
+			if(helper->state.load(std::memory_order_acquire) != 1)
+			{
+				std::unique_lock<std::mutex> lock(helper->mutex);
+				helper->ready.wait(lock, [] { return helper->state.load(std::memory_order_acquire) == 1; });
+			}
+			// Take the job, unless the main thread finished it alone and withdrew it.
+			int offered = 1;
+			if(!helper->state.compare_exchange_strong(offered, 2, std::memory_order_acq_rel))
+				continue;
+			RunBands(*helper->job, helper->next, helper->end, helper->band);
+			{
+				std::lock_guard<std::mutex> lock(helper->mutex);
+				helper->state.store(3, std::memory_order_release);
+			}
+			helper->done.notify_one();
+		}
+	}
+
+	double spriteSeconds = 0.;
+}
+
+
+
+void Raster::ParallelRows(int y0, int y1, int64_t area, const std::function<void(int, int)> &body, int band)
+{
+	if(!useThreads || y1 - y0 < 2 * band || area < MIN_PARALLEL_AREA)
+	{
+		if(y0 < y1)
+			body(y0, y1);
+		return;
+	}
+	if(!helper)
+	{
+		helper = new Helper;
+		std::thread(HelperLoop).detach();
+	}
+	helper->job = &body;
+	helper->end = y1;
+	helper->band = band;
+	helper->next.store(y0, std::memory_order_relaxed);
+	{
+		std::lock_guard<std::mutex> lock(helper->mutex);
+		helper->state.store(1, std::memory_order_release);
+	}
+	helper->ready.notify_one();
+	RunBands(body, helper->next, y1, band);
+	// If the helper never started, withdraw the job; otherwise wait for its last band.
+	int offered = 1;
+	if(!helper->state.compare_exchange_strong(offered, 0, std::memory_order_acq_rel))
+	{
+		for(int i = 0; i < SPINS && helper->state.load(std::memory_order_acquire) != 3; ++i)
+			std::this_thread::yield();
+		std::unique_lock<std::mutex> lock(helper->mutex);
+		helper->done.wait(lock, [] { return helper->state.load(std::memory_order_acquire) == 3; });
+		helper->state.store(0, std::memory_order_relaxed);
+	}
+}
+
+
+
+void Raster::SetThreads(bool on)
+{
+	useThreads = on && std::thread::hardware_concurrency() > 1;
+}
+
+
+
+double Raster::TakeSpriteSeconds()
+{
+	const double seconds = spriteSeconds;
+	spriteSeconds = 0.;
+	return seconds;
 }
 
 namespace {
@@ -62,6 +186,7 @@ namespace {
 	int clipX0 = 0, clipY0 = 0, clipX1 = 0, clipY1 = 0;
 	// Sprites blend four texels (GL_LINEAR) unless the "Texture filtering" preference is "nearest".
 	bool linearFiltering = true;
+	bool smoothingAllowed = true;
 
 	// Slot 0 is never used so that 0 means "no texture", as in GL.
 	vector<Texture> textures(1);
@@ -129,6 +254,20 @@ void Raster::SetLinearFiltering(bool linear)
 
 
 
+bool Raster::LinearFiltering()
+{
+	return linearFiltering;
+}
+
+
+
+void Raster::SetSmoothingAllowed(bool allowed)
+{
+	smoothingAllowed = allowed;
+}
+
+
+
 void Raster::SetClip(int x, int y, int width, int height)
 {
 	clipX0 = clamp(x, 0, fbWidth);
@@ -159,6 +298,7 @@ void Raster::ResetClip()
 void Raster::Clear(uint32_t argb)
 {
 	ProfScope prof(PROF_CLEAR);
+	// One core: a clear is limited by memory speed, and a second core only adds overhead.
 	for(int y = clipY0; y < clipY1; ++y)
 		fill(frame + y * fbWidth + clipX0, frame + y * fbWidth + clipX1, argb);
 }
@@ -223,12 +363,21 @@ void Raster::Fill(double x, double y, double width, double height, const float c
 	int y0 = max(clipY0, static_cast<int>(lround((y - height / 2.) * scale + fbHeight / 2.)));
 	int y1 = min(clipY1, static_cast<int>(lround((y + height / 2.) * scale + fbHeight / 2.)));
 	uint32_t src = PackColor(color[0], color[1], color[2], color[3]);
-	for(int py = y0; py < y1; ++py)
+	if(x0 >= x1)
+		return;
+	ParallelRows(y0, y1, static_cast<int64_t>(y1 - y0) * (x1 - x0), [&](int from, int to)
 	{
-		uint32_t *row = &frame[py * fbWidth];
-		for(int px = x0; px < x1; ++px)
-			row[px] = BlendPixel(row[px], src);
-	}
+		const uint32_t four[4] = {src, src, src, src};
+		for(int py = from; py < to; ++py)
+		{
+			uint32_t *row = &frame[py * fbWidth];
+			int px = x0;
+			for( ; px + 4 <= x1; px += 4)
+				Raster::BlendPixels4(row + px, four);
+			for( ; px < x1; ++px)
+				row[px] = BlendPixel(row[px], src);
+		}
+	});
 }
 
 
@@ -320,7 +469,21 @@ namespace {
 			const int x0 = min(w - 1, max(0, x)), x1 = min(w - 1, max(0, x + 1));
 			const uint32_t *row0 = layer + static_cast<size_t>(min(h - 1, max(0, y))) * w;
 			const uint32_t *row1 = layer + static_cast<size_t>(min(h - 1, max(0, y + 1))) * w;
+#if defined(__ARM_NEON)
+			// All four channels of both columns at once: vertical mix, then horizontal, in 8.8
+			// fixed point with rounding (within 1 of the scalar path).
+			const uint32x2_t top = vset_lane_u32(row0[x1], vdup_n_u32(row0[x0]), 1);
+			const uint32x2_t bottom = vset_lane_u32(row1[x1], vdup_n_u32(row1[x0]), 1);
+			const uint16x8_t t = vmovl_u8(vreinterpret_u8_u32(top));
+			const uint16x8_t b = vmovl_u8(vreinterpret_u8_u32(bottom));
+			const uint16x8_t column = vrshrq_n_u16(vmlaq_n_u16(vmulq_n_u16(t, static_cast<uint16_t>(256 - fy)), b,
+				static_cast<uint16_t>(fy)), 8);
+			const uint16x4_t mixed = vrshr_n_u16(vmla_n_u16(vmul_n_u16(vget_low_u16(column), static_cast<uint16_t>(256 - fx)),
+				vget_high_u16(column), static_cast<uint16_t>(fx)), 8);
+			return vget_lane_u32(vreinterpret_u32_u8(vmovn_u16(vcombine_u16(mixed, mixed))), 0);
+#else
 			return MixPixel(MixPixel(row0[x0], row0[x1], fx), MixPixel(row1[x0], row1[x1], fx), fy);
+#endif
 		}
 	}
 
@@ -351,23 +514,37 @@ namespace {
 			int32_t u = static_cast<int32_t>(textureS * uScale), vv = static_cast<int32_t>(v * vScale);
 			int32_t mu = static_cast<int32_t>(textureS * mw * 65536.), mv = static_cast<int32_t>(v * mh * 65536.);
 			uint32_t *out = &frame[py * fbWidth];
+			// Source pixels are worked out by next() and blended four at a time.
+			auto blendRun = [&](auto &&next)
+			{
+				int px = xa;
+				for( ; px + 4 <= xb; px += 4)
+				{
+					// Braced lists are evaluated left to right.
+					const uint32_t p[4] = {next(), next(), next(), next()};
+					if(p[0] | p[1] | p[2] | p[3])
+						Raster::BlendPixels4(out + px, p);
+				}
+				for( ; px < xb; ++px)
+					if(const uint32_t p = next())
+						out[px] = Raster::BlendPixel(out[px], p);
+			};
 			// Unrotated sprites read one texture row per screen row (most of the interface).
 			if constexpr(!FADE && !SWIZZLE && !LINEAR && !BLUR)
 				if(!dv)
 				{
 					const uint32_t *source = layerA + static_cast<size_t>(min(h - 1, max(0, vv >> 16))) * w;
-					for(int px = xa; px < xb; ++px, u += du)
+					blendRun([&]
 					{
 						uint32_t p = source[min(w - 1, max(0, u >> 16))];
-						if(!p)
-							continue;
+						u += du;
 						if constexpr(ALPHA)
 							p = ScalePixel(p, alpha);
-						out[px] = Raster::BlendPixel(out[px], p);
-					}
+						return p;
+					});
 					continue;
 				}
-			for(int px = xa; px < xb; ++px, u += du, vv += dv)
+			blendRun([&]
 			{
 				auto texel = [&](int32_t su, int32_t sv)
 				{
@@ -411,17 +588,32 @@ namespace {
 						mv += dmv;
 					}
 				}
-				if(!p)
-					continue;
+				u += du;
+				vv += dv;
 				if constexpr(ALPHA)
 					p = ScalePixel(p, alpha);
-				out[px] = Raster::BlendPixel(out[px], p);
-			}
+				return p;
+			});
 		}
+	}
+
+	// An unrotated quad drawn at its texture's own size: nearest and bilinear sampling give the
+	// same picture (landscapes, interface art), so it never needs smoothing.
+	bool PixelForPixel(const Quad &q)
+	{
+		if(q.sy || q.tx || q.blurU || q.blurV)
+			return false;
+		const double scaleS = fabs(q.sx) / (q.tex->width * q.ds), scaleT = fabs(q.ty) / (q.tex->height * fabs(q.dv));
+		return fabs(scaleS - 1.) < .02 && fabs(scaleT - 1.) < .02;
 	}
 
 	void DrawQuad(const Quad &q)
 	{
+		const bool exact = PixelForPixel(q);
+		struct Timer {
+			double start;
+			~Timer() { if(start) spriteSeconds += Raster::Now() - start; }
+		} timer{smoothingAllowed && !exact ? Raster::Now() : 0.};
 		const Texture &tex = *q.tex;
 		const double det = q.sx * q.ty - q.tx * q.sy;
 		if(fabs(det) < 1e-9 || q.alpha <= 0.f)
@@ -475,7 +667,13 @@ namespace {
 		auto pick = [&](auto linear, auto blur)
 		{
 			constexpr bool L = decltype(linear)::value, B = decltype(blur)::value;
-			auto run = [&](auto f) { f(q, m, x0, x1, y0, y1, layerA, layerB, fade, mat, maskLayer, alpha); };
+			auto run = [&](auto f)
+			{
+				Raster::ParallelRows(y0, y1, static_cast<int64_t>(y1 - y0) * (x1 - x0), [&](int from, int to)
+				{
+					f(q, m, x0, x1, from, to, layerA, layerB, fade, mat, maskLayer, alpha);
+				});
+			};
 			switch(variant)
 			{
 				case 0: run(QuadRows<false, false, false, L, B>); break;
@@ -488,7 +686,7 @@ namespace {
 				default: run(QuadRows<true, true, true, L, B>); break;
 			}
 		};
-		if(linearFiltering)
+		if(linearFiltering && smoothingAllowed && !exact)
 		{
 			if(blurs)
 				pick(true_type{}, true_type{});
@@ -592,31 +790,43 @@ void Raster::Darken(double left, double top, double width, double height,
 		first = min(first, c0[i]);
 		last = max(last, c1[i]);
 	}
-	// One row of the grid interpolated vertically, times 256.
-	vector<int> line(columns);
-	for(int py = clipY0; py < clipY1; ++py)
+	ParallelRows(clipY0, clipY1, static_cast<int64_t>(clipY1 - clipY0) * span, [&](int from, int to)
 	{
-		double v = ((py + .5 - fbHeight / 2.) / scale - top) / height * rows - .5;
-		int cell = static_cast<int>(floor(v));
-		const uint8_t *r0 = grid + clamp(cell, 0, rows - 1) * columns;
-		const uint8_t *r1 = grid + clamp(cell + 1, 0, rows - 1) * columns;
-		const int fy = v < 0. ? 0 : static_cast<int>(clamp(v - cell, 0., 1.) * 256. + .5);
-		bool any = false;
-		for(int c = first; c <= last; ++c)
+		// One row of the grid interpolated vertically, times 256 (one per band: both run at once).
+		vector<int> line(columns);
+		for(int py = from; py < to; ++py)
 		{
-			line[c] = r0[c] * (256 - fy) + r1[c] * fy;
-			any |= line[c] != 0;
+			double v = ((py + .5 - fbHeight / 2.) / scale - top) / height * rows - .5;
+			int cell = static_cast<int>(floor(v));
+			const uint8_t *r0 = grid + clamp(cell, 0, rows - 1) * columns;
+			const uint8_t *r1 = grid + clamp(cell + 1, 0, rows - 1) * columns;
+			const int fy = v < 0. ? 0 : static_cast<int>(clamp(v - cell, 0., 1.) * 256. + .5);
+			bool any = false;
+			for(int c = first; c <= last; ++c)
+			{
+				line[c] = r0[c] * (256 - fy) + r1[c] * fy;
+				any |= line[c] != 0;
+			}
+			if(!any)
+				continue;
+			uint32_t *row = &frame[py * fbWidth + clipX0];
+			auto shade = [&](int i)
+			{
+				const uint32_t a = (line[c0[i]] * (256 - fx[i]) + line[c1[i]] * fx[i] + (1 << 15)) >> 16;
+				return min(a, 255u) << 24;
+			};
+			int i = 0;
+			for( ; i + 4 <= span; i += 4)
+			{
+				const uint32_t p[4] = {shade(i), shade(i + 1), shade(i + 2), shade(i + 3)};
+				if(p[0] | p[1] | p[2] | p[3])
+					Raster::BlendPixels4(row + i, p);
+			}
+			for( ; i < span; ++i)
+				if(const uint32_t p = shade(i))
+					row[i] = BlendPixel(row[i], p);
 		}
-		if(!any)
-			continue;
-		uint32_t *row = &frame[py * fbWidth + clipX0];
-		for(int i = 0; i < span; ++i)
-		{
-			const uint32_t a = (line[c0[i]] * (256 - fx[i]) + line[c1[i]] * fx[i] + (1 << 15)) >> 16;
-			if(a)
-				row[i] = BlendPixel(row[i], min(a, 255u) << 24);
-		}
-	}
+	});
 }
 
 
@@ -751,24 +961,27 @@ void Raster::DrawOutline(uint32_t texture, float frameIndex, int frameCount, con
 	const Mapping m{ox, oy, ty / det, -tx / det, -sy / det, sx / det, 1.};
 	const int32_t du = static_cast<int32_t>(lround(m.isX * width * 65536.));
 	const int32_t dv = static_cast<int32_t>(lround(m.itX * height * 65536.));
-	for(int py = y0; py < y1; ++py)
+	ParallelRows(y0, y1, static_cast<int64_t>(y1 - y0) * (x1 - x0), [&](int from, int to)
 	{
-		int xa, xb;
-		if(!m.Span(py, x0, x1, xa, xb))
-			continue;
-		const double dx = xa + .5 - ox, dy = py + .5 - oy;
-		int32_t u = static_cast<int32_t>((m.isX * dx + m.isY * dy) * width * 65536.);
-		int32_t v = static_cast<int32_t>((m.itX * dx + m.itY * dy) * height * 65536.);
-		uint32_t *row = &frame[py * fbWidth];
-		for(int px = xa; px < xb; ++px, u += du, v += dv)
+		for(int py = from; py < to; ++py)
 		{
-			const int k = o.strength[min(height - 1, max(0, v >> 16)) * width + min(width - 1, max(0, u >> 16))];
-			if(!k)
+			int xa, xb;
+			if(!m.Span(py, x0, x1, xa, xb))
 				continue;
-			auto ch = [&](int i) { return static_cast<uint32_t>(min(255, (c[i] * k + 64) >> 7)); };
-			row[px] = BlendPixel(row[px], ch(3) << 24 | ch(0) << 16 | ch(1) << 8 | ch(2));
+			const double dx = xa + .5 - ox, dy = py + .5 - oy;
+			int32_t u = static_cast<int32_t>((m.isX * dx + m.isY * dy) * width * 65536.);
+			int32_t v = static_cast<int32_t>((m.itX * dx + m.itY * dy) * height * 65536.);
+			uint32_t *row = &frame[py * fbWidth];
+			for(int px = xa; px < xb; ++px, u += du, v += dv)
+			{
+				const int k = o.strength[min(height - 1, max(0, v >> 16)) * width + min(width - 1, max(0, u >> 16))];
+				if(!k)
+					continue;
+				auto ch = [&](int i) { return static_cast<uint32_t>(min(255, (c[i] * k + 64) >> 7)); };
+				row[px] = BlendPixel(row[px], ch(3) << 24 | ch(0) << 16 | ch(1) << 8 | ch(2));
+			}
 		}
-	}
+	});
 }
 
 
@@ -925,31 +1138,41 @@ void Raster::Composite(const uint32_t *pixels, int width, int height, const doub
 		columnWeight[px - x0] = toWeight(min((vx + eps) / (fade[2] / clip[0] + eps),
 			(1. - vx + eps) / (fade[3] / clip[0] + eps)));
 	}
-	for(int py = y0; py < y1; ++py)
+	ParallelRows(y0, y1, static_cast<int64_t>(y1 - y0) * (x1 - x0), [&](int from, int to)
 	{
-		const double vy = ((py + .5 - fbHeight / 2.) / scale - position[1]) / clip[1] + .5;
-		const double ty = (vy * clip[1] + source[1]) / size[1];
-		if(vy < 0. || vy >= 1. || ty <= 0. || ty >= 1.)
-			continue;
-		const int sy = min(height - 1, static_cast<int>(ty * height));
-		const int weightY = toWeight(min((vy + eps) / (fade[0] / clip[1] + eps),
-			(1. - vy + eps) / (fade[1] / clip[1] + eps)));
-		if(!weightY)
-			continue;
-		uint32_t *row = &frame[py * fbWidth + x0];
-		const uint32_t *src = &pixels[sy * width];
-		for(int i = 0; i < x1 - x0; ++i)
+		for(int py = from; py < to; ++py)
 		{
-			const int sx = columnSource[i];
-			if(sx < 0)
+			const double vy = ((py + .5 - fbHeight / 2.) / scale - position[1]) / clip[1] + .5;
+			const double ty = (vy * clip[1] + source[1]) / size[1];
+			if(vy < 0. || vy >= 1. || ty <= 0. || ty >= 1.)
 				continue;
-			uint32_t p = src[sx];
-			if(!p)
+			const int sy = min(height - 1, static_cast<int>(ty * height));
+			const int weightY = toWeight(min((vy + eps) / (fade[0] / clip[1] + eps),
+				(1. - vy + eps) / (fade[1] / clip[1] + eps)));
+			if(!weightY)
 				continue;
-			const int weight = min(weightY, columnWeight[i]);
-			if(weight < 256)
-				p = ScalePixel(p, weight);
-			row[i] = BlendPixel(row[i], p);
+			uint32_t *row = &frame[py * fbWidth + x0];
+			const uint32_t *src = &pixels[sy * width];
+			auto source = [&](int i) -> uint32_t
+			{
+				const int sx = columnSource[i];
+				if(sx < 0)
+					return 0;
+				const uint32_t p = src[sx];
+				const int weight = min(weightY, columnWeight[i]);
+				return weight < 256 ? ScalePixel(p, weight) : p;
+			};
+			const int count = x1 - x0;
+			int i = 0;
+			for( ; i + 4 <= count; i += 4)
+			{
+				const uint32_t p[4] = {source(i), source(i + 1), source(i + 2), source(i + 3)};
+				if(p[0] | p[1] | p[2] | p[3])
+					Raster::BlendPixels4(row + i, p);
+			}
+			for( ; i < count; ++i)
+				if(const uint32_t p = source(i))
+					row[i] = BlendPixel(row[i], p);
 		}
-	}
+	});
 }

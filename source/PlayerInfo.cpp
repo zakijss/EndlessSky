@@ -642,7 +642,11 @@ bool PlayerInfo::LoadRecent()
 void PlayerInfo::Save() const
 {
 	// Don't save dead players or players that are not fully created.
+#ifdef ES_MIYOO
+	if(!CanBeSaved() && !savingInFlight)
+#else
 	if(!CanBeSaved())
+#endif
 		return;
 
 	// Remember that this was the most recently saved player.
@@ -673,7 +677,7 @@ void PlayerInfo::Save() const
 				Files::Move(filePath, file);
 				pilot->AddSave(file);
 			}
-			if(planet->HasServices())
+			if(planet && planet->HasServices())
 				Save(rootPrevious + "spaceport.txt");
 		}
 	}
@@ -689,6 +693,36 @@ void PlayerInfo::Save() const
 
 
 
+#ifdef ES_MIYOO
+bool PlayerInfo::SaveInFlight()
+{
+	if(isDead || planet || !system || !flagship || flagship->IsDestroyed() || filePath.empty() || pilot->IsLocked())
+	{
+		Logger::Log(string("Not saved in flight:") + (isDead ? " dead" : "") + (planet ? " landed" : "")
+			+ (!system ? " no system" : "") + (!flagship || flagship->IsDestroyed() ? " no flagship" : "")
+			+ (filePath.empty() ? " no file" : "") + (pilot && pilot->IsLocked() ? " pilot locked" : ""), Logger::Level::INFO);
+		return false;
+	}
+	// Ships marked placed keep their saved positions when the save is loaded (Engine::Place).
+	vector<Ship *> marked;
+	for(const shared_ptr<Ship> &ship : ships)
+		if(ship->GetSystem() == system && !ship->IsParked() && !ship->IsDestroyed() && !ship->IsPlaced())
+		{
+			ship->SetIsPlaced(true);
+			marked.push_back(ship.get());
+		}
+	savingInFlight = true;
+	Save();
+	savingInFlight = false;
+	Logger::Log("Saved in flight in " + system->TrueName() + ".", Logger::Level::INFO);
+	for(Ship *ship : marked)
+		ship->SetIsPlaced(false);
+	return true;
+}
+
+
+
+#endif
 shared_ptr<PilotProfile> &PlayerInfo::Pilot()
 {
 	return pilot;
@@ -3898,8 +3932,16 @@ void PlayerInfo::ApplyChanges()
 // their ships are in valid locations, even if the player did something drastic, such as remove a mod.
 void PlayerInfo::ValidateLoad()
 {
+#ifdef ES_MIYOO
+	// A save made in flight (SaveInFlight) has a system and no planet: start in flight there.
+	const bool inFlight = !planet && system && system->IsValid()
+		&& any_of(ships.begin(), ships.end(), [this](const shared_ptr<Ship> &ship)
+			{ return ship->GetSystem() == system && !ship->IsParked() && !ship->GetPlanet() && ship->CanBeFlagship(); });
+#else
+	constexpr bool inFlight = false;
+#endif
 	// If a system was not specified in the player data, use the flagship's system.
-	if(!planet && !ships.empty())
+	if(!planet && !ships.empty() && !inFlight)
 	{
 		string warning = "No planet specified for player";
 		auto it = find_if(ships.begin(), ships.end(), [](const shared_ptr<Ship> &ship) noexcept -> bool
@@ -3924,7 +3966,7 @@ void PlayerInfo::ValidateLoad()
 		Logger::Log("Player system was not specified. Defaulting to the specified planet's system.",
 			Logger::Level::WARNING);
 	}
-	if(!planet || !planet->IsValid() || !system || !system->IsValid())
+	if((!planet && !inFlight) || (planet && !planet->IsValid()) || !system || !system->IsValid())
 	{
 		system = &startData.GetSystem();
 		planet = &startData.GetPlanet();

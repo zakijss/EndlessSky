@@ -308,6 +308,12 @@ void Engine::Place()
 		// Skip over ships that have already been placed by NPC or Fleet.
 		if(ship->IsPlaced())
 		{
+#ifdef ES_MIYOO
+			// The player's ships from a save made in flight (PlayerInfo::SaveInFlight) carry on
+			// where they were; Place still readies them for flight (zoom, heat, status).
+			if(ship->IsYours())
+				ship->Place(ship->Position(), Point(), ship->Facing(), false);
+#endif
 			// Unmark this ship as placed, as subsequent placements should still be randomized.
 			ship->SetIsPlaced(false);
 			continue;
@@ -1506,6 +1512,12 @@ void Engine::EnterSystem()
 
 	doEnter = true;
 	doEnterLabels = true;
+#ifdef ES_MIYOO
+	// Resuming a save made in flight is not a new day (no date change, no payments).
+	if(resumingSave)
+		resumingSave = false;
+	else
+#endif
 	player.AdvanceDate();
 	const Date &today = player.GetDate();
 

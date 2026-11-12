@@ -390,6 +390,9 @@ public:
 	static const std::string MIYOO_BATTERY_SAVER;
 	static const std::string MIYOO_CONTINUE;
 	static const std::string MIYOO_STAY_AWAKE;
+	static const std::string MIYOO_SMOOTHING;
+	static const std::string MIYOO_SAVE_IN_FLIGHT;
+	static const std::string MIYOO_DIM_IDLE;
 	// The option index of a list setting (Has() only says whether it is non-zero).
 	static int Index(const std::string &name);
 #endif

@@ -1,14 +1,56 @@
-// Self-check for source/soft/Raster: c++ -std=c++20 -I source miyoo/tests/raster_test.cpp source/soft/Raster.cpp
+// Self-check for source/soft/Raster:
+// c++ -std=c++20 -I source miyoo/tests/raster_test.cpp source/soft/Raster.cpp -lpthread
 #include "soft/Raster.h"
 #include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <cstdio>
+#include <vector>
+
+// A full-size scene that uses every drawing call split across cores: the result must be the
+// same, pixel for pixel, on one core and on two.
+static std::vector<uint32_t> Scene(bool threads, bool linear)
+{
+	Raster::SetThreads(threads);
+	Raster::Init(640, 480);
+	Raster::SetView(800, 600);
+	Raster::SetLinearFiltering(linear);
+	std::vector<uint32_t> texels(64 * 32);
+	for(size_t i = 0; i < texels.size(); ++i)
+		texels[i] = (i % 7 ? 0xFF000000u : 0x80000000u) | static_cast<uint32_t>(i * 2654435761u >> 8 & 0x7F7F7F);
+	const uint32_t tex = Raster::CreateTexture(64, 32, 1, texels.data());
+	Raster::Clear(0xFF102030);
+	const float half[4] = {.2f, .1f, .05f, .5f};
+	Raster::Fill(-50., 20., 500., 300., half);
+	Raster::SpriteDraw d;
+	d.texture = tex;
+	d.position[0] = 30.f;
+	d.position[1] = -10.f;
+	// 400x200 units, turned about 30 degrees.
+	d.transform[0] = 346.f; d.transform[1] = 200.f; d.transform[2] = -100.f; d.transform[3] = 173.f;
+	d.alpha = .8f;
+	Raster::DrawSprite(d);
+	const uint8_t grid[6] = {0, 80, 200, 255, 30, 0};
+	Raster::Darken(-300., -200., 600., 400., grid, 3, 2);
+	std::vector<uint32_t> canvas(100 * 80, 0x80402010);
+	const double size[2] = {500., 400.}, pos[2] = {0., 0.}, clip[2] = {450., 350.}, src[2] = {20., 20.};
+	const float fade[4] = {30.f, 30.f, 20.f, 20.f};
+	Raster::Composite(canvas.data(), 100, 80, size, pos, clip, src, fade);
+	const float white[4] = {1.f, 1.f, 1.f, 1.f};
+	Raster::Cover(-200., -150., 200., 150., white, [](double x, double y, float *) {
+		return static_cast<float>(1. - std::abs(std::sqrt(x * x + y * y) - 120.) / 3.); });
+	Raster::DeleteTexture(tex);
+	return std::vector<uint32_t>(Raster::Pixels(), Raster::Pixels() + 640 * 480);
+}
 
 static uint32_t At(int x, int y) { return Raster::Pixels()[y * Raster::Width() + x]; }
 
 int main()
 {
+	for(bool linear : {false, true})
+		assert(Scene(false, linear) == Scene(true, linear));
+	Raster::SetThreads(true);
+
 	Raster::Init(8, 8);
 	// The exact pixel checks below use nearest sampling; linear is checked at the end.
 	Raster::SetLinearFiltering(false);

@@ -19,10 +19,27 @@ Handheld features (Preferences, Settings, last page "Mini Plus"):
 - Start in last save: skip the main menu at launch.
 - Stay awake in flight: Onion's sleep timer no longer stops a long autopilot trip.
 - Waking from sleep in flight opens the main menu (the game pauses).
-- Menu now leaves for Onion's game switcher (saving on a planet; a second press in flight).
+- Save in flight: Start+R2 saves wherever you are, and leaving in flight (Menu, a flat battery,
+  Onion's sleep, Quit) saves first; loading such a save starts in flight at that spot (other
+  ships are placed anew). Off in Preferences gives the PC behaviour (only landing saves).
+- Menu now leaves for Onion's game switcher, saving first.
+- Slow pointer: hold Start while moving the pointer for fine aim (the map).
+- Dim when idle: the screen dims after a minute without a button press (30 s to 5 min, or off);
+  the next press only wakes it.
 - Buttons for the commands upstream leaves unbound: fleet jump (Start+Up), fleet scan
   (Start+Down), turret tracking (Start+Left); Start+B centres the map on your system.
 - Saves and settings are written to a temporary file and renamed into place.
+
+Picture quality and speed:
+- Drawing uses both CPU cores: big sprites, fills, the map fog, stars and other shapes are shared
+  between them in small bands of rows.
+- Blending and smooth sprite sampling use the CPU's NEON vector unit (four pixels at once).
+- Sprite smoothing (Preferences, Settings, Mini Plus): "auto" smooths sprites whenever the frame
+  has time for it, which is always on planets and in menus and often in flight, and backs off
+  in heavy scenes instead of dropping frames. "off" and "always" as before.
+- Ships, planets, asteroids and effects ship at three more sizes (0.4, 0.56 and 0.8), and the
+  game loads the one drawn pixel for pixel at your view zoom.
+- Faster starfield; the background haze stays sharp-filtered (it is soft art).
 
 ## 1.1 (11 November 2026)
 

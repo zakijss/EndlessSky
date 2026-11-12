@@ -58,11 +58,40 @@ namespace {
 
 
 
+#ifdef ES_MIYOO
+namespace {
+	MainPanel *currentMainPanel = nullptr;
+}
+#endif
+
+
+
 MainPanel::MainPanel(PlayerInfo &player)
 	: player(player), engine(player)
 {
 	SetIsFullScreen(true);
+#ifdef ES_MIYOO
+	currentMainPanel = this;
+#endif
 }
+
+
+
+#ifdef ES_MIYOO
+MainPanel::~MainPanel()
+{
+	if(currentMainPanel == this)
+		currentMainPanel = nullptr;
+}
+
+
+
+void MainPanel::FinishEngineStep()
+{
+	if(currentMainPanel)
+		currentMainPanel->engine.Wait();
+}
+#endif
 
 
 
@@ -143,6 +172,15 @@ void MainPanel::Step()
 		player.Land(GetUI());
 		isActive = false;
 	}
+#ifdef ES_MIYOO
+	// A save made in flight (PlayerInfo::SaveInFlight) starts here, with no planet panel whose
+	// closing places the fleet: place it now.
+	if(isActive && !placed && ++steps > 1 && !player.GetPlanet() && player.Flagship())
+	{
+		engine.ResumeSave();
+		OnCallback();
+	}
+#endif
 
 	// Offer the next available in-flight mission.
 	if(isActive && player.HasAvailableInflightMissions() && player.Flagship())
@@ -219,6 +257,9 @@ void MainPanel::Draw()
 // The planet panel calls this when it closes.
 void MainPanel::OnCallback()
 {
+#ifdef ES_MIYOO
+	placed = true;
+#endif
 	engine.Place();
 	// Run one step of the simulation to fill in the new planet locations.
 	engine.Go();
@@ -258,6 +299,16 @@ bool MainPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, boo
 {
 	if(player.IsDead())
 		return true;
+#ifdef ES_MIYOO
+	// Quick save (Start+R2 on the Miyoo, F5), with "Save in flight" on.
+	if(key == SDLK_F5 && isNewPress && Preferences::Has(Preferences::MIYOO_SAVE_IN_FLIGHT))
+	{
+		// The engine computes the next step on its own thread between frames: let it finish first.
+		engine.Wait();
+		Messages::Add(*GameData::Messages().Get(player.SaveInFlight() ? "miyoo saved in flight" : "miyoo cannot save in flight"));
+		return true;
+	}
+#endif
 
 	if(command.Has(Command::MAP | Command::INFO | Command::MESSAGE_LOG | Command::HAIL | Command::HELP))
 		show = command;
