@@ -31,6 +31,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "Logger.h"
 #include "Screen.h"
 #include "Setting.h"
+#ifdef ES_MIYOO
+#include "soft/Rumble.h"
+#endif
 #include "UI.h"
 
 #ifdef _WIN32
@@ -219,6 +222,14 @@ const string Preferences::VSYNC = "vsync";
 const string Preferences::WINDOW_SIZE = "window size";
 const string Preferences::ZOOM_FACTOR_MAIN = "zoom";
 const string Preferences::ZOOM_FACTOR_VIEW = "view zoom";
+#ifdef ES_MIYOO
+const string Preferences::MIYOO_DPAD_JUMPS = "miyoo d-pad jumps";
+const string Preferences::MIYOO_BUTTON_HINTS = "miyoo button hints";
+const string Preferences::MIYOO_RUMBLE = "miyoo rumble";
+const string Preferences::MIYOO_BATTERY_SAVER = "miyoo battery saver";
+const string Preferences::MIYOO_CONTINUE = "miyoo continue";
+const string Preferences::MIYOO_STAY_AWAKE = "miyoo stay awake";
+#endif
 #ifdef _WIN32
 const string Preferences::TITLE_BAR_THEME = "Title bar theme";
 const string Preferences::WINDOW_ROUNDING = "Window rounding";
@@ -433,6 +444,15 @@ void Preferences::Init()
 #ifdef ES_MIYOO
 	// Nearest by default on the Miyoo: linear filtering costs about 2.5 times as much per sprite pixel.
 	settings[TEXTURE_FILTERING] = Setting::List("Texture filtering", {"nearest", "linear"}, 0, true);
+	settings[MIYOO_DPAD_JUMPS] = Setting::OnOff("D-pad jumps between buttons", true);
+	settings[MIYOO_BUTTON_HINTS] = Setting::OnOff("Button hints", true);
+	settings[MIYOO_RUMBLE] = Setting::List("Rumble", {"off", "light", "strong"}, 1);
+	// A short buzz at the new strength, to feel the choice.
+	settings[MIYOO_RUMBLE].SetOnToggleFunc([](UI *) -> void { Rumble::Pulse(120); });
+	settings[MIYOO_BATTERY_SAVER] = Setting::OnOff("Battery saver", false);
+	settings[MIYOO_CONTINUE] = Setting::OnOff("Start in last save", false);
+	// Keeps Onion's sleep timer from stopping a long autopilot trip (GameWindowMiyoo).
+	settings[MIYOO_STAY_AWAKE] = Setting::OnOff("Stay awake in flight", true);
 #else
 	settings[TEXTURE_FILTERING] = Setting::List("Texture filtering", {"nearest", "linear"}, 1, true);
 #endif
@@ -1133,6 +1153,16 @@ Preferences::TargetAsteroidStrategy Preferences::GetTargetAsteroidStrategy()
 
 
 
+#ifdef ES_MIYOO
+int Preferences::Index(const string &name)
+{
+	auto it = settings.find(name);
+	return it != settings.end() ? it->second.Index() : 0;
+}
+
+
+
+#endif
 int Preferences::GetFontSize()
 {
 	return FONT_SIZES[settings[FONT_SIZE].Index()];

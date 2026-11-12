@@ -15,6 +15,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "MapDetailPanel.h"
 
+#ifdef ES_SOFT
+#include "soft/Navigation.h"
+#endif
+
 #include "text/Alignment.h"
 #include "audio/Audio.h"
 #include "Color.h"
@@ -140,6 +144,10 @@ void MapDetailPanel::Step()
 void MapDetailPanel::Draw()
 {
 	MapPanel::Draw();
+#ifdef ES_SOFT
+	// A map: the D-pad moves the pointer freely to pick systems.
+	Navigation::SetFree();
+#endif
 
 	clickZones.clear();
 

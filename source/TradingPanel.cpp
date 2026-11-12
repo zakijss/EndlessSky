@@ -15,6 +15,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "TradingPanel.h"
 
+#ifdef ES_SOFT
+#include "soft/Navigation.h"
+#endif
+
 #include "Color.h"
 #include "Command.h"
 #include "DialogPanel.h"
@@ -160,6 +164,15 @@ void TradingPanel::Draw()
 		bool isSelected = (i++ == selectedRow);
 		const Color &color = (isSelected ? selected : unselected);
 		font.Draw(commodity.name, Point(minX + nameX, y), color);
+#ifdef ES_SOFT
+		// The row's name selects it; [buy] and [sell] are stops of their own (see Click()).
+		Navigation::Add(Rectangle::FromCorner(Point(minX, y - 5), Point(buyX, 20)));
+		if(price)
+		{
+			Navigation::Add(Rectangle::FromCorner(Point(minX + buyX, y - 5), Point(sellX - buyX, 20)));
+			Navigation::Add(Rectangle::FromCorner(Point(minX + sellX, y - 5), Point(holdX - sellX, 20)));
+		}
+#endif
 
 		if(price)
 		{

@@ -15,6 +15,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "LoadPanel.h"
 
+#ifdef ES_SOFT
+#include "soft/Navigation.h"
+#endif
+
 #include "text/Alignment.h"
 #include "Color.h"
 #include "Command.h"
@@ -170,6 +174,10 @@ void LoadPanel::Draw()
 					(bottom - fadeOut - drawPoint.Y()) * .1);
 			alpha = max(alpha, 0.);
 			alpha = min(alpha, 1.);
+#ifdef ES_SOFT
+			if(alpha >= 1.)
+				Navigation::Add(zone);
+#endif
 
 			if(pilot == selectedPilot)
 				FillShader::Fill(zone, Color(.1 * alpha, 0.));
@@ -223,6 +231,10 @@ void LoadPanel::Draw()
 					(bottom - fadeOut - drawPoint.Y()) * .1);
 			alpha = max(alpha, 0.);
 			alpha = min(alpha, 1.);
+#ifdef ES_SOFT
+			if(alpha >= 1.)
+				Navigation::Add(zone);
+#endif
 
 			if(file == selectedFile)
 				FillShader::Fill(zone, Color(.1 * alpha, 0.));

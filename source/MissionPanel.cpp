@@ -18,6 +18,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "MissionPanel.h"
 
 #ifdef ES_SOFT
+#include "soft/Navigation.h"
 #include "soft/Raster.h"
 #endif
 
@@ -948,6 +949,11 @@ Point MissionPanel::DrawList(const list<Mission> &missionList, Point pos, const 
 				pos + Point(.5 * SIDE_WIDTH - 5., 8.),
 				Point(SIDE_WIDTH - 10., 20.),
 				highlight);
+#ifdef ES_SOFT
+		const Rectangle row(pos + Point(.5 * SIDE_WIDTH - 5., 8.), Point(SIDE_WIDTH - 10., 20.));
+		if(InListBand(row.Top()) && InListBand(row.Bottom() - 1))
+			Navigation::Add(row);
+#endif
 
 		if(it->Deadline())
 			SpriteShader::Draw(fast, pos + Point(-4., 8.));

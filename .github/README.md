@@ -8,7 +8,7 @@ with a small ship and a few credits, then trade, take missions, mine asteroids, 
 buy better ships and build a fleet, while a long story plays out across the galaxy. This port
 runs all of it under Onion OS, on a 640x480 screen with no GPU, mouse or keyboard.
 
-**Whole campaign · 30 fps flight · every action on a button · on-screen keyboard · status bar · Onion game switcher**
+**Whole campaign · 30 fps flight · D-pad menus · rumble · every action on a button · on-screen keyboard · status bar · Onion game switcher**
 
 [![Release](https://img.shields.io/github/v/release/zakijss/EndlessSky?color=f2a541&labelColor=1e1d28)](https://github.com/zakijss/EndlessSky/releases/latest) [![Onion OS](https://img.shields.io/badge/Onion_OS-Ports-5aa9ff?labelColor=1e1d28)](https://github.com/OnionUI/Onion) [![Miyoo](https://img.shields.io/badge/Miyoo-Mini_Plus-e2d03c?labelColor=1e1d28)](https://github.com/OnionUI/Onion) [![Upstream](https://img.shields.io/badge/Endless_Sky-0.11.5-8a8a8a?labelColor=1e1d28)](https://github.com/endless-sky/endless-sky) [![License](https://img.shields.io/badge/license-GPLv3-8a8a8a?labelColor=1e1d28)](../license.txt)
 
@@ -41,17 +41,25 @@ screens on the devices.
   player pages and the conversation screens were all checked so their text and buttons stay on
   screen. Text uses the game's full-size font atlas, so it stays sharp.
 - **Controls for the buttons you have.** Flying uses the D-pad, face buttons and shoulders.
-  Holding Select or Start gives a second set of commands. Menus use a pointer you move with the
-  D-pad, and an on-screen keyboard opens when the game asks for a name. The game's help messages
-  and tutorials name the Miyoo's buttons instead of keyboard keys.
+  Holding Select or Start gives a second set of commands, and holding either for a moment shows
+  what each button does. In menus the D-pad jumps from button to button and row to row; on the
+  map it moves a free pointer. An on-screen keyboard opens when the game asks for a name. The
+  game's help messages and tutorials name the Miyoo's buttons instead of keyboard keys.
+- **Made for a handheld.** Rumble on hits, failing shields and jumps (off, light or strong). A
+  warning at 15% and 5% battery, and at Onion's cut-off the game saves on a planet and lets Onion
+  power off. Waking from sleep in flight opens the main menu so nothing hits you first. Onion's
+  sleep timer doesn't stop a long autopilot trip. A battery saver (fewer frames and a slower CPU
+  on planets and menus), and an option to start straight in your last save. Saves are written to
+  a temporary file and renamed into place, so power loss can't leave a broken save. All of these
+  are in Preferences, Settings, on the last page.
 - **A status bar.** Time, Wi-Fi and battery sit in the top-right corner, as on Onion's own
   screens. An optional frame counter sits at the top left (Preferences, Settings, Show frame rate).
 - **Port info page.** Main menu, Port info: the version, every control and tips for playing on the
   Miyoo, on a page you can scroll.
 - **Sound.** All of the game's sound effects and its ambient loops. Endless Sky has no music.
-- **Onion's game switcher.** The Menu button belongs to Onion and opens the game switcher. Leaving
-  that way is like quitting: progress since your last landing is lost, as in the PC game, so land
-  first.
+- **Onion's game switcher.** The Menu button leaves for Onion's game switcher. On a planet the
+  game saves first. In flight it asks for a second press, since progress since your last landing
+  is lost, as in the PC game.
 - **Kept up to date.** This fork follows upstream Endless Sky. New ships, missions and fixes from
   upstream come in by merge, and each release says which upstream version it is built on.
 
@@ -87,12 +95,16 @@ Hold Start and press:
 | Y | Player info | L1 | Pause |
 | A | Cloak | R1 | Help |
 | B | Fleet: harvest flotsam | X | Fleet: use ammo or not |
+| Up | Fleet jump | Down | Fleet: scan my target |
+| Left | Turret tracking on or off | | |
 
 **Pointer (menus and planets).** Tap Select to switch between flying and the pointer; landing and
-taking off switch for you. The D-pad moves the pointer (a tap nudges it, holding speeds it up). A
-clicks, X right-clicks, B goes back and Start confirms. L1 and R1 scroll, L2 and R2 page up and
-down, and Select with the D-pad sends the arrow keys. Hold Select or Start while you click to buy
-or sell 5 or 20 at a time (both together: 100), or to add ships to a selection.
+taking off switch for you. The D-pad jumps the pointer to the next button or row, outlined in
+orange (hold to keep going). On the map, or where nothing more is that way, it moves freely (a tap
+nudges it, holding speeds it up). A clicks, X right-clicks, B goes back and Start confirms. L1 and
+R1 scroll, L2 and R2 page up and down, and Select with the D-pad sends the arrow keys. Start with
+B centres the map on your system. Hold Select or Start while you click to buy or sell 5 or 20 at
+a time (both together: 100), or to add ships to a selection.
 
 **Keyboard.** When the game asks for text (your pilot's name, a ship's name, a map search) a
 keyboard opens at the top of the screen. The D-pad picks a key, A types it, B deletes, X is Shift,
@@ -219,7 +231,8 @@ Problems with the game itself (missions, balance, story) belong upstream at
   banner and section headers here are made from the game's own art (the galaxy map and the main
   menu planets), and so is the view out of the window in the room renders, which use Poly Haven
   textures (CC0).
-- Onion OS: the launcher uses Onion's `launch_standalone.sh`, and Menu opens Onion's game switcher.
+- Onion OS: the launcher uses Onion's `launch_standalone.sh`; Menu, the low-battery exit, rumble
+  (GPIO 48) and staying awake follow Onion's own code and flag files.
 - Fonts in the headers: Exo 2 (Natanael Gama) and Raleway (Matt McInerney, Pablo Impallari and
   Rodrigo Fuenzalida), under the SIL Open Font License.
 

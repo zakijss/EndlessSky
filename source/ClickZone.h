@@ -20,6 +20,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <utility>
 
+#ifdef ES_SOFT
+#include "soft/Navigation.h"
+#endif
+
 
 
 // This is a simple template class defining a rectangular region in the UI that
@@ -46,6 +50,9 @@ template<class Type>
 ClickZone<Type>::ClickZone(Point center, Point dimensions, Type value)
 	: Rectangle(center, dimensions), value(std::move(value))
 {
+#ifdef ES_SOFT
+	Navigation::Add(*this);
+#endif
 }
 
 
@@ -54,6 +61,9 @@ template<class Type>
 ClickZone<Type>::ClickZone(const Rectangle &rect, Type value)
 	: Rectangle(rect), value(std::move(value))
 {
+#ifdef ES_SOFT
+	Navigation::Add(*this);
+#endif
 }
 
 

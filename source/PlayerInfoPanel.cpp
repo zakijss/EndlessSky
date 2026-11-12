@@ -15,6 +15,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "PlayerInfoPanel.h"
 
+#ifdef ES_SOFT
+#include "soft/Navigation.h"
+#endif
+
 #include "text/Alignment.h"
 #include "audio/Audio.h"
 #include "Command.h"
@@ -793,6 +797,9 @@ void PlayerInfoPanel::DrawFleet(const Rectangle &bounds)
 
 		// Find out if the mouse is hovering over the ship
 		Rectangle shipZone = Rectangle(table.GetCenterPoint(), table.GetRowSize());
+#ifdef ES_SOFT
+		Navigation::Add(shipZone);
+#endif
 		bool isHovered = (hoverIndex == -1) && shipZone.Contains(hoverPoint);
 		if(isHovered)
 			hoverIndex = index;

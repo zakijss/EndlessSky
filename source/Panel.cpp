@@ -15,6 +15,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "Panel.h"
 
+#ifdef ES_SOFT
+#include "soft/Navigation.h"
+#endif
+
 #include "Color.h"
 #include "Command.h"
 #include "DialogPanel.h"
@@ -98,6 +102,9 @@ void Panel::ClearZones()
 // Add a clickable zone to the panel.
 void Panel::AddZone(const Rectangle &rect, const function<void()> &fun)
 {
+#ifdef ES_SOFT
+	Navigation::Add(rect);
+#endif
 	// The most recently added zone will typically correspond to what was drawn
 	// most recently, so it should be on top.
 	zones.emplace_front(rect, fun);
@@ -108,6 +115,9 @@ void Panel::AddZone(const Rectangle &rect, const function<void()> &fun)
 // Add a clickable zone to the panel.
 void Panel::AddZone(const Rectangle &rect, const function<void(const Event &)> &fun)
 {
+#ifdef ES_SOFT
+	Navigation::Add(rect);
+#endif
 	// The most recently added zone will typically correspond to what was drawn
 	// most recently, so it should be on top.
 	zones.emplace_front(rect, fun);

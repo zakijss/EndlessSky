@@ -1,0 +1,3 @@
+"Initiate fleet jump" 107
+"Fleet: Scan my target" 111
+"Toggle turret tracking" 120

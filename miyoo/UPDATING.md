@@ -42,8 +42,9 @@ The stage in `build-miyoo/stage` is then the whole SD card package.
    `docker build -t es-host -f miyoo/Dockerfile.host miyoo`.
 3. Build: `ninja -C build-soft` in es-host (the Mac check build), and `ninja -C build-arm -j2`
    in es-zig, then `arm-linux-gnueabihf-strip -o build-miyoo/endless-sky build-arm/endless-sky`.
-4. Test in es-host: the integration tests (`--test <name>`, all must pass),
-   `miyoo/tests/raster_test.cpp` and `miyoo/tests/sound_test.cpp` (build lines at their tops).
+4. Test in es-host: the integration tests (`tests/integration/run_tests.sh`, all must pass),
+   `miyoo/tests/raster_test.cpp`, `sound_test.cpp` and `navigation_test.cpp` (build lines at their
+   tops).
 5. `miyoo/tools/stage.sh`. The layout and help generators stop with an error if upstream
    changed a layout or a help sentence they rewrite. Adjust the rule they name, then run it again.
 6. Look at the screens: copy `miyoo/tests/tour.txt` into a test config's plugins and run the
@@ -78,4 +79,7 @@ doesn't list.
   restores it afterwards.
 - Press buttons only with `pressif.sh`, which checks the game is running (it calls `press`,
   built from `miyoo/probe/press.c`). Simulated holds don't work on this hardware, only taps.
-- Leave the Menu button to Onion: it opens the game switcher.
+- Menu: the game quits and leaves `/mnt/SDCARD/.tmp_update/.runGameSwitcher`, so Onion opens its
+  game switcher (Onion's key monitor doesn't act on ports). The low-battery exit leaves
+  `/tmp/.lowBat` the same way. Rumble is GPIO 48 (active low); "Stay awake in flight" creates
+  `/tmp/stay_awake`.

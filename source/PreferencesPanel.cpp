@@ -748,6 +748,16 @@ void PreferencesPanel::DrawSettings()
 		Preferences::DATE_FORMAT,
 		Preferences::DESTINATION_NOTIFICATION,
 		Preferences::SAVE_MSG_LOGS,
+#ifdef ES_MIYOO
+		"\t",
+		"Mini Plus",
+		Preferences::MIYOO_DPAD_JUMPS,
+		Preferences::MIYOO_BUTTON_HINTS,
+		Preferences::MIYOO_RUMBLE,
+		Preferences::MIYOO_BATTERY_SAVER,
+		Preferences::MIYOO_CONTINUE,
+		Preferences::MIYOO_STAY_AWAKE,
+#endif
 #ifdef _WIN32
 		"\t",
 		"Windows Options",

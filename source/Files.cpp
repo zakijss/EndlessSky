@@ -28,6 +28,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <sstream>
 #include <stdexcept>
 
+#ifdef ES_MIYOO
+#include <cstdio>
+#include <fcntl.h>
+#include <unistd.h>
+#endif
+
 using namespace std;
 
 namespace {
@@ -498,6 +504,39 @@ string Files::Read(shared_ptr<iostream> file)
 
 void Files::Write(const filesystem::path &path, const string &data)
 {
+#ifdef ES_MIYOO
+	// A handheld can lose power or be closed mid-write: write a temporary file, flush it to the
+	// card, then rename it over the old one, so a file is always either the old or the new one.
+	const string target = path.string();
+	const string temporary = target + ".tmp";
+	const int fd = open(temporary.c_str(), O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, 0644);
+	if(fd >= 0)
+	{
+		bool ok = true;
+		for(size_t done = 0; ok && done < data.size(); )
+		{
+			const ssize_t wrote = write(fd, data.data() + done, data.size() - done);
+			ok = wrote > 0;
+			if(ok)
+				done += wrote;
+		}
+		ok = (fsync(fd) == 0) && ok;
+		ok = (close(fd) == 0) && ok;
+		if(ok && rename(temporary.c_str(), target.c_str()) == 0)
+		{
+			// Make the rename itself stick.
+			const int dir = open(path.parent_path().string().c_str(), O_RDONLY | O_CLOEXEC);
+			if(dir >= 0)
+			{
+				fsync(dir);
+				close(dir);
+			}
+			return;
+		}
+		remove(temporary.c_str());
+		Logger::Log("Unable to save " + target + " safely; writing it in place.", Logger::Level::WARNING);
+	}
+#endif
 	Write(Open(path, true), data);
 }
 

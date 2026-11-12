@@ -119,6 +119,22 @@ MenuPanel::~MenuPanel()
 
 void MenuPanel::Step()
 {
+#ifdef ES_MIYOO
+	// "Start in last save": the first time the menu shows after launch, go straight into the
+	// game, as Enter Ship would. Onion can then resume the game at boot right into the ship.
+	static bool launched = false;
+	if(!launched && GetUI().IsTop(this))
+	{
+		launched = true;
+		if(Preferences::Has(Preferences::MIYOO_CONTINUE) && player.IsLoaded() && !player.IsDead()
+				&& !player.Pilot()->IsLocked())
+		{
+			gamePanels.CanSave(true);
+			GetUI().PopThrough(this);
+			return;
+		}
+	}
+#endif
 	if(Preferences::Has(Preferences::ANIMATE_MENU_BACKGROUND))
 	{
 		GameData::StepBackground(Point(xSpeed, yAmplitude * sin(animation * TO_RAD)));

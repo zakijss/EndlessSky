@@ -15,6 +15,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "MainPanel.h"
 
+#ifdef ES_MIYOO
+#include "soft/Rumble.h"
+#endif
+
 #include "BoardingPanel.h"
 #include "comparators/ByGivenOrder.h"
 #include "CategoryList.h"
@@ -65,6 +69,40 @@ MainPanel::MainPanel(PlayerInfo &player)
 void MainPanel::Step()
 {
 	engine.Wait();
+#ifdef ES_MIYOO
+	// Rumble: hull hits, shields going down, jumps and losing the flagship.
+	{
+		static const Ship *lastShip = nullptr;
+		static double lastHull = 0., lastShields = 0.;
+		static bool wasJumping = false;
+		const Ship *flagship = player.Flagship();
+		if(flagship && flagship == lastShip && !player.GetPlanet())
+		{
+			const double hull = flagship->HullFraction(), shields = flagship->ShieldFraction();
+			const bool jumping = flagship->IsHyperspacing();
+			if(flagship->IsDestroyed() && lastHull > 0.)
+				Rumble::Pulse(500);
+			else if(hull < lastHull - .001)
+				Rumble::Pulse(60 + static_cast<int>(min(1., (lastHull - hull) * 10.) * 140.));
+			else if(shields <= 0. && lastShields > 0.)
+				Rumble::Pulse(120);
+			else if(shields < lastShields - .02)
+				Rumble::Pulse(30);
+			if(jumping && !wasJumping)
+				Rumble::Pulse(150);
+			lastHull = flagship->IsDestroyed() ? 0. : hull;
+			lastShields = shields;
+			wasJumping = jumping;
+		}
+		else if(flagship)
+		{
+			lastHull = flagship->HullFraction();
+			lastShields = flagship->ShieldFraction();
+			wasJumping = flagship->IsHyperspacing();
+		}
+		lastShip = flagship;
+	}
+#endif
 
 	// Depending on what UI element is on top, the game is "paused." This
 	// checks only already-drawn panels.

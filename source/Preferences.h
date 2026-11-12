@@ -382,6 +382,17 @@ public:
 	static const std::string WINDOW_SIZE;
 	static const std::string ZOOM_FACTOR_MAIN;
 	static const std::string ZOOM_FACTOR_VIEW;
+#ifdef ES_MIYOO
+	// Handheld settings (Preferences, Settings, "Mini Plus").
+	static const std::string MIYOO_DPAD_JUMPS;
+	static const std::string MIYOO_BUTTON_HINTS;
+	static const std::string MIYOO_RUMBLE;
+	static const std::string MIYOO_BATTERY_SAVER;
+	static const std::string MIYOO_CONTINUE;
+	static const std::string MIYOO_STAY_AWAKE;
+	// The option index of a list setting (Has() only says whether it is non-zero).
+	static int Index(const std::string &name);
+#endif
 #ifdef _WIN32
 	static const std::string TITLE_BAR_THEME;
 	static const std::string WINDOW_ROUNDING;

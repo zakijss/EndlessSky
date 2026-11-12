@@ -15,6 +15,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "BoardingPanel.h"
 
+#ifdef ES_SOFT
+#include "soft/Navigation.h"
+#endif
+
 #include "text/Alignment.h"
 #include "audio/Audio.h"
 #include "CargoHold.h"
@@ -173,6 +177,9 @@ void BoardingPanel::Draw()
 		const Plunder &item = plunder[index];
 		Rectangle plunderZone = Rectangle(Point(plunderTableFrame.Center().X(), y + 10.),
 			Point(plunderTableFrame.Width(), 20.));
+#ifdef ES_SOFT
+		Navigation::Add(plunderZone);
+#endif
 		Point pos(plunderTableInner.Left() + iconOffset, y + fontOff);
 
 		// Check if this is the selected row.

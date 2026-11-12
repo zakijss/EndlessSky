@@ -15,6 +15,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "BankPanel.h"
 
+#ifdef ES_SOFT
+#include "soft/Navigation.h"
+#endif
+
 #include "text/Alignment.h"
 #include "Color.h"
 #include "Command.h"
@@ -262,6 +266,15 @@ void BankPanel::Draw()
 			if(mortgage.Principal() <= player.Accounts().Credits())
 				info.SetCondition("can pay");
 	bankUi->Draw(info, this);
+#ifdef ES_SOFT
+	// The [pay extra] cells and [apply], as Click() reads them.
+	const int payRows = min<int>(mortgageRows, player.Accounts().Mortgages().size());
+	for(int row = 0; row < payRows; ++row)
+		Navigation::Add(Rectangle::FromCorner(Point(MIN_X + EXTRA_X, FIRST_Y + 25 + 20 * row),
+			Point(MAX_X - MIN_X - EXTRA_X, 20)));
+	if(qualify)
+		Navigation::Add(Rectangle::FromCorner(Point(MIN_X + EXTRA_X - 10, FIRST_Y + 230), Point(MAX_X - MIN_X - EXTRA_X + 10, 20)));
+#endif
 }
 
 

@@ -15,6 +15,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "UI.h"
 
+#ifdef ES_SOFT
+#include "soft/Navigation.h"
+#endif
+
 #include "audio/Audio.h"
 #include "Command.h"
 #include "Panel.h"
@@ -143,6 +147,9 @@ void UI::DrawAll()
 		// Panels that are about to be popped shouldn't get drawn.
 		if(count(toPop.begin(), toPop.end(), it->get()))
 			continue;
+#ifdef ES_SOFT
+		Navigation::BeginPanel();
+#endif
 		(*it)->DoDraw();
 	}
 }

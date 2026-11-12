@@ -17,7 +17,9 @@ cp miyoo/data/_ui/*.txt "$G/data/_ui/"
 python3 miyoo/tools/layout_miyoo.py data/_ui/interfaces.txt "$G/data/_ui/miyoo interfaces.txt" images
 python3 miyoo/tools/help_miyoo.py data/_ui/help.txt "$G/data/_ui/miyoo help.txt"
 python3 miyoo/tools/port_credits.py credits.txt "$G/credits.txt" "$VERSION"
-cp keys.txt copyright license.txt "$G/"
+cp copyright license.txt "$G/"
+# Default keys, plus keys for the commands upstream leaves unbound (the Miyoo can't type them).
+cat keys.txt miyoo/data/keys.txt > "$G/keys.txt"
 # Sprite sizes, collision masks and areas (made from the art; see UPDATING.md).
 cp miyoo/art/sizes.txt miyoo/art/masks.txt miyoo/art/areas.txt "$G/"
 cp "miyoo/onion/Endless Sky.port" "$P/Shortcuts/Space/"
