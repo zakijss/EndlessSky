@@ -427,8 +427,6 @@ namespace {
 	vector<const Sprite *> requests;
 	atomic<thread::id> mainThread{};
 	int softFrame = 0;
-	// Frames a sprite stays safe from eviction after it was last drawn (about 2 s at 30 fps).
-	constexpr int KEEP_FRAMES = 60;
 
 	// Zoom levels of the art (folder suffix, drawn scale it is made for), smallest first.
 	const char *const LEVEL_FOLDERS[] = {"images@0.4", "images@0.56", "images@0.8"};
@@ -445,14 +443,55 @@ namespace {
 	}
 	atomic<int> artLevel{-1};
 
+	// Free memory (MemAvailable) in bytes, or 0 if unknown.
+	uint64_t AvailableMemory()
+	{
+		uint64_t kb = 0;
+		if(FILE *file = fopen("/proc/meminfo", "r"))
+		{
+			char line[128];
+			while(fgets(line, sizeof(line), file))
+				if(sscanf(line, "MemAvailable: %llu kB", reinterpret_cast<unsigned long long *>(&kb)) == 1)
+					break;
+			fclose(file);
+		}
+		return kb << 10;
+	}
+
+	// Texture memory allowed: at most 20 MB (ES_SPRITE_BUDGET_MB), and never more than the
+	// textures already held plus what the system has free beyond a reserve. On the Miyoo the
+	// rest of the game, Onion and any running apps share 103 MB; going past that pushes the game
+	// into swap, and a jump to a new system (all new art) then drops to a frame a second.
+	// Checked about once a second.
+	constexpr uint64_t RESERVE = 16ull << 20, FLOOR = 6ull << 20;
 	uint64_t SoftBudget()
 	{
-		static const uint64_t budget = []
+		static const uint64_t ceiling = []
 		{
 			const char *mb = getenv("ES_SPRITE_BUDGET_MB");
 			return static_cast<uint64_t>(mb ? atoi(mb) : 20) << 20;
 		}();
+		static uint64_t budget = ceiling;
+		static int lastCheck = -1000;
+		if(softFrame - lastCheck >= 30)
+		{
+			lastCheck = softFrame;
+			const uint64_t available = AvailableMemory();
+			if(available)
+			{
+				const uint64_t held = Raster::TextureBytes();
+				const uint64_t room = available > RESERVE ? available - RESERVE : 0;
+				budget = clamp(held + room, FLOOR, ceiling);
+			}
+		}
 		return budget;
+	}
+
+	// Frames a sprite stays safe from eviction after it was last drawn, less when memory is
+	// tight (a jump: the old system's art is still "recent" when the new one arrives).
+	int KeepFrames()
+	{
+		return SoftBudget() < (12ull << 20) ? 10 : 60;
 	}
 }
 
@@ -571,8 +610,9 @@ void SpriteLoadManager::PumpSprites()
 		return;
 	// Evict the least recently drawn sprites until under budget, never ones drawn lately.
 	vector<pair<int, const Sprite *>> candidates;
+	const int keepFrames = KeepFrames();
 	for(const auto &[sprite, entry] : softEntries)
-		if(!entry.pending && sprite->IsResident() && softFrame - entry.lastUsed > KEEP_FRAMES)
+		if(!entry.pending && sprite->IsResident() && softFrame - entry.lastUsed > keepFrames)
 			candidates.emplace_back(entry.lastUsed, sprite);
 	sort(candidates.begin(), candidates.end());
 	for(const auto &[lastUsed, sprite] : candidates)

@@ -1419,6 +1419,21 @@ void GameWindow::Step()
 	if(!profile.enabled)
 		return;
 	const double end = Now();
+	// A frame slower than 150 ms: log what it was spent on (the window totals below hide it).
+	{
+		static double lastTotals[Raster::PROF_COUNT] = {};
+		if(profile.lastEnd && end - profile.lastEnd > .15)
+		{
+			string parts = "slow frame " + to_string(static_cast<int>((end - profile.lastEnd) * 1000.)) + " ms:";
+			for(int i = 0; i < Raster::PROF_COUNT; ++i)
+				if(Raster::profTime[i] - lastTotals[i] > .005)
+					parts += " " + string(Raster::profNames[i]) + " " + to_string(static_cast<int>((Raster::profTime[i] - lastTotals[i]) * 1000.));
+			parts += ", textures " + to_string(Raster::TextureBytes() >> 20) + " MB";
+			Logger::Log(parts, Logger::Level::INFO);
+		}
+		for(int i = 0; i < Raster::PROF_COUNT; ++i)
+			lastTotals[i] = Raster::profTime[i];
+	}
 	if(profile.lastEnd)
 		profile.game += start - profile.lastEnd;
 	profile.present += end - start;
@@ -1444,6 +1459,7 @@ void GameWindow::Step()
 					+ " (" + to_string(Raster::profCalls[i] / 120) + ")";
 			Raster::profTime[i] = 0.;
 			Raster::profCalls[i] = 0;
+			// (the slow-frame totals restart from 0 too: a negative difference logs nothing)
 		}
 		Logger::Log(parts, Logger::Level::INFO);
 		profile.frames = 0;
