@@ -40,6 +40,8 @@ Picture quality and speed:
 - Ships, planets, asteroids and effects ship at three more sizes (0.4, 0.56 and 0.8), and the
   game loads the one drawn pixel for pixel at your view zoom.
 - Faster starfield; the background haze stays sharp-filtered (it is soft art).
+- Sprite memory follows the memory the system has free (up to 20 MB as before), so jumping to a
+  new system no longer pushes the game into swap when other apps hold memory.
 
 ## 1.1 (11 November 2026)
 
