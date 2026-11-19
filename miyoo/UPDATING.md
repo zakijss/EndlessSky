@@ -57,10 +57,16 @@ The stage in `build-miyoo/stage` is then the whole SD card package.
    images upstream changed in `miyoo/art/update-images.txt` first), then
    `gh release create v<version> build-miyoo/EndlessSky-Miyoo-<version>.zip
    build-miyoo/EndlessSky-Miyoo-update.tgz build-miyoo/EndlessSky-Miyoo-update.tgz.sha256
-   -R zakijss/EndlessSky` with a few lines on what changed. The zip unpacks onto the SD card root
+   -R zakijss/EndlessSky` with a few lines on what changed. Before uploading, sign the zip and the
+   update package with the release key (`minisign -S -s ~/.minisign/zjss-release.key -m
+   build-miyoo/EndlessSky-Miyoo-<version>.zip build-miyoo/EndlessSky-Miyoo-update.tgz`, the owner
+   types its passphrase) and upload both `.minisig` files with them: the game's updater and
+   MiniMart refuse anything unsigned. The zip unpacks onto the SD card root
    as it is. The update package's two file names never change: the updater finds them in the
    latest release by name. Clear `update-images.txt` afterwards. Test the updater with
-   `sh miyoo/tests/update_test.sh`.
+   `sh miyoo/tests/update_test.sh`. Staging needs MiniDeck's `minisig` built for the device
+   (`dist/minisig-armv7` in the MiniDeck clone beside this one); `miyoo/onion/release.pub` is the
+   public half of the release key.
 
 ## When upstream art changes
 

@@ -23,7 +23,11 @@ cat keys.txt miyoo/data/keys.txt > "$G/keys.txt"
 # Sprite sizes, collision masks and areas (made from the art; see UPDATING.md).
 cp miyoo/art/sizes.txt miyoo/art/masks.txt miyoo/art/areas.txt "$G/"
 # The updater (update.sh, its CA bundle) and the version it compares against.
-cp miyoo/onion/update.sh miyoo/onion/cacert.pem "$G/"
+cp miyoo/onion/update.sh miyoo/onion/cacert.pem miyoo/onion/release.pub "$G/"
+# The signature verifier, MiniDeck's minisig built for the device (MINISIG=<file> to use another).
+MINISIG=${MINISIG:-../split/MiniDeck/dist/minisig-armv7}
+[ -f "$MINISIG" ] || { echo "stage: no minisig at $MINISIG (build it in MiniDeck)" >&2; exit 1; }
+cp "$MINISIG" "$G/minisig" && chmod +x "$G/minisig"
 echo "$VERSION" > "$G/port-version.txt"
 cp "miyoo/onion/Endless Sky.port" "$P/Shortcuts/Space/"
 cp "miyoo/onion/Endless Sky.png" "$P/Imgs/"

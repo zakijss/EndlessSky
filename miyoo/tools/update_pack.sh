@@ -15,7 +15,7 @@ trap 'rm -rf "$T"' EXIT
 mkdir -p "$T/launcher"
 cp -R "$G/data" "$T/"
 for f in endless-sky areas.txt credits.txt keys.txt masks.txt sizes.txt copyright license.txt \
-		update.sh cacert.pem port-version.txt; do
+		update.sh cacert.pem port-version.txt minisig release.pub; do
 	cp "$G/$f" "$T/"
 done
 cp "$P/Shortcuts/Space/Endless Sky.port" "$T/launcher/"
@@ -29,3 +29,5 @@ fi
 (cd "$T" && COPYFILE_DISABLE=1 tar -czf - .) > "$OUT"
 (cd build-miyoo && shasum -a 256 "$(basename "$OUT")" > "$(basename "$OUT").sha256")
 ls -l "$OUT"; cat "$OUT.sha256"
+echo "Now sign it (and the full zip) with the release key; the updater refuses unsigned packages:"
+echo "  minisign -S -s <release key> -m $OUT build-miyoo/EndlessSky-Miyoo-<version>.zip"

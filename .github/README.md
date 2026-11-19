@@ -135,10 +135,14 @@ computer (`~/.local/share/endless-sky/saves` on Linux, `%APPDATA%\endless-sky\sa
 `Saves/CurrentProfile/saves/EndlessSky/saves` on the card. A save from an older version of the
 game loads here; a save from this port loads on a PC running the same or a newer version.
 
+**MiniMart.** Endless Sky is also in [MiniMart](https://github.com/zakijss/MiniMart), under Ports,
+signed with the same key.
+
 **Updating.** From 1.4 the game updates itself over Wi-Fi. Once a day, when you start it, it
 looks for a newer release here; the main menu then says "Update 1.x available" under Port info.
 Open Port info and choose Download: a few MB come down (only what changed, not the whole game),
-are checked against their SHA-256, and are installed the next time you start the game. Port info
+are checked against the release key's signature, and are installed the next time you start the
+game; anything unsigned or wrongly signed is thrown away. Port info
 also has Check again. Saves and settings are kept. Copying a newer full release over the old one
 still works too. What changed in each version is in the [changelog](../miyoo/CHANGELOG.md).
 

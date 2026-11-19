@@ -12,6 +12,9 @@
 # ES_LAUNCHER: the launcher that runs "apply", so a new launcher replaces it where it is.
 # cacert.pem beside it: Mozilla's root certificates as curl publishes them
 # (curl.se/docs/caextract.html, MPL 2.0); refresh it now and then when releasing.
+# Every package must be signed with the port's release key: minisig (MiniDeck's verifier) checks
+# its .minisig against release.pub, both from the installed game, so each update is accepted
+# only by code and a key that were themselves verified. Nothing unsigned is ever installed.
 REPO=zakijss/EndlessSky
 ASSET=EndlessSky-Miyoo-update.tgz
 G=$(cd "$(dirname "$0")" && pwd)
@@ -62,6 +65,12 @@ newer() { # newer A B: version A is later than B
 		exit 1 }'
 }
 fail() { status error "latest=$(field latest)" "error=$1"; exit 1; }
+# ES_MINISIG: for tests on another machine.
+MINISIG=${ES_MINISIG:-$G/minisig}
+signed() { # signed FILE SIGFILE: the release key signed FILE
+	[ -x "$MINISIG" ] || chmod +x "$MINISIG" 2>/dev/null
+	[ -f "$2" ] && [ -f "$G/release.pub" ] && "$MINISIG" -p "$G/release.pub" -m "$1" -x "$2" >/dev/null 2>&1
+}
 
 # One run at a time (the launcher's daily check can meet a check from the game). A lock left by a
 # run that died (power off) is stale after 30 minutes, or once the clock has gone back past it.
@@ -119,19 +128,29 @@ download)
 	room "$D" $((size / 1024 * 4 + 20480)) || fail "There isn't enough free space on the SD card."
 	[ -n "$CURL" ] || fail "Updates need Onion OS 4.3 or newer (for its curl)."
 	status downloading "latest=$v" "size=$size" "url=$url"
-	rm -f "$D/update.part" "$D/update.tgz"
+	rm -f "$D/update.part" "$D/update.tgz" "$D/update.minisig"
 	# (after a failure, Check again finds the update again)
 	get "$url.sha256" "$D/update.sha256" 30 || fail "$(why $?)"
+	get "$url.minisig" "$D/update.minisig" 30 || {
+		r=$?
+		rm -f "$D/update.sha256"
+		[ "$r" = 22 ] && fail "This update isn't signed, so it wasn't downloaded."
+		fail "$(why $r)"
+	}
 	get "$url" "$D/update.part" 1800 || {
 		r=$?
-		rm -f "$D/update.part" "$D/update.sha256"
+		rm -f "$D/update.part" "$D/update.sha256" "$D/update.minisig"
 		fail "$(why $r)"
 	}
 	want=$(cut -d' ' -f1 "$D/update.sha256")
 	got=$(sha256sum "$D/update.part" | cut -d' ' -f1)
 	if [ -z "$want" ] || [ "$want" != "$got" ]; then
-		rm -f "$D/update.part" "$D/update.sha256"
+		rm -f "$D/update.part" "$D/update.sha256" "$D/update.minisig"
 		fail "The download didn't match its checksum, so it was thrown away."
+	fi
+	if ! signed "$D/update.part" "$D/update.minisig"; then
+		rm -f "$D/update.part" "$D/update.sha256" "$D/update.minisig"
+		fail "The update's signature didn't check out, so it was thrown away."
 	fi
 	mv -f "$D/update.part" "$D/update.tgz" && sync
 	status ready "latest=$v" "size=$size"
@@ -143,8 +162,8 @@ apply)
 	v=$(field latest)
 	want=$(cut -d' ' -f1 "$D/update.sha256" 2>/dev/null)
 	got=$(sha256sum "$D/update.tgz" | cut -d' ' -f1)
-	if [ -z "$want" ] || [ "$want" != "$got" ]; then
-		rm -f "$D/update.tgz" "$D/update.sha256"
+	if [ -z "$want" ] || [ "$want" != "$got" ] || ! signed "$D/update.tgz" "$D/update.minisig"; then
+		rm -f "$D/update.tgz" "$D/update.sha256" "$D/update.minisig"
 		fail "The download was damaged on the card and was thrown away."
 	fi
 	N="$G/.update-new"
@@ -152,8 +171,10 @@ apply)
 	room "$G" $(( $(wc -c < "$D/update.tgz") / 1024 * 3 + 20480 )) ||
 		fail "Not enough free space on the SD card to install it."
 	rm -rf "$N" && mkdir "$N" || fail "The update couldn't be unpacked."
-	if ! tar -xzf "$D/update.tgz" -C "$N" || [ ! -f "$N/endless-sky" ] || [ ! -d "$N/data" ]; then
-		rm -rf "$N" "$D/update.tgz" "$D/update.sha256"
+	# A package must bring the verifier and key for the next update too, or updates would stop.
+	if ! tar -xzf "$D/update.tgz" -C "$N" || [ ! -f "$N/endless-sky" ] || [ ! -d "$N/data" ] ||
+			[ ! -f "$N/minisig" ] || [ ! -f "$N/release.pub" ]; then
+		rm -rf "$N" "$D/update.tgz" "$D/update.sha256" "$D/update.minisig"
 		fail "The update couldn't be unpacked."
 	fi
 	# Each file is replaced by a rename, so a running script or binary keeps its old copy.
@@ -171,8 +192,8 @@ apply)
 	( cd "$N" && find . -type f ) | while read -r f; do
 		mkdir -p "$G/$(dirname "$f")" && mv -f "$N/$f" "$G/$f"
 	done
-	chmod +x "$G/endless-sky" "$G/update.sh" 2>/dev/null
-	rm -rf "$N" "$D/update.tgz" "$D/update.sha256"
+	chmod +x "$G/endless-sky" "$G/update.sh" "$G/minisig" 2>/dev/null
+	rm -rf "$N" "$D/update.tgz" "$D/update.sha256" "$D/update.minisig"
 	sync
 	status current "latest=$(current)"
 	;;
