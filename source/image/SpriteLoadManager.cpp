@@ -30,6 +30,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <algorithm>
 #include <cstdlib>
 #include <vector>
+#ifdef __GLIBC__
+#include <malloc.h>
+#endif
 #endif
 #include <atomic>
 #include <thread>
@@ -476,7 +479,16 @@ namespace {
 		if(softFrame - lastCheck >= 30)
 		{
 			lastCheck = softFrame;
-			const uint64_t available = AvailableMemory();
+			uint64_t available = AvailableMemory();
+#ifdef __GLIBC__
+			// Evicted textures can stay in the heap, where MemAvailable doesn't count them, and
+			// the budget would shrink a little after every eviction: hand them back first.
+			if(available && Raster::TextureBytes() + (available > RESERVE ? available - RESERVE : 0) < ceiling)
+			{
+				malloc_trim(0);
+				available = AvailableMemory();
+			}
+#endif
 			if(available)
 			{
 				const uint64_t held = Raster::TextureBytes();

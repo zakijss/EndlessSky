@@ -3,6 +3,29 @@
 Port versions of Endless Sky for the Miyoo Mini Plus. Each one names the upstream version it is
 built on.
 
+## 1.3 (19 November 2026)
+
+Built on Endless Sky 0.11.5 (upstream development branch, 18 November 2026).
+
+Upstream changes:
+- New optional game rules (Preferences, Gamerules, all off by default): captured ships can come
+  with locked computer systems (no weapons, no passenger quarters) until a shipyard rewires them
+  with the new Rewire button, and locked ships sell for scrap; friendly fire between ships of the
+  same or allied governments, with its own damage multiplier.
+- Jump drives list how long their jump takes. Plugins can now make inertialess engines (the
+  ship flies where it faces, at a throttled speed) and jump drives with their own jump time.
+- The Overcharged Pulse Laser is reworked, the Radiant Shield Shunt can no longer be removed,
+  Korath raiders carry less crew, and Heliarch and Coalition boarding values are updated.
+- Fixes: a ship that must stop before jumping no longer gets stuck, auto-targeting only picks
+  destinations of missions you can complete, the map search finds systems and planets by their
+  shown names, the Missions button on the map is the right size, parked ships are no longer
+  outlined, and selling a locked ship drops its depreciation records.
+
+Port:
+- The new lock icon is shipped at the interface size.
+- Sprite memory: textures the game drops are handed back to the system before it measures free
+  memory, so the sprite budget no longer shrinks over a long session.
+
 ## 1.2.1 (12 November 2026)
 
 Built on Endless Sky 0.11.5 (upstream development branch, 10 November 2026).
