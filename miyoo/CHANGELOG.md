@@ -3,6 +3,20 @@
 Port versions of Endless Sky for the Miyoo Mini Plus. Each one names the upstream version it is
 built on.
 
+## 1.4 (19 November 2026)
+
+Built on Endless Sky 0.11.5 (upstream development branch, 18 November 2026).
+
+- The game updates itself from this port's GitHub releases. When you start it, it looks for a
+  newer version at most once a day, in the background; if there is one, the main menu says so
+  under Port info. Port info shows the update and has a Download button (and Check again). The
+  download is the small update package each release now carries (binary, data and any changed
+  images, a few MB), is checked against its SHA-256, and is installed by the launcher the next
+  time you start the game, before anything loads. A damaged download is thrown away and the game
+  stays as it was.
+- From this version every release carries `EndlessSky-Miyoo-update.tgz` and its `.sha256` beside
+  the full zip.
+
 ## 1.3 (19 November 2026)
 
 Built on Endless Sky 0.11.5 (upstream development branch, 18 November 2026).

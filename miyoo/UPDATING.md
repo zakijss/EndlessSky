@@ -53,8 +53,14 @@ The stage in `build-miyoo/stage` is then the whole SD card package.
 8. Upload with `miyoo/tools/push.sh` (one large file at a time, resumable), or copy the stage
    to the SD card.
 9. Release: `cd build-miyoo/stage && zip -qr -X ../EndlessSky-Miyoo-<version>.zip Roms`, then
-   `gh release create v<version> build-miyoo/EndlessSky-Miyoo-<version>.zip -R zakijss/EndlessSky`
-   with a few lines on what changed. The zip unpacks onto the SD card root as it is.
+   `miyoo/tools/update_pack.sh` (the game's own updater downloads this small package; list any
+   images upstream changed in `miyoo/art/update-images.txt` first), then
+   `gh release create v<version> build-miyoo/EndlessSky-Miyoo-<version>.zip
+   build-miyoo/EndlessSky-Miyoo-update.tgz build-miyoo/EndlessSky-Miyoo-update.tgz.sha256
+   -R zakijss/EndlessSky` with a few lines on what changed. The zip unpacks onto the SD card root
+   as it is. The update package's two file names never change: the updater finds them in the
+   latest release by name. Clear `update-images.txt` afterwards. Test the updater with
+   `sh miyoo/tests/update_test.sh`.
 
 ## When upstream art changes
 

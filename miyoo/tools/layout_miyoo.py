@@ -155,6 +155,9 @@ def port_info_button(lines):
         '\tvisible', '\tactive',
         '\tsprite "ui/wide button"', '\t\tcenter -345 195',
         '\tbutton i "Port _info"', '\t\tcenter -345 195', '\t\tdimensions 90 30',
+        # an update found or downloaded (MenuPanel sets "port update")
+        '\tvisible if "port update"',
+        '\tstring "port update"', '\t\tfrom -390 214', '\t\talign top left', '\t\tcolor "bright"',
     ]
 
 

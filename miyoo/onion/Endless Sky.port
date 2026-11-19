@@ -18,5 +18,15 @@ Saves="/mnt/SDCARD/Saves/CurrentProfile/saves/EndlessSky"
 mkdir -p "$Saves"
 Arguments="--resources . --config $Saves"
 
+# Updates from the port's GitHub releases (update.sh in the game folder): install one the game
+# downloaded before the game starts, then look for a newer one in the background, once a day.
+Game="/mnt/SDCARD/Roms/PORTS/Games/$GameDir"
+Log="$Saves/update.log"
+[ "$( { wc -c < "$Log"; } 2>/dev/null || echo 0)" -gt 65536 ] && mv -f "$Log" "$Log.old"
+if [ -f "$Game/update.sh" ]; then
+	ES_LAUNCHER="$0" sh "$Game/update.sh" apply "$Saves/update" >> "$Log" 2>&1
+	setsid sh "$Game/update.sh" check "$Saves/update" --daily >> "$Log" 2>&1 &
+fi
+
 # running command line :
 /mnt/SDCARD/Emu/PORTS/launch_standalone.sh "$GameName" "$GameDir" "$GameExecutable" "$Arguments" "$GameDataFile" "$KillAudioserver" "$PerformanceMode" > "$Saves/last-run.log" 2>&1

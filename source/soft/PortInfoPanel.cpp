@@ -20,7 +20,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "../GameData.h"
 #include "../GameVersion.h"
 #include "../Point.h"
+#include "../Rectangle.h"
 #include "../Screen.h"
+#include "../text/DisplayText.h"
 #include "../text/Font.h"
 #include "../text/FontSet.h"
 #include "../UI.h"
@@ -36,9 +38,13 @@ namespace {
 	constexpr double BOX_WIDTH = 720.;
 	constexpr double BOX_HEIGHT = 540.;
 	constexpr double PAD = 20.;
-	// Title area above the text, and the hint line below it.
+	// Title area above the text; the update line and the hint line below it.
 	constexpr double HEADER = 56.;
-	constexpr double FOOTER = 30.;
+	constexpr double FOOTER = 62.;
+	constexpr double BUTTON_WIDTH = 130.;
+	constexpr double BUTTON_HEIGHT = 24.;
+	// Check again on opening the page once the last check is this old.
+	constexpr int64_t RECHECK_SECONDS = 600;
 
 	double VisibleHeight()
 	{
@@ -55,6 +61,15 @@ PortInfoPanel::PortInfoPanel()
 	text.SetWrapWidth(static_cast<int>(BOX_WIDTH - 2. * PAD));
 	text.SetAlignment(Alignment::JUSTIFIED);
 	text.Wrap(GameData::HelpMessage("miyoo port info"));
+
+	update = PortUpdate::Read();
+	const string &state = update.state;
+	if(state != "checking" && state != "downloading" && state != "ready"
+			&& PortUpdate::SinceCheck() > RECHECK_SECONDS)
+	{
+		PortUpdate::Start("check");
+		update.state = "checking";
+	}
 }
 
 
@@ -89,8 +104,32 @@ void PortInfoPanel::Draw()
 	text.Draw(Point(left + PAD, textTop + 6. - scroll), bright);
 	Raster::ResetClip();
 
+	// The update line, read again twice a second while the page is open.
+	if(++updatePoll >= 30)
+	{
+		updatePoll = 0;
+		update = PortUpdate::Read();
+	}
+	const double lineY = top + BOX_HEIGHT - FOOTER + 8.;
+	FillShader::Fill(Point(0., lineY - 4.), Point(BOX_WIDTH - 2. * PAD, 1.), edge);
+	string label;
+	if(update.state == "available")
+		label = "Download";
+	else if(update.state == "current" || update.state == "error" || update.state == "idle")
+		label = "Check again";
+	const double textRoom = BOX_WIDTH - 2. * PAD - (label.empty() ? 0. : BUTTON_WIDTH + PAD);
+	const DisplayText line(PortUpdate::Describe(update), Layout(static_cast<int>(textRoom), Truncate::BACK));
+	font.Draw(line, Point(left + PAD, lineY + 6.), update.state == "error" ? medium : bright);
+	if(!label.empty())
+	{
+		const Point center(left + BOX_WIDTH - PAD - BUTTON_WIDTH / 2., lineY + 12.);
+		FillShader::Fill(center, Point(BUTTON_WIDTH, BUTTON_HEIGHT), edge);
+		font.Draw(label, center - Point(font.Width(label) / 2., 7.), bright);
+		AddZone(Rectangle(center, Point(BUTTON_WIDTH, BUTTON_HEIGHT)), [this](){ UpdateAction(); });
+	}
+
 	const string hint = text.Height() > VisibleHeight() ? "L1/R1: scroll    B or Start: close" : "B or Start: close";
-	font.Draw(hint, Point(-font.Width(hint) / 2., top + BOX_HEIGHT - FOOTER + 8.), medium);
+	font.Draw(hint, Point(-font.Width(hint) / 2., top + BOX_HEIGHT - 22.), medium);
 }
 
 
@@ -111,6 +150,24 @@ bool PortInfoPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command,
 bool PortInfoPanel::Click(int x, int y, MouseButton button, int clicks)
 {
 	return true;
+}
+
+
+
+void PortInfoPanel::UpdateAction()
+{
+	if(update.state == "available")
+	{
+		PortUpdate::Start("download");
+		update.state = "downloading";
+		update.got = 0;
+	}
+	else if(update.state == "current" || update.state == "error" || update.state == "idle")
+	{
+		PortUpdate::Start("check");
+		update.state = "checking";
+	}
+	updatePoll = 0;
 }
 
 

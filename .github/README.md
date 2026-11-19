@@ -135,8 +135,12 @@ computer (`~/.local/share/endless-sky/saves` on Linux, `%APPDATA%\endless-sky\sa
 `Saves/CurrentProfile/saves/EndlessSky/saves` on the card. A save from an older version of the
 game loads here; a save from this port loads on a PC running the same or a newer version.
 
-**Updating.** Copy a newer release over the old one. Saves and settings are kept. What changed in
-each version is in the [changelog](../miyoo/CHANGELOG.md).
+**Updating.** From 1.4 the game updates itself over Wi-Fi. Once a day, when you start it, it
+looks for a newer release here; the main menu then says "Update 1.x available" under Port info.
+Open Port info and choose Download: a few MB come down (only what changed, not the whole game),
+are checked against their SHA-256, and are installed the next time you start the game. Port info
+also has Check again. Saves and settings are kept. Copying a newer full release over the old one
+still works too. What changed in each version is in the [changelog](../miyoo/CHANGELOG.md).
 
 **Removing it.** Delete `Roms/PORTS/Games/Endless Sky`, `Roms/PORTS/Shortcuts/Space/Endless Sky.port`
 and `Roms/PORTS/Imgs/Endless Sky.png`. Your saves stay in the `Saves` folder until you delete them.

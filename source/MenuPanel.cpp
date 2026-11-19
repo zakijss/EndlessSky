@@ -17,6 +17,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #ifdef ES_SOFT
 #include "soft/PortInfoPanel.h"
+#include "soft/PortUpdate.h"
 #endif
 
 #include "audio/Audio.h"
@@ -184,6 +185,28 @@ void MenuPanel::Draw()
 	}
 	if(player.IsLoaded() && !player.Pilot()->IsLocked() && !player.Pilot()->GetGamerules().LockGamerules())
 		info.SetCondition("gamerules unlocked");
+#ifdef ES_SOFT
+	// A port update found by the launcher's daily check, or downloaded from Port info: say so
+	// under the Port info button (the status file is read every few seconds, not every frame).
+	static int updatePoll = 0;
+	static string updateLine;
+	if(updatePoll-- <= 0)
+	{
+		updatePoll = 120;
+		const PortUpdate::Status update = PortUpdate::Read();
+		if(update.state == "available")
+			updateLine = "Update " + update.latest + " available";
+		else if(update.state == "ready")
+			updateLine = "Update " + update.latest + " installs on restart";
+		else
+			updateLine.clear();
+	}
+	if(!updateLine.empty())
+	{
+		info.SetCondition("port update");
+		info.SetString("port update", updateLine);
+	}
+#endif
 
 	GameData::Interfaces().Get("menu background")->Draw(info, this);
 	mainMenuUi->Draw(info, this);

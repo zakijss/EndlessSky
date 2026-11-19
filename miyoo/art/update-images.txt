@@ -1,0 +1,1 @@
+# Images upstream changed since the last release, as paths in the game folder (see update_pack.sh).

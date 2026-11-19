@@ -18,10 +18,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "../Panel.h"
 
 #include "../text/WrappedText.h"
+#include "PortUpdate.h"
 
 
 
-// About the Miyoo Mini Plus port: its version, the controls and tips, scrollable.
+// About the Miyoo Mini Plus port: its version, the controls and tips, scrollable, and updates
+// from the port's GitHub releases (checked on opening, downloaded on request).
 // The text is the help message "miyoo port info", so <command> names become buttons.
 class PortInfoPanel : public Panel {
 public:
@@ -39,9 +41,13 @@ protected:
 
 private:
 	void ScrollBy(double dy);
+	// The update button: download an available update, or check again.
+	void UpdateAction();
 
 
 private:
 	WrappedText text;
 	double scroll = 0.;
+	PortUpdate::Status update;
+	int updatePoll = 0;
 };

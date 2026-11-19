@@ -22,6 +22,9 @@ cp copyright license.txt "$G/"
 cat keys.txt miyoo/data/keys.txt > "$G/keys.txt"
 # Sprite sizes, collision masks and areas (made from the art; see UPDATING.md).
 cp miyoo/art/sizes.txt miyoo/art/masks.txt miyoo/art/areas.txt "$G/"
+# The updater (update.sh, its CA bundle) and the version it compares against.
+cp miyoo/onion/update.sh miyoo/onion/cacert.pem "$G/"
+echo "$VERSION" > "$G/port-version.txt"
 cp "miyoo/onion/Endless Sky.port" "$P/Shortcuts/Space/"
 cp "miyoo/onion/Endless Sky.png" "$P/Imgs/"
 [ -f build-miyoo/endless-sky ] && cp build-miyoo/endless-sky "$G/"
