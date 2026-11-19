@@ -3273,6 +3273,7 @@ ui/in cargo	12	12
 ui/info panel	638	356
 ui/installed	12	12
 ui/left edge	18	624
+ui/lock	16	16
 ui/map system	124	56
 ui/map trade	124	144
 ui/message log key	124	38
