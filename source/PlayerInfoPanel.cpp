@@ -617,7 +617,7 @@ void PlayerInfoPanel::DrawPlayer(const Rectangle &bounds)
 	int totalCargo = 0;
 	for(const auto &ship : player.Ships())
 	{
-		if(ship->IsDestroyed() || ship->IsParked())
+		if(ship->IsDestroyed() || ship->IsParked() || ship->IsLocked())
 			continue;
 		const CargoHold &cargo = ship->Cargo();
 		usedCargo += cargo.UsedPrecise();

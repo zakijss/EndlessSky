@@ -136,10 +136,17 @@ namespace {
 		{"turning energy", 0},
 		{"turning fuel", 0},
 		{"turning heat", 0},
+		{"inertialess flight shields", 0},
+		{"inertialess flight hull", 0},
+		{"inertialess flight energy", 0},
+		{"inertialess flight fuel", 0},
+		{"inertialess flight heat", 0},
 
 		{"thrust", 1},
 		{"reverse thrust", 1},
 		{"afterburner thrust", 1},
+		{"inertialess thrust", 1},
+		{"inertialess braking", 1},
 
 		{"afterburner discharge", 2},
 		{"afterburner corrosion", 2},
@@ -176,6 +183,15 @@ namespace {
 		{"turning burn", 2},
 		{"turning slowing", 2},
 		{"turning disruption", 2},
+
+		{"inertialess flight discharge", 2},
+		{"inertialess flight corrosion", 2},
+		{"inertialess flight ion", 2},
+		{"inertialess flight scramble", 2},
+		{"inertialess flight leakage", 2},
+		{"inertialess flight burn", 2},
+		{"inertialess flight slowing", 2},
+		{"inertialess flight disruption", 2},
 
 		{"ion resistance", 2},
 		{"scramble resistance", 2},
@@ -237,34 +253,15 @@ namespace {
 		{"shield delay", 5},
 		{"cloaking shield delay", 5},
 		{"depleted shield delay", 5},
-		{"disabled recovery time", 5}
-	};
-
-	const map<string, string> BOOLEAN_ATTRIBUTES = {
-		{"unplunderable", "Cannot be plundered while installed."},
-		{"installable", "This is not an installable item."},
-		{"hyperdrive", "Allows you to make hyperjumps."},
-		{"jump drive", "Lets you jump to any nearby system."},
-		{"minable", "This item is mined from asteroids."},
-		{"map minables", "This map reveals minables."},
-		{"atrocity", "This outfit is considered an atrocity."},
-		{"unique", "This item is unique."},
-		{"cloaked afterburner", "You may use afterburners while cloaked."},
-		{"cloaked boarding", "You may board while cloaked."},
-		{"cloaked communication", "You may make hails while cloaked."},
-		{"cloaked deployment", "You may deploy from bays while cloaked."},
-		{"cloaked pickup", "You may pick up flotsam while cloaked."},
-		{"cloaked scanning", "You may scan other ships while cloaked."},
-		{"can jettison", "Can be jettisoned while installed."},
-		{"unremovable", "Can't be removed once installed."},
-		{"nondepreciable", "Doesn't lose value with age."},
+		{"disabled recovery time", 5},
+		{"jump duration", 5},
 	};
 
 	bool IsNotRequirement(const string &label)
 	{
 		return label == "automaton" ||
 			SCALE.find(label) != SCALE.end() ||
-			BOOLEAN_ATTRIBUTES.find(label) != BOOLEAN_ATTRIBUTES.end();
+			Outfit::BooleanAttributes().find(label) != Outfit::BooleanAttributes().end();
 	}
 }
 
@@ -459,7 +456,7 @@ void OutfitInfoDisplay::UpdateAttributes(const Outfit &outfit)
 	{
 		// Attributes that are expected to be negative and boolean attributes
 		// are displayed separately.
-		if(count(EXPECTED_NEGATIVE.begin(), EXPECTED_NEGATIVE.end(), name) || BOOLEAN_ATTRIBUTES.contains(name))
+		if(count(EXPECTED_NEGATIVE.begin(), EXPECTED_NEGATIVE.end(), name) || Outfit::BooleanAttributes().contains(name))
 			continue;
 
 		// Only show positive values here, with some exceptions.
@@ -483,7 +480,7 @@ void OutfitInfoDisplay::UpdateAttributes(const Outfit &outfit)
 	}
 
 	bool firstBoolean = true;
-	for(const auto &[name, display] : BOOLEAN_ATTRIBUTES)
+	for(const auto &[name, display] : Outfit::BooleanAttributes())
 	{
 		double value = outfit.GetPrecise(name);
 		if(!value)

@@ -255,7 +255,7 @@ bool ShipInfoPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command,
 				"How many tons of " + Format::LowerCase(selectedCommodity)
 					+ " do you want to jettison?", amount));
 		}
-		else if(plunderAmount > 0 && selectedPlunder->Get("installable") < 0.)
+		else if(plunderAmount > 0 && selectedPlunder->Get("uninstallable"))
 		{
 			GetUI().Push(DialogPanel::RequestPositiveInteger(this, &ShipInfoPanel::DumpPlunder,
 				"How many tons of " + Format::LowerCase(selectedPlunder->DisplayName())
@@ -425,7 +425,8 @@ void ShipInfoPanel::DrawShipStats(const Rectangle &bounds)
 
 	if(table.GetRowBounds().Contains(hoverPoint))
 		table.DrawHighlight(backColor);
-	table.DrawTruncatedPair("ship:", dim, ship.GivenName(), bright, Truncate::MIDDLE, true);
+	table.DrawTruncatedPair(ship.IsLocked() ? "ship (locked):" : "ship:",
+		dim, ship.GivenName(), bright, Truncate::MIDDLE, true);
 
 	// A box too short for the whole list (the Miyoo's 600-high screen) leaves the energy
 	// and heat table to the bottom of the cargo column.
@@ -703,7 +704,7 @@ void ShipInfoPanel::DrawCargo(const Rectangle &bounds)
 				table.DrawHighlight(backColor);
 
 			// For outfits, show how many of them you have and their total mass.
-			bool isSingular = (it.second == 1 || it.first->Get("installable") < 0.);
+			bool isSingular = (it.second == 1 || it.first->Get("uninstallable"));
 			string name = (isSingular ? it.first->DisplayName() : it.first->PluralName());
 			name += " (" + to_string(it.second) + "x)";
 			table.Draw(name, dim);

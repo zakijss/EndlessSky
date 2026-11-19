@@ -47,18 +47,18 @@ ShipInfoDisplay::ShipInfoDisplay()
 // Call this every time the ship changes.
 // Panels that have scrolling abilities are not limited by space, allowing more detailed attributes.
 void ShipInfoDisplay::Update(const Ship &ship, const PlayerInfo &player, bool hasFleetCapacity,
-	bool descriptionCollapsed, bool scrollingPanel, bool isDefinition)
+	bool descriptionCollapsed, bool scrollingPanel, bool isSale)
 {
-	if(isDefinition)
+	if(isSale)
 		UpdateDescription(ship.Description(), ship.Attributes().Licenses(), true);
 	else
 	{
-		// If the given ship is not a ship definition, then it won't have a description.
+		// If the given ship is not for sale, then it might not have a description.
 		// Locate the description it's supposed to have from its definition.
 		const Ship *definition = GameData::Ships().Get(ship.VariantName());
 		UpdateDescription(definition->Description(), ship.Attributes().Licenses(), true);
 	}
-	UpdateAttributes(ship, player, hasFleetCapacity, descriptionCollapsed, scrollingPanel);
+	UpdateAttributes(ship, player, hasFleetCapacity, descriptionCollapsed, scrollingPanel, isSale);
 	const Depreciation &depreciation = ship.IsYours() ? player.FleetDepreciation() : player.StockDepreciation();
 	UpdateOutfits(ship, player, depreciation);
 
@@ -166,7 +166,7 @@ void ShipInfoDisplay::DrawOutfits(const Point &topLeft) const
 
 
 void ShipInfoDisplay::UpdateAttributes(const Ship &ship, const PlayerInfo &player, bool hasFleetCapacity,
-	bool descriptionCollapsed, bool scrollingPanel)
+	bool descriptionCollapsed, bool scrollingPanel, bool isSale)
 {
 	bool isGeneric = ship.GivenName().empty() || ship.GetPlanet();
 
@@ -228,6 +228,17 @@ void ShipInfoDisplay::UpdateAttributes(const Ship &ship, const PlayerInfo &playe
 		attributeValues.push_back(Format::Number(ship.FleetCost()));
 		attributesHeight += 20;
 	}
+	// Only show the rewiring cost on scrolling panels with no risk of overflow.
+	bool locked = ship.IsLocked();
+	if(scrollingPanel && locked)
+	{
+		attributeLabels.push_back("rewiring cost:");
+		if(ship.CannotUnlock())
+			attributeValues.push_back("cannot be rewired");
+		else
+			attributeValues.push_back(Format::AbbreviatedNumber(ship.RewiringCost()));
+		attributesHeight += 20;
+	}
 
 	attributeLabels.push_back(string());
 	attributeValues.push_back(string());
@@ -235,7 +246,7 @@ void ShipInfoDisplay::UpdateAttributes(const Ship &ship, const PlayerInfo &playe
 	double shieldRegen = (attributes.Get("shield generation")
 		+ attributes.Get("delayed shield generation"))
 		* (1. + attributes.Get("shield generation multiplier"));
-	bool hasShieldRegen = shieldRegen > 0.;
+	bool hasShieldRegen = shieldRegen > 0. && !locked;
 	if(hasShieldRegen)
 	{
 		attributeLabels.push_back("shields (charge):");
@@ -251,7 +262,7 @@ void ShipInfoDisplay::UpdateAttributes(const Ship &ship, const PlayerInfo &playe
 	double hullRepair = (attributes.Get("hull repair rate")
 		+ attributes.Get("delayed hull repair rate"))
 		* (1. + attributes.Get("hull repair multiplier"));
-	bool hasHullRepair = hullRepair > 0.;
+	bool hasHullRepair = hullRepair > 0. && !locked;
 	if(hasHullRepair)
 	{
 		attributeLabels.push_back("hull (repair):");
@@ -296,11 +307,13 @@ void ShipInfoDisplay::UpdateAttributes(const Ship &ship, const PlayerInfo &playe
 
 	double fullMass = emptyMass + attributes.Get("cargo space");
 	isGeneric &= (fullMass != emptyMass);
-	double thrust = attributes.Get("thrust");
+	bool inertialess = ship.InertialessMovement();
+	double thrust = inertialess ? attributes.Get("inertialess thrust") : attributes.Get("thrust");
 	double afterburnerThrust = attributes.Get("afterburner thrust");
 	double mainThrust = thrust ? thrust : afterburnerThrust;
 	double allThrust = thrust + afterburnerThrust;
-	double reverseThrust = attributes.Get("reverse thrust");
+	double reverseThrust = inertialess ? (attributes.Get("inertialess braking")
+		? attributes.Get("inertialess braking") : thrust) : attributes.Get("reverse thrust");
 	double drag = ship.Drag();
 	attributeLabels.push_back(string());
 	attributeValues.push_back(string());
@@ -319,7 +332,7 @@ void ShipInfoDisplay::UpdateAttributes(const Ship &ship, const PlayerInfo &playe
 			attributeValues.push_back(Format::Number(60. * allThrust / drag));
 			attributesHeight += 20;
 		}
-		if(reverseThrust)
+		if(reverseThrust && !inertialess)
 		{
 			attributeLabels.push_back("    reversed:");
 			attributeValues.push_back(Format::Number(60. * reverseThrust / drag));
@@ -437,15 +450,31 @@ void ShipInfoDisplay::UpdateAttributes(const Ship &ship, const PlayerInfo &playe
 	double movingHeatPerFrame = attributes.Get("turning heat");
 	if(mainThrust && reverseThrust)
 	{
-		movingEnergyPerFrame += max(attributes.Get("thrusting energy") + attributes.Get("afterburner energy"),
-			attributes.Get("reverse thrusting energy"));
-		movingHeatPerFrame += max(attributes.Get("thrusting heat") + attributes.Get("afterburner heat"),
-			attributes.Get("reverse thrusting heat"));
+		if(inertialess)
+		{
+			movingEnergyPerFrame += attributes.Get("inertialess flight energy") + attributes.Get("afterburner energy");
+			movingHeatPerFrame += attributes.Get("inertialess flight heat") + attributes.Get("afterburner heat");
+		}
+		else
+		{
+			movingEnergyPerFrame += max(attributes.Get("thrusting energy") + attributes.Get("afterburner energy"),
+				attributes.Get("reverse thrusting energy"));
+			movingHeatPerFrame += max(attributes.Get("thrusting heat") + attributes.Get("afterburner heat"),
+				attributes.Get("reverse thrusting heat"));
+		}
 	}
 	else if(mainThrust)
 	{
-		movingEnergyPerFrame += attributes.Get("thrusting energy") + attributes.Get("afterburner energy");
-		movingHeatPerFrame += attributes.Get("thrusting heat") + attributes.Get("afterburner heat");
+		if(inertialess)
+		{
+			movingEnergyPerFrame += attributes.Get("inertialess flight energy") + attributes.Get("afterburner energy");
+			movingHeatPerFrame += attributes.Get("inertialess flight heat") + attributes.Get("afterburner heat");
+		}
+		else
+		{
+			movingEnergyPerFrame += attributes.Get("thrusting energy") + attributes.Get("afterburner energy");
+			movingHeatPerFrame += attributes.Get("thrusting heat") + attributes.Get("afterburner heat");
+		}
 	}
 	else if(reverseThrust)
 	{
@@ -456,9 +485,17 @@ void ShipInfoDisplay::UpdateAttributes(const Ship &ship, const PlayerInfo &playe
 	if(scrollingPanel)
 	{
 		tableLabels.push_back("thrusting:");
-		energyTable.push_back(Format::Number(-60. * attributes.Get("thrusting energy")));
-		heatTable.push_back(Format::Number(60. * attributes.Get("thrusting heat")));
-		if(reverseThrust)
+		if(inertialess)
+		{
+			energyTable.push_back(Format::Number(-60. * attributes.Get("inertialess flight energy")));
+			heatTable.push_back(Format::Number(60. * attributes.Get("inertialess flight heat")));
+		}
+		else
+		{
+			energyTable.push_back(Format::Number(-60. * attributes.Get("thrusting energy")));
+			heatTable.push_back(Format::Number(60. * attributes.Get("thrusting heat")));
+		}
+		if(reverseThrust && !inertialess)
 		{
 			attributesHeight += 20;
 			tableLabels.push_back("reversing:");
@@ -603,9 +640,9 @@ void ShipInfoDisplay::UpdateOutfits(const Ship &ship, const PlayerInfo &player, 
 	}
 
 	int64_t totalCost = depreciation.Value(ship, player.GetDate().DaysSinceEpoch());
-	int64_t chassisCost = depreciation.Value(
-		GameData::Ships().Get(ship.TrueModelName()),
-		player.GetDate().DaysSinceEpoch());
+	int64_t fullChassis = ship.ChassisCost();
+	int64_t chassisCost = depreciation.Value(GameData::Ships().Get(ship.TrueModelName()),
+		player.GetDate().DaysSinceEpoch(), 1, ship.IsLocked());
 	saleLabels.clear();
 	saleValues.clear();
 	saleHeight = 20;
@@ -613,7 +650,14 @@ void ShipInfoDisplay::UpdateOutfits(const Ship &ship, const PlayerInfo &player, 
 	saleLabels.push_back("This ship will sell for:");
 	saleValues.push_back(string());
 	saleHeight += 20;
-	saleLabels.push_back("empty hull:");
+	if(chassisCost == fullChassis)
+		saleLabels.push_back("empty hull:");
+	else
+	{
+		ostringstream out;
+		out << "empty hull (" << (100 * chassisCost) / fullChassis << "%):";
+		saleLabels.push_back(out.str());
+	}
 	saleValues.push_back(Format::AbbreviatedNumber(chassisCost));
 	saleHeight += 20;
 	saleLabels.push_back("  + outfits:");
