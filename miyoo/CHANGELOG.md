@@ -11,6 +11,8 @@ Built on Endless Sky 0.11.5 (upstream development branch, 18 November 2026).
   installs a package only if its signature checks out against the key the game already has; an
   unsigned or wrongly signed package is thrown away before anything is installed. The check runs
   again just before installing, so a file changed on the card in between is refused too.
+- The updater only installs a version newer than the one you have, read from inside the signed
+  package, so an old release can't be offered again as a new one.
 - Endless Sky is in MiniMart (Ports, Space), signed the same way.
 
 ## 1.4 (19 November 2026)
