@@ -177,6 +177,12 @@ apply)
 		rm -rf "$N" "$D/update.tgz" "$D/update.sha256" "$D/update.minisig"
 		fail "The update couldn't be unpacked."
 	fi
+	# The version inside the signed package, not the release's tag: an old signed package can't
+	# be passed off as new.
+	if ! newer "$(cat "$N/port-version.txt" 2>/dev/null)" "$(current)"; then
+		rm -rf "$N" "$D/update.tgz" "$D/update.sha256" "$D/update.minisig"
+		fail "The update is older than the installed game, so it was thrown away."
+	fi
 	# Each file is replaced by a rename, so a running script or binary keeps its old copy.
 	rm -rf "$G/data.old"
 	mv "$G/data" "$G/data.old" && mv "$N/data" "$G/data" && rm -rf "$G/data.old"

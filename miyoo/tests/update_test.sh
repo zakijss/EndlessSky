@@ -77,6 +77,15 @@ tail -1 "$G/update.sh" | grep -q '# new' || fail "updater not replaced"
 [ ! -f "$D/update.tgz" ] || fail "package left behind"
 grep -q '^state=current' "$D/status" && grep -q '^latest=1.1' "$D/status" || fail "status after apply: $(cat "$D/status")"
 
+# An old signed package offered again as new (a replay): refused, the game stays as it is.
+echo old > "$G/endless-sky"
+available
+sh "$G/update.sh" download "$D"
+sh "$G/update.sh" apply "$D" || true
+grep -q '^state=error' "$D/status" && grep -q 'older' "$D/status" || fail "old package reinstalled: $(cat "$D/status")"
+[ "$(cat "$G/endless-sky")" = old ] || fail "game changed by an old package"
+echo new > "$G/endless-sky"
+
 # A package damaged on the card is refused; the game stays as it is.
 available
 sh "$G/update.sh" download "$D"
@@ -133,6 +142,7 @@ sh "$G/update.sh" apply "$D"
 [ -d "$G/data" ] || fail "data not put back"
 
 # Without a launcher path the new launcher goes to the zip's own folder.
+echo 1.2 > "$K/port-version.txt"; pack
 available
 sh "$G/update.sh" download "$D"
 sh "$G/update.sh" apply "$D"
