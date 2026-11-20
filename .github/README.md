@@ -2,6 +2,8 @@
 
 <img src="../miyoo/docs/ui/top.png" alt="Endless Sky, Mini Plus by ZJSS: a space trading and combat game for the Miyoo Mini Plus, ported by ZJSS from Endless Sky by Michael Zahniser and contributors" width="100%">
 
+https://github.com/user-attachments/assets/c90f2240-7ba2-4376-90dc-ad970d6c7853
+
 The full [Endless Sky](https://github.com/endless-sky/endless-sky) on the Miyoo Mini Plus, **ported
 by ZJSS**. Start with a small ship and a few credits, then trade, take missions, mine asteroids,
 fight pirates and build a fleet while a long story plays out across the galaxy. It runs under
